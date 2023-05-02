@@ -2,7 +2,7 @@
 # define MSG_HPP
 
 # include "Client.hpp"
-# include <list>
+# include <deque>
 
 struct	Msg
 {
@@ -10,7 +10,7 @@ struct	Msg
 		Client					client;
 		std::string				prefix;
 		std::string				command;
-		std::list<std::string>	params;
+		std::deque<std::string>	params;
 };
 
 #endif

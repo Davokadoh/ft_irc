@@ -1,60 +1,47 @@
-# Compiler
-CXX = c++
+GTEST_DIR=googletest/googletest
+TST_DIR=tests
+SRC_DIR=src
+INC_DIR=inc
 
-# Compiler flags
-CXXFLAGS = -std=c++11 -Wall -Wextra -Werror -Iinc
+# Set Google Test's header directory as a system directory, such that
+# the compiler doesn't generate warnings in Google Test headers.
+CPPFLAGS += -isystem $(GTEST_DIR)/include
 
-# Directories
-INC_DIR = inc
-SRC_DIR = src
-CMD_DIR = $(SRC_DIR)/cmds
-OBJ_DIR = obj
-TST_DIR = tests
+CXXFLAGS += -g -Wall -Wextra -pthread -std=c++14
 
-# Files
-SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(CMD_DIR)/*.cpp)
-OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp, obj/%.o, $(SRC_FILES))
-TEST_FILES = $(wildcard $(TST_DIR)/*.cpp)
-TEST_OBJ_FILES = $(patsubst $(TST_DIR)/%.cpp, obj/%.o, $(TEST_FILES))
+TESTS = test_parser
 
-# Executable name
-EXECUTABLE = bin/ft_irc
+GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
+                $(GTEST_DIR)/include/gtest/internal/*.h
 
-# Google Test libraries
-GTEST = -lgtest -lgtest_main -lpthread
+all : $(TESTS)
 
-# Targets
-all: $(EXECUTABLE)
+clean :
+	rm -f $(TESTS) gtest.a gtest_main.a *.o
 
-clean:
-	rm -f $(EXECUTABLE) $(TEST_EXECUTABLE) obj/*.o bin/*
+# Builds gtest.a and gtest_main.a.
 
-# Object files
-obj/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 
-obj/%.o: $(TST_DIR)/%.cpp | $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+gtest-all.o : $(GTEST_SRCS_)
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
+            $(GTEST_DIR)/src/gtest-all.cc
 
-$(OBJ_DIR):
-	mkdir $(OBJ_DIR)
+gtest_main.o : $(GTEST_SRCS_)
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
+            $(GTEST_DIR)/src/gtest_main.cc
 
-$(OBJ_DIR)/cmds:
-	mkdir -p $(OBJ_DIR)/cmds
+gtest.a : gtest-all.o
+	$(AR) $(ARFLAGS) $@ $^
 
-# Executable
-$(EXECUTABLE): $(OBJ_FILES)
-	$(CXX) $(CXXFLAGS) -o $(EXECUTABLE) $^
+gtest_main.a : gtest-all.o gtest_main.o
+	$(AR) $(ARFLAGS) $@ $^
 
-test: test_parser
+parser.o : $(SRC_DIR)/parser.cpp $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I$(INC_DIR) -c $(SRC_DIR)/parser.cpp
 
-parser.o : $(SRC_DIR)/parser.cpp $(INC_DIR)/parser.hpp
-	$(CXX) $(CXXFLAGS) -c $(SRC_DIR)/parser.cpp -o $(OBJ_DIR)/parser.o
+test_parser.o : $(TST_DIR)/test_parser.cpp $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I$(INC_DIR) -c $(TST_DIR)/test_parser.cpp
 
-parser_test.o: $(TST_DIR)/parser_test.cpp $(INC_DIR)/parser.hpp
-	$(CXX) $(CXXFLAGS) -c $(TST_DIR)/parser_test.cpp -o $(OBJ_DIR)/parser_test.o
-
-test_parser: parser.o parser_test.o
-	$(CXX) $(CXXFLAGS) $^ $(GTEST) -o $@
-
-.PHONY: all clean test
+test_parser : parser.o test_parser.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

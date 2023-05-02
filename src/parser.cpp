@@ -4,7 +4,6 @@
 
 #include "parser.hpp"
 #include <iostream>
-#include <list>
 
 //Need to verify signature, could get c-string
 Msg	parse(const std::string	&raw)
