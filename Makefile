@@ -45,3 +45,4 @@ test_parser.o : $(TST_DIR)/test_parser.cpp $(GTEST_HEADERS)
 
 test_parser : parser.o test_parser.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+	./$@
