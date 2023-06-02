@@ -8,6 +8,7 @@ struct	Client
 	std::string	nickname;
 	std::string	username;
 	std::string	realname;
+	int			socket;
 };
 
 #endif
