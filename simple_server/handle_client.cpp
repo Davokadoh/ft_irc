@@ -9,9 +9,13 @@
 #include <iostream>
 #include <unistd.h>
 
+#include "../inc/Message.hpp"
+
+
 void	handle_client(int sd, int &max_sd, fd_set &master_set)
 {
-	char	buffer[80];
+	Message	msgP;
+	char	buffer[80] = {};
 	int		close_conn;
 	int		rc;
 
@@ -37,8 +41,12 @@ void	handle_client(int sd, int &max_sd, fd_set &master_set)
 			break;
 		}
 
+		msgP.msgParsing(buffer);
+
 		printf("  %d bytes received\n", rc);
 		printf("  %s\n", buffer);
+
+		msgP.clearParam();
 	}
 
 	if (close_conn)
