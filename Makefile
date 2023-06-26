@@ -1,85 +1,62 @@
-GTEST_DIR		=	googletest/googletest
-INC_DIR			=	inc
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: jleroux <marvin@42lausanne.ch>             +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/06/26 14:18:20 by jleroux           #+#    #+#              #
+#    Updated: 2023/06/26 14:18:23 by jleroux          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-SRC_DIR			=	src
-SRCS			=	$(SRC_DIR)/main.cpp $(SRC_DIR)/parser.cpp
-OBJ_DIR			=	obj
-OBJS			=	$(SRCS:%.cpp=$(OBJ_DIR)/%.o)
-BIN_DIR			=	bin
-BIN				=	ft_irc
+NAME		=	ft_irc
 
-TST_SRC_DIR		=	tests
-TST_SRCS		=	$(TST_SRC_DIR)/test_parser.cpp
-TST_OBJ_DIR		=	$(TST_SRC_DIR)/obj
-TST_OBJS		=	$(TST_SRCS:%.cpp=$(TST_OBJ_DIR)/%.o)
-TST_BIN_DIR		=	$(TST_SRC_DIR)/bin
-TST_BIN			=	$(TST_SRCS:$(TST_SRC_DIR)/%.cpp=$(TST_BIN_DIR)/%)
+SRC_DIR		=	src
+SRCS		=	$(SRC_DIR)/main.cpp \
+				$(SRC_DIR)/Server.cpp \
+				$(SRC_DIR)/Client.cpp \
 
-# Set Google Test's header directory as a system directory, such that
-# the compiler doesn't generate warnings in Google Test headers.
-CPPFLAGS		+=	-isystem $(GTEST_DIR)/include
+INCS		=	inc
 
-CXXFLAGS		+=	-g -Wall -Wextra -pthread -std=c++14
+CXX			=	c++#g++-13
+CXXFLAGS	=	-std=c++98 -O2
+CPPFLAGS	=	-Wall -Wextra -Werror -pedantic \
+				$(addprefix -I,$(INCS)) -MMD -MP \
 
-GTEST_HEADERS	=	$(GTEST_DIR)/include/gtest/*.h \
-					$(GTEST_DIR)/include/gtest/internal/*.h
+RM			=	rm -rf
 
-all: $(BIN)
+BUILD_DIR	=	bin
+OBJS		=	$(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
+DEPS        =	$(OBJS:.o=.d)
 
-test: $(TST_BIN)
-	for test in $(TST_BIN) ; do ./$$test ; done
+all: $(NAME)
 
-.SECONDEXPANSION:
+$(NAME): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OBJS) -o $(NAME)
 
-# Compile and link program
-$(BIN): $(OBJS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I$(INC_DIR) $^ -o $(BIN_DIR)/$@
-
-# Compile object files
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I$(INC_DIR) -c $< -o $@
-
-# Compile,link and run tests
-$(TST_BIN_DIR)/test_%: $(TST_OBJ_DIR)/test_%.o $(OBJ_DIR)/%.o gtest_main.a | $(TST_BIN_DIR)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I$(INC_DIR) -lpthread $^ -o $@
-
-# Compile tests
-$(TST_OBJ_DIR)/%.o: $(TST_SRC_DIR)/%.cpp $(GTEST_HEADERS) | $(TST_OBJ_DIR)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I$(INC_DIR) -c $< -o $@
-
-$(BIN_DIR):
+$(BUILD_DIR):
 	@mkdir -p $@
 
-$(TST_BIN_DIR):
-	@mkdir -p $@
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
-$(OBJ_DIR):
-	@mkdir -p $@
-
-$(TST_OBJ_DIR):
-	@mkdir -p $@
+-include $(DEPS)
 
 clean:
-	rm -rf $(OBJ_DIR) $(TST_OBJ_DIR) gtest.a gtest_main.a *.o
+	$(RM) $(BUILD_DIR)
 
 fclean: clean
-	rm -rf $(BIN) $(TST_BIN_DIR)
+	$(RM) $(NAME)
 
-############################################
+re: fclean $(NAME)
 
-# Builds gtest.a and gtest_main.a.
-GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
+run: all
+	clear
+	./$(NAME) 6667 password
 
-gtest-all.o : $(GTEST_SRCS_)
-	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
-            $(GTEST_DIR)/src/gtest-all.cc
+leaks: all
+	clear
+	-leaks -quiet -atExit -- ./$(NAME) 6667 password
 
-gtest_main.o : $(GTEST_SRCS_)
-	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
-            $(GTEST_DIR)/src/gtest_main.cc
-
-gtest.a : gtest-all.o
-	$(AR) $(ARFLAGS) $@ $^
-
-gtest_main.a : gtest-all.o gtest_main.o
-	$(AR) $(ARFLAGS) $@ $^
+.PHONY: all clean fclean re run leaks
