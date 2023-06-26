@@ -10,7 +10,7 @@ int	main(int argc, char *argv[]) {
 
 	try {
 		port = std::atoi(argv[1]);
-		if (port <= 0) { //Change to test 4 valid ports
+		if (port < 1025 || port > 65536) {
 			throw std::runtime_error("Invalid port");
 		}
 		server = Server(port, argv[2]);
