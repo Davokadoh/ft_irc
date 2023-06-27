@@ -18,7 +18,6 @@ void	Message::srcSplit(void)
 	std::istringstream	buffer(this->_src);
 
 	std::getline(buffer, this->_nick, '!');
-	this->_nick.erase(0, 1);
 	std::getline(buffer, this->_user, '@');
 	std::getline(buffer, this->_hostName, '\0');
 }
@@ -28,7 +27,10 @@ void	Message::parse(std::string toParse)
 	std::istringstream	buffer(toParse);
 	std::string			tmp;
 	if (toParse[0] == ':')
+	{
 		std::getline(buffer, this->_src, ' ');
+		this->_src.erase(0, 1);
+	}
 	std::getline(buffer, this->_cmd, ' ');
 	std::getline(buffer, tmp, ':');
 	this->splitData(tmp);
