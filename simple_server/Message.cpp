@@ -4,119 +4,40 @@ Message::Message(void) : _nick(""), _hostName(""), _cmd("") {}
 
 Message::~Message(void) {}
 
-int	Message::checkCmd(std::string toCheck)
+void	Message::splitData(std::string tmp)
 {
-	std::vector<std::string>	cmdList;// vector test
-	cmdList.push_back("NICK");
-	cmdList.push_back("PRIVMSG");
-	cmdList.push_back("JOIN");
-	std::vector<std::string>::iterator	it = cmdList.begin();
-	for (; it != cmdList.end(); it++)
-	{
-		if (toCheck == *it)
-		{
-			this->_cmd = toCheck;
-			std::vector<std::string>::iterator	it2 = this->pars.begin() + 1;
-			it++;
-			for (;it2 != this->pars.end(); it2++)
-				this->_param.push_back(*it2);
-			this->pars.clear();
-			return(1);
-		}
-	}
-	return (0);
+	std::istringstream	iss(tmp);
+	std::string token;
+
+	while (iss >> token)
+		this->_param.push_back(token);
 }
 
-void	Message::fillData(std::string	data)
+void	Message::srcSplit(void)
 {
-	switch	(this->fillIdx)
-	{
-		case 0:
-			this->_nick = data;
-			this->fillIdx++;
-			break;
-		case 1:
-			this->_user = data;
-			this->fillIdx++;
-			break;
-		case 2:
-			this->_hostName = data;
-			this->fillIdx++;
-			break;
-		case 3:
-			this->_cmd = data;
-			this->fillIdx++;
-			break;
-		case 4:
-			this->_param.push_back(data);
-			break;
-	}
+	std::istringstream	buffer(this->_src);
+
+	std::getline(buffer, this->_nick, '!');
+	this->_nick.erase(0, 1);
+	std::getline(buffer, this->_user, '@');
+	std::getline(buffer, this->_hostName, '\0');
 }
 
-void	Message::splitData(void)
+void	Message::parse(std::string toParse)
 {
-	int			type;
-	
-	if (checkCmd(this->pars[0]))
-		return;
-	else
-	{
-		std::vector<std::string>::iterator	it = this->pars.begin();
-		for (; it != this->pars.end(); it++)
-			this->fillData(*it);
-	}
-	this->pars.clear();
-}
-
-void	Message::msgParsing(std::string toParse)
-{
-	int pos = 0;
-	int	pos2 = 0;
-	std::string	stock;
-	this->fillIdx = 0;
-	int	endlPos;
-
-	if (toParse.find('\n'))
-	{
-		endlPos = toParse.find('\n');
-		toParse.erase(endlPos, toParse.npos);
-	}
-
-	if (toParse[0] == '\n')
-	{
-		std::cout << "Error: Empty message" << std::endl;
-		return;
-	}
-	if (toParse.find(":") == 0)
-		toParse.erase(0, 1);
-	while ((pos = toParse.find(" ")) < toParse.find(":"))
-	{
-		if ((pos2 = toParse.find("!")) < toParse.find(":"))
-		{	
-			stock = toParse.substr(0, pos2);
-			this->pars.push_back(stock);
-			toParse.erase(0, pos2 + 1);
-		}
-		else if ((pos2 = toParse.find("@")) < toParse.find(":"))
-		{	
-			stock = toParse.substr(0, pos2);
-			this->pars.push_back(stock);
-			toParse.erase(0, pos2 + 1);
-		}
-		else
-		{
-			stock = toParse.substr(0, pos);
-			this->pars.push_back(stock);
-			toParse.erase(0, pos + 1);
-		}
-	}
-	if (toParse.find(":") == 0)
-		toParse.erase(0, 1);
-	this->pars.push_back(toParse);
-
-	this->splitData();
+	std::istringstream	buffer(toParse);
+	std::string			tmp;
+	if (toParse[0] == ':')
+		std::getline(buffer, this->_src, ' ');
+	std::getline(buffer, this->_cmd, ' ');
+	std::getline(buffer, tmp, ':');
+	this->splitData(tmp);
+	tmp.erase();
+	std::getline(buffer, tmp, '\n');
+	if (!tmp.empty())
+		this->_param.push_back(tmp);
+	this->srcSplit();
 	this->printTest();
-	this->clearParam();
 }
 
 void	Message::clearParam(void)
@@ -129,6 +50,7 @@ void	Message::clearParam(void)
 
 void	Message::printTest(void)
 {
+	std::cout << "Src: " << this->_src << std::endl;
 	std::cout << "Nick: " << this->_nick << std::endl;
 	std::cout << "User: " << this->_user << std::endl;
 	std::cout << "Hostname: " << this->_hostName << std::endl;

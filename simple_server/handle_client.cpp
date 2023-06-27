@@ -41,10 +41,11 @@ void	handle_client(int sd, int &max_sd, fd_set &master_set)
 			break;
 		}
 
-		msgP.msgParsing(buffer);
+		std::cout << "buffer: " << buffer << std::endl;
+		msgP.parse(buffer);
 
-		printf("  %d bytes received\n", rc);
-		printf("  %s\n", buffer);
+		//printf("  %d bytes received\n", rc);
+		//printf("  %s\n", buffer);
 
 		msgP.clearParam();
 	}

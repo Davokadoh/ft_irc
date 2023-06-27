@@ -3,10 +3,13 @@
 
 #include	<iostream>
 #include	<vector>
+#include	<string>
+#include	<sstream>
 
 class	Message
 {
 	private:
+		std::string	_src;
 		std::string	_nick;
 		std::string	_user;
 		std::string	_hostName;
@@ -19,10 +22,11 @@ class	Message
 		
 		std::vector<std::string>	pars;
 		
-		void	msgParsing(std::string toParse);
-		void	splitData(void);
+		void	parse(std::string toParse);
+		void	splitData(std::string tmp);
 		int		checkCmd(std::string toCheck);
 		void	fillData(std::string data);
+		void	srcSplit(void);
 
 		void	clearParam(void);
 
