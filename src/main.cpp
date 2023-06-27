@@ -1,4 +1,5 @@
-#include "Server.cpp"
+#include "Server.hpp"
+#include <iostream>
 
 int	main(int argc, char *argv[]) {
 	Server	server;
@@ -14,7 +15,7 @@ int	main(int argc, char *argv[]) {
 			throw std::runtime_error("Invalid port");
 		}
 		server = Server(port, argv[2]);
-		server.listen();
+		server.watch();
 		server.run();
 	} catch (const std::exception &e) {
 		std::cerr << e.what() << std::endl;
