@@ -4,7 +4,7 @@
 #include <fcntl.h>
 #include <iostream>
 
-Server::Server(const int port, const std::string &password) :
+Server::Server(const std::string &port, const std::string &password) :
 	_status(true), _maxSd(1), _port(port), _password(password) {
 	(void) _port;
 	FD_ZERO(&_mainSet);
@@ -60,8 +60,6 @@ void	Server::watch(void) {
 	addSocket(_listenSd);
 }
 
-#define PORT "6667"
-
 struct addrinfo	*Server::getAddr(void) {
 	struct addrinfo	hints, *servinfo;
 
@@ -69,7 +67,7 @@ struct addrinfo	*Server::getAddr(void) {
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
-	if (getaddrinfo(NULL, PORT, &hints, &servinfo) != 0) {
+	if (getaddrinfo(NULL, _port.c_str(), &hints, &servinfo) != 0) {
 		throw std::runtime_error("getaddrinfo() failed"); //what about gai_strerror() ?
 	}
 	return servinfo;

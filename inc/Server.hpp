@@ -34,11 +34,11 @@ class Server {
 		bool					_status;
 		int						_listenSd;
 		int						_maxSd;
-		int						_port;
+		std::string				_port;
 		std::string				_password;
 
 	public:
-		Server(const int port = -1, const std::string &password = "");
+		Server(const std::string &port = "6667", const std::string &password = "");
 		Server(const Server &ref);
 		Server	&operator=(const Server &rhs);
 		~Server(void);
