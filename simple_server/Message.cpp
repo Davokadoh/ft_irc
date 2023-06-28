@@ -1,6 +1,6 @@
 #include "../inc/Message.hpp"
 
-Message::Message(void) : _src(""), _nick(""), _user(""), _hostname(""), _cmd("") {}
+Message::Message(void) : _src(""), _nick(""), _user(""), _hostname(""), _verb("") {}
 
 Message::~Message(void) {}
 
@@ -26,9 +26,9 @@ std::string	Message::getHostname(void) const
 	return (this->_hostname);
 }
 
-std::string	Message::getCmd(void) const
+std::string	Message::getVerb(void) const
 {
-	return (this->_cmd);
+	return (this->_verb);
 }
 
 std::vector<std::string>	Message::getParameters(void) const
@@ -56,9 +56,9 @@ void	Message::setHostname(std::string str)
 	this->_hostname = str;
 }
 
-void	Message::setCmd(std::string str)
+void	Message::setVerb(std::string str)
 {
-	this->_cmd = str;
+	this->_verb = str;
 }
 
 // ------- MEMBER FONCTIONS -------
@@ -91,7 +91,7 @@ void	Message::parse(std::string toParse)
 		std::getline(buffer, this->_src, ' ');
 		this->_src.erase(0, 1);
 	}
-	std::getline(buffer, this->_cmd, ' ');
+	std::getline(buffer, this->_verb, ' ');
 	std::getline(buffer, tmp, ':');
 	if (!tmp.empty())
 	{
@@ -110,12 +110,12 @@ void	Message::parse(std::string toParse)
 void	Message::printTest(void)
 {
 	std::vector<std::string> tmp = this->getParameters();
-	
+
 	std::cout << "Src: " << this->getSrc()<< std::endl;
 	std::cout << "Nick: " << this->getNick() << std::endl;
 	std::cout << "User: " << this->getUser() << std::endl;
 	std::cout << "hostname: " << this->getHostname() << std::endl;
-	std::cout << "Cmd: " << this->getCmd() << std::endl;
+	std::cout << "Verb: " << this->getVerb() << std::endl;
 	std::cout << "Parameters: ";
 	std::vector<std::string>::iterator	it = tmp.begin();
 	for (; it != tmp.end(); it++)
