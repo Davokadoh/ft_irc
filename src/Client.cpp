@@ -33,6 +33,7 @@ void	Client::recvPackets(void) {
 	int	rc;
 
 	while (true) {
+		bzero(_recvBuffer, 512);
 		rc = recv(_sd, _recvBuffer, sizeof(_recvBuffer), 0);
 		if (rc < 0 && errno != EWOULDBLOCK) {
 			throw std::runtime_error(std::strerror(errno)); //"recv() failed"
@@ -42,8 +43,7 @@ void	Client::recvPackets(void) {
 			setStatus(DISCONNECTED);
 			break;
 		} else {
-			std::cout << "Pckt recv on " << _sd << std::endl;
-			std::cout << "Pckt: " << _recvBuffer << std::endl;
+			std::cout << _sd << ":Pckt recv: " << _recvBuffer << std::endl;
 			_recvString.append(_recvBuffer);
 		}
 	}
@@ -59,8 +59,7 @@ void	Client::sendPackets(void) {
 		} else if (rc < 0) {
 			break;
 		} else {
-			std::cout << "Pckt sent on " << _sd << std::endl;
-			std::cout << "Pckt: " << _sendBuffer << std::endl;
+			std::cout << _sd << ":Pckt sent: " << _sendBuffer << std::endl;
 		}
 	}
 }
