@@ -26,7 +26,7 @@ Client::~Client(void) {
 	close(_sd);
 }
 
-void	Client::recvMsg(void) { //maybe rename recvPackets
+void	Client::recvPackets(void) {
 	int	rc;
 
 	while (true) {
@@ -39,14 +39,14 @@ void	Client::recvMsg(void) { //maybe rename recvPackets
 			setStatus(DISCONNECTED);
 			break;
 		} else {
-			std::cout << "Packet on " << _sd << std::endl;
-			std::cout << _recvBuffer << std::endl;
-			break;
+			std::cout << "Pckt recv on " << _sd << std::endl;
+			std::cout << "Pckt: " << _recvBuffer << std::endl;
+			_recvString.push_back(_recvBuffer);
 		}
 	}
 }
 
-void	Client::sendMsg(void) { //rename sendPackets
+void	Client::sendPackets(void) {
 	int	rc;
 
 	while (!_sendBuffer.empty()) {
@@ -56,8 +56,15 @@ void	Client::sendMsg(void) { //rename sendPackets
 		} else if (rc < 0) {
 			break;
 		} else {
-			std::cout << "Client[" << _sd << "] sends a msg" << std::endl;
+			std::cout << "Pckt sent on " << _sd << std::endl;
+			std::cout << "Pckt: " << _sendBuffer << std::endl;
 		}
+	}
+}
+
+void	Client::parse(void) {
+	if (_recvString.find("\r\n") != std::string::npos) {
+		_recvMessage.parse(_recvString);
 	}
 }
 
