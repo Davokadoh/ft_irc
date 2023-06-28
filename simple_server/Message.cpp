@@ -26,6 +26,7 @@ void	Message::parse(std::string toParse)
 {
 	std::istringstream	buffer(toParse);
 	std::string			tmp;
+
 	if (toParse[0] == ':')
 	{
 		std::getline(buffer, this->_src, ' ');
@@ -33,9 +34,14 @@ void	Message::parse(std::string toParse)
 	}
 	std::getline(buffer, this->_cmd, ' ');
 	std::getline(buffer, tmp, ':');
-	this->splitData(tmp);
-	tmp.erase();
+	if (!tmp.empty())
+	{
+		this->splitData(tmp);
+		tmp.erase();
+	}
 	std::getline(buffer, tmp, '\n');
+	if (tmp.back() == '\r')
+		tmp.pop_back();
 	if (!tmp.empty())
 		this->_param.push_back(tmp);
 	this->srcSplit();
