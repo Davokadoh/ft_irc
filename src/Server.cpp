@@ -109,14 +109,7 @@ void	Server::run(void) {
 		for (int i = 0; i <= _maxSd; ++i) {
 			//_clients[i].receivedMsg.parse();
 		}
-		/*
-		for (int i = 0;;) {
-			if (_clients[i].getStatus() == CLOSED) {
-				_clients.erase(i);
-				rmSocket(i);
-			}
-		}
-		*/
+		rmClients();
 	}
 }
 
@@ -147,4 +140,15 @@ void	Server::addClients(void) {
 		_clients.insert(std::make_pair(sd, new Client(sd)));
 	} while (sd >= 0);
 	FD_CLR(_listenSd, &_recvSet);
+}
+
+void	Server::rmClients(void) {
+	for (std::map<int, Client*>::iterator it = _clients.begin(), last = _clients.end(); it != last; ) {
+		if (it->second->getStatus()) {
+			rmSocket(it->first);
+			it = _clients.erase(it);
+		} else {
+			++it;
+		}
+	}
 }

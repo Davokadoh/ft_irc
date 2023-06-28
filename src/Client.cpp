@@ -2,8 +2,9 @@
 #include <iostream>
 #include <sys/socket.h>
 #include <stdio.h>
+#include <unistd.h>
 
-Client::Client(int sd) : _sd(sd) {
+Client::Client(int sd) : _sd(sd), _status(CONNECTED) {
 }
 
 Client::Client(const Client &ref) {
@@ -22,6 +23,7 @@ Client	&Client::operator=(const Client &rhs) {
 }
 
 Client::~Client(void) {
+	close(_sd);
 }
 
 void	Client::recvMsg(void) { //maybe rename recvPackets
@@ -34,9 +36,8 @@ void	Client::recvMsg(void) { //maybe rename recvPackets
 		} else if (rc < 0) {
 			break;
 		} else if (rc == 0) {
-			//setStatus(bye);
-			std::cerr << "CLOSED" << std::endl;
-			exit(1);
+			setStatus(DISCONNECTED);
+			break;
 		} else {
 			std::cout << "Client[" << _sd << "] recvd a msg" << std::endl;
 			std::cout << _recvBuffer << std::endl;
@@ -58,4 +59,12 @@ void	Client::sendMsg(void) { //rename sendPackets
 			std::cout << "Client[" << _sd << "] sends a msg" << std::endl;
 		}
 	}
+}
+
+void	Client::setStatus(bool status) {
+	_status = status;
+}
+
+bool	Client::getStatus(void) const {
+	return _status;
 }

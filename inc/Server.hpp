@@ -25,6 +25,7 @@ class Server {
 		void			rmSocket(int sd);
 		void			cull(void);
 		void			addClients(void);
+		void			rmClients(void);
 	
 		std::map<int, Client*>	_clients;
 		fd_set					_mainSet;
