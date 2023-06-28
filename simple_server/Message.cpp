@@ -1,8 +1,67 @@
 #include "../inc/Message.hpp"
 
-Message::Message(void) : _nick(""), _hostName(""), _cmd("") {}
+Message::Message(void) : _src(""), _nick(""), _user(""), _hostname(""), _cmd("") {}
 
 Message::~Message(void) {}
+
+// ------- GETTER AND SETTER -------
+
+std::string	Message::getSrc(void) const
+{
+	return (this->_src);
+}
+
+std::string Message::getNick(void) const
+{
+	return (this->_nick);
+}
+
+std::string	Message::getUser(void) const
+{
+	return (this->_user);
+}
+
+std::string	Message::getHostname(void) const
+{
+	return (this->_hostname);
+}
+
+std::string	Message::getCmd(void) const
+{
+	return (this->_cmd);
+}
+
+std::vector<std::string>	Message::getParameters(void) const
+{
+	return (this->_parameters);
+}
+
+void	Message::setSrc(std::string str)
+{
+	this->_src = str;
+}
+
+void	Message::setNick(std::string str)
+{
+	this->_nick = str;
+}
+
+void	Message::setUser(std::string str)
+{
+	this->_user = str;
+}
+
+void	Message::setHostname(std::string str)
+{
+	this->_hostname = str;
+}
+
+void	Message::setCmd(std::string str)
+{
+	this->_cmd = str;
+}
+
+// ------- MEMBER FONCTIONS -------
 
 void	Message::splitData(std::string tmp)
 {
@@ -10,7 +69,7 @@ void	Message::splitData(std::string tmp)
 	std::string token;
 
 	while (iss >> token)
-		this->_param.push_back(token);
+		this->_parameters.push_back(token);
 }
 
 void	Message::srcSplit(void)
@@ -19,7 +78,7 @@ void	Message::srcSplit(void)
 
 	std::getline(buffer, this->_nick, '!');
 	std::getline(buffer, this->_user, '@');
-	std::getline(buffer, this->_hostName, '\0');
+	std::getline(buffer, this->_hostname, '\0');
 }
 
 void	Message::parse(std::string toParse)
@@ -43,29 +102,21 @@ void	Message::parse(std::string toParse)
 	if (tmp.back() == '\r')
 		tmp.pop_back();
 	if (!tmp.empty())
-		this->_param.push_back(tmp);
+		this->_parameters.push_back(tmp);
 	this->srcSplit();
 	this->printTest();
 }
 
-void	Message::clearParam(void)
-{
-	this->_nick = "";
-	this->_hostName = "";
-	this->_cmd = "";
-	this->_param.clear();
-}
-
 void	Message::printTest(void)
 {
-	std::cout << "Src: " << this->_src << std::endl;
-	std::cout << "Nick: " << this->_nick << std::endl;
-	std::cout << "User: " << this->_user << std::endl;
-	std::cout << "Hostname: " << this->_hostName << std::endl;
-	std::cout << "Cmd: " << this->_cmd << std::endl;
-	std::cout << "Params: ";
-	std::vector<std::string>::iterator	it = this->_param.begin();
-	for (; it != this->_param.end(); it++)
+	std::cout << "Src: " << this->getSrc()<< std::endl;
+	std::cout << "Nick: " << this->getNick() << std::endl;
+	std::cout << "User: " << this->getUser() << std::endl;
+	std::cout << "hostname: " << this->getHostname() << std::endl;
+	std::cout << "Cmd: " << this->getCmd() << std::endl;
+	std::cout << "Parameters: ";
+	std::vector<std::string>::iterator	it = this->_parameters.begin();
+	for (; it != this->_parameters.end(); it++)
 	{
 		std::cout << *it << " | ";
 	}
