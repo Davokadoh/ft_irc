@@ -84,6 +84,7 @@ void	Server::addSocket(int sd) {
 
 void	Server::rmSocket(int sd) {
 	FD_CLR(sd, &_mainSet);
+	close(sd);
 	if (sd == _maxSd) {
 		while (!FD_ISSET(--_maxSd, &_mainSet));
 	}
@@ -97,7 +98,6 @@ void	Server::run(void) {
 		}
 		for (int i = 0; i <= _maxSd; ++i) {
 			if (FD_ISSET(i, &_recvSet)) {
-				std::cout << "RECEIVING" << std::endl;
 				_clients[i]->recvMsg();
 			}
 		}
@@ -109,6 +109,14 @@ void	Server::run(void) {
 		for (int i = 0; i <= _maxSd; ++i) {
 			//_clients[i].receivedMsg.parse();
 		}
+		/*
+		for (int i = 0;;) {
+			if (_clients[i].getStatus() == CLOSED) {
+				_clients.erase(i);
+				rmSocket(i);
+			}
+		}
+		*/
 	}
 }
 

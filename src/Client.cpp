@@ -24,7 +24,7 @@ Client	&Client::operator=(const Client &rhs) {
 Client::~Client(void) {
 }
 
-void	Client::recvMsg(void) {
+void	Client::recvMsg(void) { //maybe rename recvPackets
 	int	rc;
 
 	while (true) {
@@ -33,6 +33,10 @@ void	Client::recvMsg(void) {
 			throw std::runtime_error(std::strerror(errno)); //"recv() failed"
 		} else if (rc < 0) {
 			break;
+		} else if (rc == 0) {
+			//setStatus(bye);
+			std::cerr << "CLOSED" << std::endl;
+			exit(1);
 		} else {
 			std::cout << "Client[" << _sd << "] recvd a msg" << std::endl;
 			std::cout << _recvBuffer << std::endl;
@@ -41,7 +45,7 @@ void	Client::recvMsg(void) {
 	}
 }
 
-void	Client::sendMsg(void) {
+void	Client::sendMsg(void) { //rename sendPackets
 	int	rc;
 
 	while (!_sendBuffer.empty()) {
