@@ -14,6 +14,7 @@ class Client {
 		std::string	_username;
 		std::string	_realname;
 		std::string	_sendBuffer;
+		std::string	_recvString;
 		char		_recvBuffer[512];
 
 	public:
@@ -22,10 +23,11 @@ class Client {
 		Client	&operator=(const Client &rhs);
 		~Client(void);
 
-		void	recvMsg(void);
-		void	sendMsg(void);
+		void	recvPackets(void);
+		void	sendPackets(void);
 		void	setStatus(bool status);
 		bool	getStatus(void) const;
+		void	parse(void);
 };
 
 #endif

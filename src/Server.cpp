@@ -96,16 +96,16 @@ void	Server::run(void) {
 		}
 		for (int i = 0; i <= _maxSd; ++i) {
 			if (FD_ISSET(i, &_recvSet)) {
-				_clients[i]->recvMsg();
+				_clients[i]->recvPackets();
 			}
 		}
 		for (int i = 0; i <= _maxSd; ++i) {
 			if (FD_ISSET(i, &_sendSet)) {
-				_clients[i]->sendMsg();
+				_clients[i]->sendPackets();
 			}
 		}
-		for (int i = 0; i <= _maxSd; ++i) {
-			//_clients[i].receivedMsg.parse();
+		for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
+			it->second->parse();
 		}
 		rmClients();
 	}

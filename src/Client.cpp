@@ -4,8 +4,11 @@
 #include <stdio.h>
 #include <unistd.h>
 
-Client::Client(int sd) : _sd(sd), _status(CONNECTED) {
-}
+Client::Client(int sd) :
+	_sd(sd),
+	_status(CONNECTED),
+	_recvString("") {
+	}
 
 Client::Client(const Client &ref) {
 	*this = ref;
@@ -41,7 +44,7 @@ void	Client::recvPackets(void) {
 		} else {
 			std::cout << "Pckt recv on " << _sd << std::endl;
 			std::cout << "Pckt: " << _recvBuffer << std::endl;
-			_recvString.push_back(_recvBuffer);
+			_recvString.append(_recvBuffer);
 		}
 	}
 }
@@ -63,8 +66,16 @@ void	Client::sendPackets(void) {
 }
 
 void	Client::parse(void) {
-	if (_recvString.find("\r\n") != std::string::npos) {
-		_recvMessage.parse(_recvString);
+	std::string::size_type pos;
+
+	pos = _recvString.find("\r\n");
+	if (pos != std::string::npos) {
+		//_recvMessage.parse(_recvString.substr(0, pos+2));
+		std::cout << "Parsing message..." << std::endl;
+		std::cout << _recvString.substr(0, pos+2) << std::endl;
+		_recvString.erase(0, pos+2);
+	} else if (_recvString.size() > 512) {
+		throw std::runtime_error("Client sent message too long");
 	}
 }
 
