@@ -109,14 +109,16 @@ void	Message::parse(std::string toParse)
 
 void	Message::printTest(void)
 {
+	std::vector<std::string> tmp = this->getParameters();
+	
 	std::cout << "Src: " << this->getSrc()<< std::endl;
 	std::cout << "Nick: " << this->getNick() << std::endl;
 	std::cout << "User: " << this->getUser() << std::endl;
 	std::cout << "hostname: " << this->getHostname() << std::endl;
 	std::cout << "Cmd: " << this->getCmd() << std::endl;
 	std::cout << "Parameters: ";
-	std::vector<std::string>::iterator	it = this->_parameters.begin();
-	for (; it != this->_parameters.end(); it++)
+	std::vector<std::string>::iterator	it = tmp.begin();
+	for (; it != tmp.end(); it++)
 	{
 		std::cout << *it << " | ";
 	}
