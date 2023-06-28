@@ -39,7 +39,7 @@ void	Client::recvMsg(void) { //maybe rename recvPackets
 			setStatus(DISCONNECTED);
 			break;
 		} else {
-			std::cout << "Client[" << _sd << "] recvd a msg" << std::endl;
+			std::cout << "Packet on " << _sd << std::endl;
 			std::cout << _recvBuffer << std::endl;
 			break;
 		}
