@@ -18,6 +18,8 @@ class	Message
 
 	public:
 		Message(void);
+		Message(const Message &rhs);
+		Message	&operator=(const Message &rhs);
 		~Message(void);
 
 		std::string	getSrc(void) const;
@@ -34,10 +36,18 @@ class	Message
 		void	setVerb(std::string str);
 		
 		void	parse(std::string toParse);
-		void	splitData(std::string tmp);
+		void	splitParameters(std::string tmp);
 		void	srcSplit(void);
 
 		void	printTest(void);
+
+		// ------- EXCEPTION -------
+
+		class	WrongMsgFormatException	: public	std::exception
+		{
+			public:
+				virtual const char	*what() const throw();
+		};
 };
 
 # endif

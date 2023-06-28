@@ -42,7 +42,14 @@ void	handle_client(int sd, int &max_sd, fd_set &master_set)
 		}
 
 		std::cout << "buffer: " << buffer << std::endl;
-		msgP.parse(buffer);
+		try
+		{
+			msgP.parse(buffer);
+		}
+		catch (std::exception &e)
+		{
+			std::cerr << e.what() << std::endl;
+		}
 	}
 
 	if (close_conn)

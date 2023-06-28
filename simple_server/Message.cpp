@@ -1,6 +1,27 @@
 #include "../inc/Message.hpp"
 
+// ------- COPLIEN -------
+
 Message::Message(void) : _src(""), _nick(""), _user(""), _hostname(""), _verb("") {}
+
+Message::Message(const Message &rhs)
+{
+	*this = rhs;
+}
+
+Message	&Message::operator=(const Message &rhs)
+{
+	if (this != &rhs)
+	{
+		this->_src = rhs._src;
+		this->_nick = rhs._nick;
+		this->_user = rhs._user;
+		this->_hostname = rhs._hostname;
+		this->_verb = rhs._verb;
+		this->_parameters = rhs._parameters;
+	}
+	return (*this);
+}
 
 Message::~Message(void) {}
 
@@ -63,19 +84,25 @@ void	Message::setVerb(std::string str)
 
 // ------- MEMBER FONCTIONS -------
 
-void	Message::splitData(std::string tmp)
+void	Message::splitParameters(std::string tmp)
 {
 	std::istringstream	iss(tmp);
 	std::string token;
 
 	while (iss >> token)
+	{
 		this->_parameters.push_back(token);
+	}
 }
 
 void	Message::srcSplit(void)
 {
 	std::istringstream	buffer(this->_src);
 
+	if (this->_src.find('!') == std::string::npos || this->_src.find("@") == std::string::npos)
+	{
+		throw Message::WrongMsgFormatException();
+	}
 	std::getline(buffer, this->_nick, '!');
 	std::getline(buffer, this->_user, '@');
 	std::getline(buffer, this->_hostname, '\0');
@@ -95,15 +122,22 @@ void	Message::parse(std::string toParse)
 	std::getline(buffer, tmp, ':');
 	if (!tmp.empty())
 	{
-		this->splitData(tmp);
+		this->splitParameters(tmp);
 		tmp.erase();
 	}
 	std::getline(buffer, tmp, '\n');
 	if (tmp.back() == '\r')
+	{
 		tmp.pop_back();
+	}
 	if (!tmp.empty())
+	{
 		this->_parameters.push_back(tmp);
-	this->srcSplit();
+	}
+	if (!(this->getSrc()).empty())
+	{
+		this->srcSplit();
+	}
 	this->printTest();
 }
 
@@ -123,4 +157,11 @@ void	Message::printTest(void)
 		std::cout << *it << " | ";
 	}
 	std::cout << std::endl;
+}
+
+// ------- EXCEPTION -------
+
+const char	*Message::WrongMsgFormatException::what() const throw()
+{
+	return ("Exception: message is in the wrong format");
 }
