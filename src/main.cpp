@@ -14,7 +14,7 @@ int	main(int argc, char *argv[]) {
 		if (port < 1025 || port > 65536) {
 			throw std::runtime_error("Invalid port");
 		}
-		server = Server(port, argv[2]);
+		server = Server(argv[1], argv[2]);
 		server.watch();
 		server.run();
 	} catch (const std::exception &e) {
