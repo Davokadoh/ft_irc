@@ -4,11 +4,20 @@
 #include <stdio.h>
 #include <unistd.h>
 
+std::map<std::string, CmdFunc>	Client::createMap(void) {
+	std::map<std::string, CmdFunc>	cmdMap;
+	cmdMap["NICK"] = &Client::nick;
+	cmdMap["USER"] = &CLient::user;
+	return cmdMap;
+}
+
+const std::map<std::string, CmdFunc> Client::_cmdMap = Client::createMap();
+
 Client::Client(int sd) :
 	_sd(sd),
 	_status(CONNECTED),
 	_recvString("") {
-	}
+}
 
 Client::Client(const Client &ref) {
 	*this = ref;
@@ -27,6 +36,10 @@ Client	&Client::operator=(const Client &rhs) {
 
 Client::~Client(void) {
 	close(_sd);
+}
+
+void	Client::nick(Message message) {
+	std::cout << message.getVerb() << std::endl;
 }
 
 void	Client::recvPackets(void) {
@@ -69,13 +82,22 @@ void	Client::parse(void) {
 
 	pos = _recvString.find("\r\n");
 	if (pos != std::string::npos) {
-		//_recvMessage.parse(_recvString.substr(0, pos+2));
+		//_recvMessage.reset();
+		_recvMessage.parse(_recvString.substr(0, pos+2));
 		std::cout << "Parsing message..." << std::endl;
 		std::cout << _recvString.substr(0, pos+2) << std::endl;
 		_recvString.erase(0, pos+2);
 	} else if (_recvString.size() > 512) {
 		throw std::runtime_error("Client sent message too long");
 	}
+}
+
+void	Client::execute(void) {
+	if (_cmdMap.find(_recvMessage.getVerb()) != _cmdMap.end()) {
+		(this->*_cmdMap.at(_recvMessage.getVerb()))(_recvMessage);
+    } else {
+		throw std::runtime_error("Cmd does not exist");
+    }
 }
 
 void	Client::setStatus(bool status) {
