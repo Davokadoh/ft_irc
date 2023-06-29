@@ -5,6 +5,7 @@
 # define CONNECTED 0
 
 # include <string>
+# include "Message.hpp"
 
 class Client {
 	private:
@@ -16,6 +17,7 @@ class Client {
 		std::string	_sendBuffer;
 		std::string	_recvString;
 		char		_recvBuffer[512];
+		Message		_recvMessage;
 
 	public:
 		Client(int sd = -1);
@@ -28,6 +30,9 @@ class Client {
 		void	setStatus(bool status);
 		bool	getStatus(void) const;
 		void	parse(void);
+
+		// ------ COMMANDS ------
+		void	join(std::string channelName);
 };
 
 #endif

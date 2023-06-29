@@ -18,6 +18,8 @@
 # include <sys/wait.h>
 # include <signal.h>
 
+# include "Channel.hpp"
+
 class Server {
 	private:
 		struct addrinfo	*getAddr(void);
@@ -37,6 +39,8 @@ class Server {
 		std::string				_port;
 		std::string				_password;
 
+		std::map<std::string, Channel*> _channels;
+
 	public:
 		Server(const std::string &port = "6667", const std::string &password = "");
 		Server(const Server &ref);
@@ -45,6 +49,9 @@ class Server {
 
 		void	watch(void);
 		void	run(void);
+
+		// ------ COMMANDS ------
+		void	join(std::string channelName);
 };
 
 #endif

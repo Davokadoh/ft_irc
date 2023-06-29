@@ -6,6 +6,7 @@
 #include	<string>
 #include	<sstream>
 
+
 class	Message
 {
 	private:
@@ -38,16 +39,9 @@ class	Message
 		void	parse(std::string toParse);
 		void	splitParameters(std::string tmp);
 		void	srcSplit(void);
+		void	clearMessage(void);
 
 		void	print(void);
-
-		// ------- EXCEPTION -------
-
-		class	WrongMsgFormatException	: public	std::exception
-		{
-			public:
-				virtual const char	*what() const throw();
-		};
 };
 
 # endif

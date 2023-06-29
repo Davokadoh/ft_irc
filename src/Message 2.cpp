@@ -106,6 +106,10 @@ void	Message::srcSplit(void)
 {
 	std::istringstream	buffer(this->_src);
 
+	if (this->_src.find('!') == std::string::npos || this->_src.find("@") == std::string::npos)
+	{
+		throw Message::WrongMsgFormatException();
+	}
 	std::getline(buffer, this->_nick, '!');
 	std::getline(buffer, this->_user, '@');
 	std::getline(buffer, this->_hostname);
@@ -141,16 +145,6 @@ void	Message::parse(std::string toParse)
 	this->print();
 }
 
-void	Message::clearMessage(void)
-{
-	this->_src.clear();
-	this->_nick.clear();
-	this->_user.clear();
-	this->_hostname.clear();
-	this->_verb.clear();
-	this->_parameters.clear();
-}
-
 void	Message::print(void)
 {
 	std::vector<std::string> tmp = this->getParameters();
@@ -166,4 +160,11 @@ void	Message::print(void)
 		std::cout << *it << " | ";
 	}
 	std::cout << std::endl;
+}
+
+// ------- EXCEPTION -------
+
+const char	*Message::WrongMsgFormatException::what() const throw()
+{
+	return ("Exception: message is in the wrong format");
 }

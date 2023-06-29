@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jleroux <marvin@42lausanne.ch>             +#+  +:+       +#+         #
+#    By: gregoirebeaumann <gregoirebeaumann@stud    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/26 14:18:20 by jleroux           #+#    #+#              #
-#    Updated: 2023/06/26 14:18:23 by jleroux          ###   ########.fr        #
+#    Updated: 2023/06/29 14:33:46 by gregoirebea      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,8 @@ SRC_DIR		=	src
 SRCS		=	$(SRC_DIR)/main.cpp \
 				$(SRC_DIR)/Server.cpp \
 				$(SRC_DIR)/Client.cpp \
+				$(SRC_DIR)/Message.cpp \
+				$(SRC_DIR)/Channel.cpp \
 
 INCS		=	inc
 

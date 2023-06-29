@@ -69,7 +69,9 @@ void	Client::parse(void) {
 
 	pos = _recvString.find("\r\n");
 	if (pos != std::string::npos) {
-		//_recvMessage.parse(_recvString.substr(0, pos+2));
+		_recvMessage.clearMessage();
+		_recvMessage.parse(_recvString.substr(0, pos+2));
+		
 		std::cout << "Parsing message..." << std::endl;
 		std::cout << _recvString.substr(0, pos+2) << std::endl;
 		_recvString.erase(0, pos+2);

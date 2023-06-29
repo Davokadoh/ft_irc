@@ -1,15 +1,12 @@
 //Command: JOIN
-//Parameters: <channelname> ?
-void	join(Msg msg)
+#include "Server.hpp"
+
+
+void	Server::join(std::string channelName)
 {
-	std::string	channel_name;
+	std::map<std::string, Channel*>::iterator it = this->_channels.find(channelName);
 
-	channel_name = msg.params[0]; //need error check ?
 
-	channel = channels.insert(channel_name); //Create if need, returns channel
-
-	channel.addClient(&client);
-
-	send(); //Send success or error
+	//send(); //Send success or error
 }
 
