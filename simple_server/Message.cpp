@@ -2,7 +2,14 @@
 
 // ------- COPLIEN -------
 
-Message::Message(void) : _src(""), _nick(""), _user(""), _hostname(""), _verb("") {}
+Message::Message(void)
+{
+	this->_src = "";
+	this->_nick = "";
+	this->_user = "";
+	this->_hostname = "";
+	this->_verb = "";
+}
 
 Message::Message(const Message &rhs)
 {
@@ -105,7 +112,7 @@ void	Message::srcSplit(void)
 	}
 	std::getline(buffer, this->_nick, '!');
 	std::getline(buffer, this->_user, '@');
-	std::getline(buffer, this->_hostname, '\0');
+	std::getline(buffer, this->_hostname);
 }
 
 void	Message::parse(std::string toParse)
@@ -117,6 +124,7 @@ void	Message::parse(std::string toParse)
 	{
 		std::getline(buffer, this->_src, ' ');
 		this->_src.erase(0, 1);
+		this->srcSplit();
 	}
 	std::getline(buffer, this->_verb, ' ');
 	std::getline(buffer, tmp, ':');
@@ -134,14 +142,10 @@ void	Message::parse(std::string toParse)
 	{
 		this->_parameters.push_back(tmp);
 	}
-	if (!(this->getSrc()).empty())
-	{
-		this->srcSplit();
-	}
-	this->printTest();
+	this->print();
 }
 
-void	Message::printTest(void)
+void	Message::print(void)
 {
 	std::vector<std::string> tmp = this->getParameters();
 
@@ -150,9 +154,8 @@ void	Message::printTest(void)
 	std::cout << "User: " << this->getUser() << std::endl;
 	std::cout << "hostname: " << this->getHostname() << std::endl;
 	std::cout << "Verb: " << this->getVerb() << std::endl;
-	std::cout << "Parameters: ";
-	std::vector<std::string>::iterator	it = tmp.begin();
-	for (; it != tmp.end(); it++)
+	std::cout << "Parameters: ";;
+	for (std::vector<std::string>::iterator	it = tmp.begin(); it != tmp.end(); it++)
 	{
 		std::cout << *it << " | ";
 	}

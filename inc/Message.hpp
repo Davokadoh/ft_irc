@@ -39,7 +39,7 @@ class	Message
 		void	splitParameters(std::string tmp);
 		void	srcSplit(void);
 
-		void	printTest(void);
+		void	print(void);
 
 		// ------- EXCEPTION -------
 
