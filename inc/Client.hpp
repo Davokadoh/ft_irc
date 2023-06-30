@@ -30,10 +30,8 @@ class Client {
 		void	sendPackets(void);
 		void	setStatus(bool status);
 		bool	getStatus(void) const;
-		Message	getMessage(void) const;
+		Message	&getMessage(void);
 		void	parse(void);
-
-		Message	&getRecvMessage(void); // <--------- just to test: greg
 };
 
 #endif

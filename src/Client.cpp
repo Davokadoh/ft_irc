@@ -88,6 +88,6 @@ bool	Client::getStatus(void) const {
 	return _status;
 }
 
-Message	Client::getMessage(void) const {
+Message	&Client::getMessage(void) {
 	return _recvMessage;
 }
