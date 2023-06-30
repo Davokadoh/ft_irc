@@ -18,15 +18,23 @@
 # include <sys/wait.h>
 # include <signal.h>
 
+class Server;
+
+typedef void (Server::*FunPtr)(Message message);
+
 class Server {
 	private:
-		struct addrinfo	*getAddr(void);
-		void			addSocket(int sd);
-		void			rmSocket(int sd);
-		void			cull(void);
-		void			addClients(void);
-		void			rmClients(void);
+		struct addrinfo		*getAddr(void);
+		void				addSocket(int sd);
+		void				rmSocket(int sd);
+		void				addClients(void);
+		void				rmClients(void);
+		void				cull(void);
+		void				nick(Message message);
+		void				execute(Client &client);
+		static std::map<std::string, FunPtr>	createMap(void);
 	
+		static const std::map<std::string, FunPtr>	_cmds;
 		std::map<int, Client*>	_clients;
 		fd_set					_mainSet;
 		fd_set					_recvSet;

@@ -4,15 +4,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-std::map<std::string, CmdFunc>	Client::createMap(void) {
-	std::map<std::string, CmdFunc>	cmdMap;
-	cmdMap["NICK"] = &Client::nick;
-	cmdMap["USER"] = &CLient::user;
-	return cmdMap;
-}
-
-const std::map<std::string, CmdFunc> Client::_cmdMap = Client::createMap();
-
 Client::Client(int sd) :
 	_sd(sd),
 	_status(CONNECTED),
@@ -36,10 +27,6 @@ Client	&Client::operator=(const Client &rhs) {
 
 Client::~Client(void) {
 	close(_sd);
-}
-
-void	Client::nick(Message message) {
-	std::cout << message.getVerb() << std::endl;
 }
 
 void	Client::recvPackets(void) {
@@ -92,18 +79,14 @@ void	Client::parse(void) {
 	}
 }
 
-void	Client::execute(void) {
-	if (_cmdMap.find(_recvMessage.getVerb()) != _cmdMap.end()) {
-		(this->*_cmdMap.at(_recvMessage.getVerb()))(_recvMessage);
-    } else {
-		throw std::runtime_error("Cmd does not exist");
-    }
-}
-
 void	Client::setStatus(bool status) {
 	_status = status;
 }
 
 bool	Client::getStatus(void) const {
 	return _status;
+}
+
+Message	Client::getMessage(void) const {
+	return _recvMessage;
 }

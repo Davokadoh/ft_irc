@@ -4,6 +4,15 @@
 #include <fcntl.h>
 #include <iostream>
 
+std::map<std::string, FunPtr>	Server::createMap(void) {
+	std::map<std::string, FunPtr>	cmds;
+	cmds["NICK"] = &Server::nick;
+	//cmdMap["USER"] = &Client::user;
+	return cmds;
+}
+
+const std::map<std::string, FunPtr> Server::_cmds = Server::createMap();
+
 Server::Server(const std::string &port, const std::string &password) :
 	_status(true), _maxSd(1), _port(port), _password(password) {
 	(void) _port;
@@ -68,7 +77,8 @@ struct addrinfo	*Server::getAddr(void) {
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
 	if (getaddrinfo(NULL, _port.c_str(), &hints, &servinfo) != 0) {
-		throw std::runtime_error("getaddrinfo() failed"); //what about gai_strerror() ?
+		//what about gai_strerror() ?
+		throw std::runtime_error("getaddrinfo() failed");
 	}
 	return servinfo;
 }
@@ -106,9 +116,22 @@ void	Server::run(void) {
 		}
 		for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
 			it->second->parse();
-			execute(it->second);
+			execute(*(it->second));
 		}
 		rmClients();
+	}
+}
+
+void	Server::execute(Client &client) {
+	Message		message = client.getMessage();
+	std::string	verb = message.getVerb();
+
+	if (verb.empty()) {
+		return;
+	} else if (_cmds.find(verb) != _cmds.end()) {
+		(this->*_cmds.at(verb))(message);
+	} else {
+		throw std::runtime_error("Command does not exist");
 	}
 }
 
@@ -150,4 +173,8 @@ void	Server::rmClients(void) {
 			++it;
 		}
 	}
+}
+
+void	Server::nick(Message message) {
+	std::cout << message.getVerb() << std::endl;
 }
