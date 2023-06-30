@@ -13,7 +13,7 @@ Channel	&Channel::operator=(const Channel &rhs)
 {
 	if (this != &rhs)
 	{
-		this->_client = rhs._client;
+		this->_clients = rhs._clients;
 	}
 	return (*this);
 }
@@ -24,11 +24,11 @@ Channel::~Channel(void) {}
 
 void	Channel::addClient(Client *client)
 {
-	std::set<Client*>::iterator it = this->_client.find(client);
+	std::set<Client*>::iterator it = this->_clients.find(client);
 
-	if (it == this->_client.end())
+	if (it == this->_clients.end())
 	{
-		this->_client.insert(client);
+		this->_clients.insert(client);
 	}
 }
 
@@ -37,7 +37,7 @@ void	Channel::addClient(Client *client)
 void	Channel::printClientList(void)
 {
 	std::cout << "Clients: " << std::endl;
-	for (std::set<Client*>::iterator it = this->_client.begin(); it != this->_client.end(); it++)
+	for (std::set<Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
 	{
 		std::cout << *it << std::endl;
 	}

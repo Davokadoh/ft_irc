@@ -8,7 +8,7 @@
 class	Channel
 {
 	private:
-		std::set<Client*>	_client;
+		std::set<Client*>	_clients;
 		Channel(const Channel &rhs);
 		Channel	&operator=(const Channel &rhs);
 
