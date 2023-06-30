@@ -44,4 +44,4 @@ class	Message
 		void	print(void);
 };
 
-# endif
+#endif

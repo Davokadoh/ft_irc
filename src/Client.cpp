@@ -8,7 +8,7 @@ Client::Client(int sd) :
 	_sd(sd),
 	_status(CONNECTED),
 	_recvString("") {
-	}
+}
 
 Client::Client(const Client &ref) {
 	*this = ref;
@@ -70,6 +70,7 @@ void	Client::parse(void) {
 	pos = _recvString.find("\r\n");
 	if (pos != std::string::npos) {
 		_recvMessage.clearMessage();
+		//_recvMessage.reset();
 		_recvMessage.parse(_recvString.substr(0, pos+2));
 		std::cout << "Parsing message..." << std::endl;
 		std::cout << _recvString.substr(0, pos+2) << std::endl;
@@ -87,9 +88,6 @@ bool	Client::getStatus(void) const {
 	return _status;
 }
 
-
-// <--------- just to test: greg
-Message	&Client::getRecvMessage(void)
-{
-	return (this->_recvMessage);
+Message	Client::getMessage(void) const {
+	return _recvMessage;
 }
