@@ -20,7 +20,7 @@
 
 class Server;
 
-typedef void (Server::*FunPtr)(Message message);
+typedef void (Server::*FunPtr)(Client &client);
 
 class Server {
 	private:
@@ -30,8 +30,8 @@ class Server {
 		void				addClients(void);
 		void				rmClients(void);
 		void				cull(void);
-		void				nick(Message message);
 		void				execute(Client &client);
+		void				nick(Client &client);
 		static std::map<std::string, FunPtr>	createMap(void);
 	
 		static const std::map<std::string, FunPtr>	_cmds;

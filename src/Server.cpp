@@ -123,13 +123,12 @@ void	Server::run(void) {
 }
 
 void	Server::execute(Client &client) {
-	Message		message = client.getMessage();
-	std::string	verb = message.getVerb();
+	std::string	verb = client.getMessage().getVerb();
 
 	if (verb.empty()) {
 		return;
 	} else if (_cmds.find(verb) != _cmds.end()) {
-		(this->*_cmds.at(verb))(message);
+		(this->*_cmds.at(verb))(client);
 	} else {
 		throw std::runtime_error("Command does not exist");
 	}
@@ -175,6 +174,6 @@ void	Server::rmClients(void) {
 	}
 }
 
-void	Server::nick(Message message) {
-	std::cout << message.getVerb() << std::endl;
+void	Server::nick(Client &client) {
+	std::cout << client.getMessage().getVerb() << std::endl;
 }
