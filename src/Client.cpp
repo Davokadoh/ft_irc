@@ -71,8 +71,6 @@ void	Client::parse(void) {
 	if (pos != std::string::npos) {
 		_recvMessage.clearMessage();
 		_recvMessage.parse(_recvString.substr(0, pos+2));
-		this->_verb = this->_recvMessage.getVerb(); // <--------- just to test: greg
-		this->_parameters = this->_recvMessage.getParameters(); // <--------- just to test: greg
 		std::cout << "Parsing message..." << std::endl;
 		std::cout << _recvString.substr(0, pos+2) << std::endl;
 		_recvString.erase(0, pos+2);
@@ -91,17 +89,7 @@ bool	Client::getStatus(void) const {
 
 
 // <--------- just to test: greg
-std::string	Client::getVerb(void) const
+Message	&Client::getRecvMessage(void)
 {
-	return (this->_verb);
-}
-
-void	Client::setVerb(std::string str)
-{
-	this->_verb = str;
-}
-
-std::vector<std::string>	Client::getParameters(void) const
-{
-	return (this->_parameters);
+	return (this->_recvMessage);
 }

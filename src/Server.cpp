@@ -107,11 +107,11 @@ void	Server::run(void) {
 		for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
 			it->second->parse();
 			// <--------- just to test: greg
-			if (it->second->getVerb() == "JOIN")
+			if (it->second->getRecvMessage().getVerb() == "JOIN")
 			{
-				std::vector<std::string>	tmp = it->second->getParameters();
+				std::vector<std::string>	tmp = it->second->getRecvMessage().getParameters();
 				this->join(tmp[0], it->second);
-				it->second->setVerb("");
+				it->second->getRecvMessage().setVerb("");
 			}
 			// <--------- just to test: greg
 		}

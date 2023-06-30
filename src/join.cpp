@@ -17,5 +17,7 @@ void	Server::join(std::string channelName, Client *client)
 		std::cout << "Channel: " << it->first << std::endl;
 		it->second->printClientList();
 	}
+	// just to check
+	
 	//send(); //Send success or error
 }
