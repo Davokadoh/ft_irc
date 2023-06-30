@@ -17,6 +17,8 @@ class	Channel
 		~Channel(void);
 
 		void addClient(Client *client);
+
+		void	printClientList(void); // <--------- just to test: greg
 };
 
 #endif

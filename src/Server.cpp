@@ -106,6 +106,14 @@ void	Server::run(void) {
 		}
 		for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
 			it->second->parse();
+			// <--------- just to test: greg
+			if (it->second->getVerb() == "JOIN")
+			{
+				std::vector<std::string>	tmp = it->second->getParameters();
+				this->join(tmp[0], it->second);
+				it->second->setVerb("");
+			}
+			// <--------- just to test: greg
 		}
 		rmClients();
 	}

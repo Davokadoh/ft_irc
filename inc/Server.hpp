@@ -51,7 +51,7 @@ class Server {
 		void	run(void);
 
 		// ------ COMMANDS ------
-		void	join(std::string channelName);
+		void	join(std::string channelName, Client *client);
 };
 
 #endif

@@ -6,7 +6,7 @@
 #    By: gregoirebeaumann <gregoirebeaumann@stud    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/26 14:18:20 by jleroux           #+#    #+#              #
-#    Updated: 2023/06/29 14:33:46 by gregoirebea      ###   ########.fr        #
+#    Updated: 2023/06/30 11:15:52 by gregoirebea      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ SRCS		=	$(SRC_DIR)/main.cpp \
 				$(SRC_DIR)/Client.cpp \
 				$(SRC_DIR)/Message.cpp \
 				$(SRC_DIR)/Channel.cpp \
+				$(SRC_DIR)/join.cpp \
 
 INCS		=	inc
 

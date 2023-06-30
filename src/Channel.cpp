@@ -26,8 +26,19 @@ void	Channel::addClient(Client *client)
 {
 	std::set<Client*>::iterator it = this->_client.find(client);
 
-	if (it != this->_client.end())
+	if (it == this->_client.end())
 	{
 		this->_client.insert(client);
+	}
+}
+
+// <--------- just to test: greg
+
+void	Channel::printClientList(void)
+{
+	std::cout << "Clients: " << std::endl;
+	for (std::set<Client*>::iterator it = this->_client.begin(); it != this->_client.end(); it++)
+	{
+		std::cout << *it << std::endl;
 	}
 }
