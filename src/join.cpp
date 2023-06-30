@@ -2,14 +2,15 @@
 #include "Server.hpp"
 
 
-void	Server::join(std::string channelName, Client *client)
+void	Server::join(Client &client)
 {
-	std::map<std::string, Channel*>::iterator it = this->_channels.find(channelName);
+	std::string	channel = client.getMessage().getParameters()[0];
+	std::map<std::string, Channel*>::iterator it = this->_channels.find(channel);
 	if (it == this->_channels.end())
 	{
-		this->_channels[channelName] = new Channel;
+		this->_channels[channel] = new Channel;
 	}
-	this->_channels[channelName]->addClient(client);
+	this->_channels[channel]->addClient(&client);
 	
 	// just to check
 	for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
