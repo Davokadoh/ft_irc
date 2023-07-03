@@ -10,15 +10,15 @@
 
 class Client {
 	private:
-		int											_sd;
-		bool										_status;
-		std::string									_nickname;
-		std::string									_username;
-		std::string									_realname;
-		std::string									_sendBuffer;
-		char										_recvBuffer[512];
-		std::string									_recvString;
-		Message										_recvMessage;
+		int						_sd;
+		bool					_status;
+		std::string		_nickname;
+		std::string		_username;
+		std::string		_realname;
+		std::string		_sendBuff;
+		char					_recvBuff[512];
+		std::string		_recvString;
+		Message				_recvMessage;
 
 	public:
 		Client(int sd = -1);
@@ -32,6 +32,7 @@ class Client {
 		bool	getStatus(void) const;
 		Message	&getMessage(void);
 		void	parse(void);
+		void	sendMessage(const std::string &msg);
 };
 
 #endif

@@ -16,7 +16,6 @@ const std::map<std::string, FunPtr> Server::_cmds = Server::createMap();
 
 Server::Server(const std::string &port, const std::string &password) :
 	_status(true), _maxSd(1), _port(port), _password(password) {
-	(void) _port;
 	FD_ZERO(&_mainSet);
 	FD_ZERO(&_recvSet);
 	FD_ZERO(&_sendSet);
@@ -41,7 +40,7 @@ Server	&Server::operator=(const Server &rhs) {
 Server::~Server(void) {
 	for(int i = 0; i < _maxSd; ++i) {
 		if (FD_ISSET(i, &_mainSet)) {
-			close(i);
+			rmSocket(i);
 		}
 	}
 }
@@ -177,5 +176,6 @@ void	Server::rmClients(void) {
 }
 
 void	Server::nick(Client &client) {
-	std::cout << client.getMessage().getVerb() << std::endl;
+	Message	message = client.getMessage();
+	client.sendMessage("Cmd NICK received!");
 }
