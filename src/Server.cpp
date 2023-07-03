@@ -176,6 +176,6 @@ void	Server::rmClients(void) {
 	}
 }
 
-void	Server::nick(Client &client) {
+/*void	Server::nick(Client &client) {
 	std::cout << client.getMessage().getVerb() << std::endl;
-}
+}*/

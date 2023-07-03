@@ -59,6 +59,8 @@ class Server {
 
 		// ------ COMMANDS ------
 		void	join(Client &client);
+		//void    nick(Client &client);
+		bool	isNickInUse(const std::string &nick);
 };
 
 #endif

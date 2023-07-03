@@ -7,6 +7,7 @@
 Client::Client(int sd) :
 	_sd(sd),
 	_status(CONNECTED),
+	_nickname("*"),
 	_recvString("") {
 }
 
@@ -88,4 +89,16 @@ bool	Client::getStatus(void) const {
 
 Message	&Client::getMessage(void) {
 	return _recvMessage;
+}
+
+// ------- GETTERS AND SETTERS -------
+
+std::string	Client::getNickname(void) const
+{
+	return (this->_nickname);
+}
+
+void	Client::setNickname(std::string newNick)
+{
+	this->_nickname = newNick;
 }
