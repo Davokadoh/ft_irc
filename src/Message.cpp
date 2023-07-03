@@ -130,10 +130,10 @@ void	Message::parse(std::string toParse)
 		tmp.erase();
 	}
 	std::getline(buffer, tmp, '\n');
-	if (tmp.back() == '\r')
+	/*if (tmp.back() == '\r')
 	{
 		tmp.pop_back();
-	}
+	}*/
 	if (!tmp.empty())
 	{
 		this->_parameters.push_back(tmp);
@@ -160,7 +160,7 @@ void	Message::print(void)
 	std::cout << "User: " << this->getUser() << std::endl;
 	std::cout << "hostname: " << this->getHostname() << std::endl;
 	std::cout << "Verb: " << this->getVerb() << std::endl;
-	std::cout << "Parameters: ";;
+	std::cout << "Parameters: ";
 	for (std::vector<std::string>::iterator	it = tmp.begin(); it != tmp.end(); it++)
 	{
 		std::cout << *it << " | ";

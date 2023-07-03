@@ -71,9 +71,7 @@ void	Client::parse(void) {
 	if (pos != std::string::npos) {
 		_recvMessage.clearMessage();
 		//_recvMessage.reset();
-		_recvMessage.parse(_recvString.substr(0, pos+2));
-		std::cout << "Parsing message..." << std::endl;
-		std::cout << _recvString.substr(0, pos+2) << std::endl;
+		_recvMessage.parse(_recvString.substr(0, pos));
 		_recvString.erase(0, pos+2);
 	} else if (_recvString.size() > 512) {
 		throw std::runtime_error("Client sent message too long");
