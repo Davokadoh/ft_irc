@@ -33,6 +33,7 @@ class Server {
 		void				cull(void);
 		void				execute(Client &client);
 		void				nick(Client &client);
+		void				user(Client &client);
 		static std::map<std::string, FunPtr>	createMap(void);
 	
 		static const std::map<std::string, FunPtr>	_cmds;

@@ -7,6 +7,7 @@
 std::map<std::string, FunPtr>	Server::createMap(void) {
 	std::map<std::string, FunPtr>	cmds;
 	cmds["NICK"] = &Server::nick;
+	cmds["USER"] = &Server::user;
 	cmds["JOIN"] = &Server::join;
 	//cmdMap["USER"] = &Client::user;
 	return cmds;
@@ -131,6 +132,7 @@ void	Server::execute(Client &client) {
 	} else if (_cmds.find(verb) != _cmds.end()) {
 		(this->*_cmds.at(verb))(client);
 	} else {
+		return;
 		throw std::runtime_error("Command does not exist");
 	}
 }
@@ -173,4 +175,9 @@ void	Server::rmClients(void) {
 			++it;
 		}
 	}
+}
+
+void	Server::user(Client &client) {
+		std::cout << "éasdhfékadjhfgéaksjhg" << std::endl;
+		client.sendMessage("Ceci est un message");
 }
