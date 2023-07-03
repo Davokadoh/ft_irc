@@ -92,3 +92,15 @@ bool	Client::getStatus(void) const {
 Message	&Client::getMessage(void) {
 	return _recvMessage;
 }
+
+// ------- GETTERS AND SETTERS -------
+
+std::string	Client::getNickname(void) const
+{
+	return (this->_nickname);
+}
+
+void	Client::setNickname(std::string newNick)
+{
+	this->_nickname = newNick;
+}

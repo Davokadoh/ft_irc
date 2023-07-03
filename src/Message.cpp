@@ -138,7 +138,7 @@ void	Message::parse(std::string toParse)
 	{
 		this->_parameters.push_back(tmp);
 	}
-	this->print();
+	//this->print();
 }
 
 void	Message::clearMessage(void)

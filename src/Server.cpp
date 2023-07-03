@@ -174,8 +174,3 @@ void	Server::rmClients(void) {
 		}
 	}
 }
-
-void	Server::nick(Client &client) {
-	Message	message = client.getMessage();
-	client.sendMessage("Cmd NICK received!");
-}

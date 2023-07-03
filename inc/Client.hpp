@@ -26,6 +26,9 @@ class Client {
 		Client	&operator=(const Client &rhs);
 		~Client(void);
 
+		std::string	getNickname(void) const;
+		void		setNickname(std::string newNick);
+
 		void	recvPackets(void);
 		void	sendPackets(void);
 		void	setStatus(bool status);
