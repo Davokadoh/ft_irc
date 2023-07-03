@@ -19,10 +19,12 @@ bool	Server::isNickInUse(const std::string &nick)
 
 # define ERR_NONICKNAMEGIVEN() (":No nickname given\r\n")
 void    Server::nick(Client &client) {
-	if (client.getMessage().getParameters().size() == 0) {
-		//return client.sendMessage(ERR_NONICKNAMEGIVEN);
-	}
-	std::string    nickname = client.getMessage().getParameters()[0];
+	/*if (client.getMessage().getParameters().size() != 1)
+	{
+		std::cout << "Error: wrong number of paramaters" << std::endl;
+		return;
+	}*/
+    std::string    nickname = client.getMessage().getParameters()[0];
 
 	if (isNickInUse(nickname))
 	{
