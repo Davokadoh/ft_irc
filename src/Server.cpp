@@ -75,7 +75,7 @@ struct addrinfo	*Server::getAddr(void) {
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
-	if (getaddrinfo(NULL, _port.c_str(), &hints, &servinfo) != 0) {
+	if (getaddrinfo(NULL, _port.c_str(), &hints, &servinfo)) {
 		//what about gai_strerror() ?
 		throw std::runtime_error("getaddrinfo() failed");
 	}
@@ -168,6 +168,7 @@ void	Server::rmClients(void) {
 	for (std::map<int, Client*>::iterator it = _clients.begin(), last = _clients.end(); it != last; ) {
 		if (it->second->getStatus()) {
 			rmSocket(it->first);
+			_nicknames.erase(it->second->getNickname());
 			it = _clients.erase(it);
 		} else {
 			++it;
