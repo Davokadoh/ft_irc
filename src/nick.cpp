@@ -11,22 +11,19 @@ bool	isNickValid(const std::string &nick)
 
 bool	Server::isNickInUse(const std::string &nick)
 {
-	for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
-		if ((it->second->getNickname() == nick))
-			return 1;
-	return 0;
+	return (_clients.find(nick) != _clients.end()) ? 0 : 1;
 }
 
-# define ERR_NONICKNAMEGIVEN() (":No nickname given\r\n")
+# define ERR_NONICKNAMEGIVEN(arg) (arg + ":No nickname given")
 void    Server::nick(Client &client) {
 	if (client.getMessage().getParameters().size() == 0) {
-		//return client.sendMessage(ERR_NONICKNAMEGIVEN);
+		return client.sendMessage(ERR_NONICKNAMEGIVEN(_name));
 	}
 	std::string    nickname = client.getMessage().getParameters()[0];
 
 	if (isNickInUse(nickname))
 	{
-		return client.sendMessage(ERR_NONICKNAMEGIVEN);
+		return client.sendMessage("in use");
 		std::cout << "Error: nickname aleardy in use" << std::endl;
 		return;
 		//reply("COLLISION"); //ERR_NICKNAMEINUSE
