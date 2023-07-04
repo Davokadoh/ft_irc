@@ -67,7 +67,7 @@ void	Client::sendPackets(void) {
 }
 
 void	Client::sendMessage(const std::string &msg) {
-	_sendBuff.append(Message.getHostname() + Msg.getVerb() + "\r\n");
+	_sendBuff.append(this->getMessage().getHostname() + this->getMessage().getNick() + msg + "\r\n");
 }
 
 void	Client::parse(void) {

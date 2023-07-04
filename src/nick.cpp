@@ -18,6 +18,8 @@ bool	Server::isNickInUse(const std::string &nick)
 }
 
 # define ERR_NONICKNAMEGIVEN() (":No nickname given\r\n")
+# define ERR_NICKNAMEINUSE() (": Nickname aleardy in use\r\n")
+
 void    Server::nick(Client &client) {
 	/*if (client.getMessage().getParameters().size() != 1)
 	{
@@ -28,7 +30,7 @@ void    Server::nick(Client &client) {
 
 	if (isNickInUse(nickname))
 	{
-		return client.sendMessage(ERR_NONICKNAMEGIVEN);
+		return client.sendMessage(ERR_NONICKNAMEGIVEN());
 		std::cout << "Error: nickname aleardy in use" << std::endl;
 		return;
 		//reply("COLLISION"); //ERR_NICKNAMEINUSE

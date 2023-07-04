@@ -130,10 +130,7 @@ void	Message::parse(std::string toParse)
 		tmp.erase();
 	}
 	std::getline(buffer, tmp, '\n');
-	/*if (tmp.back() == '\r')
-	{
-		tmp.pop_back();
-	}*/
+
 	if (!tmp.empty())
 	{
 		this->_parameters.push_back(tmp);
