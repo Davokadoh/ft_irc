@@ -37,6 +37,7 @@ class Server {
 		static std::map<std::string, FunPtr>	createMap(void);
 	
 		static const std::map<std::string, FunPtr>	_cmds;
+		std::map<std::string, Client*>	_nicknames;
 		std::map<int, Client*>			_clients;
 		fd_set							_mainSet;
 		fd_set							_recvSet;
