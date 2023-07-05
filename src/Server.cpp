@@ -72,7 +72,7 @@ struct addrinfo	*Server::getAddr(void) {
 	struct addrinfo	hints, *servinfo;
 
 	memset(&hints, 0, sizeof hints);
-    hints.ai_family = AF_UNSPEC;
+    hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
 	if (getaddrinfo(NULL, _port.c_str(), &hints, &servinfo)) {
@@ -149,15 +149,17 @@ void	Server::cull(void) {
 
 void	Server::addClients(void) {
 	int	sd;
+	socklen_t	len = sizeof(struct sockaddr);
+    struct sockaddr_in addr;
 
 	do {
-		sd = accept(_listenSd, NULL, NULL);
+		sd = accept(_listenSd, (struct sockaddr *) &addr, &len);
 		if (sd < 0 && errno != EWOULDBLOCK) {
 			throw std::runtime_error("accept() failed");
 		} else if (sd < 0) {
 			break;
 		}
-		std::cout << "Inserting client" << std::endl;
+		std::cout << inet_ntoa(addr.sin_addr) << std::endl;
 		addSocket(sd);
 		_clients.insert(std::make_pair(sd, new Client(sd)));
 	} while (sd >= 0);

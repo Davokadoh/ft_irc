@@ -24,9 +24,9 @@ void    Server::nick(Client &client) {
 		std::cout << "Invalid character in nickname" << std::endl;
 		return;
 	} else {
-		//if (nickname != "*") {
-		_nicknames.erase(client.getNickname());
-		//}
+		if (p[0] != "*") {
+			_nicknames.erase(client.getNickname());
+		}
 		_nicknames.insert(std::make_pair(p[0], &client));
 		client.setNickname(p[0]);
 	}
