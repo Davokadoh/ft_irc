@@ -7,6 +7,8 @@
 std::map<std::string, FunPtr>	Server::createMap(void) {
 	std::map<std::string, FunPtr>	cmds;
 	cmds["NICK"] = &Server::nick;
+	cmds["USER"] = &Server::user;
+	cmds["JOIN"] = &Server::join;
 	//cmdMap["USER"] = &Client::user;
 	return cmds;
 }
@@ -14,8 +16,7 @@ std::map<std::string, FunPtr>	Server::createMap(void) {
 const std::map<std::string, FunPtr> Server::_cmds = Server::createMap();
 
 Server::Server(const std::string &port, const std::string &password) :
-	_status(true), _maxSd(1), _port(port), _password(password) {
-	(void) _port;
+	_status(true), _maxSd(1), _port(port), _password(password), _name(":127.0.0.1") {
 	FD_ZERO(&_mainSet);
 	FD_ZERO(&_recvSet);
 	FD_ZERO(&_sendSet);
@@ -40,7 +41,7 @@ Server	&Server::operator=(const Server &rhs) {
 Server::~Server(void) {
 	for(int i = 0; i < _maxSd; ++i) {
 		if (FD_ISSET(i, &_mainSet)) {
-			close(i);
+			rmSocket(i);
 		}
 	}
 }
@@ -117,6 +118,7 @@ void	Server::run(void) {
 		for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
 			it->second->parse();
 			execute(*(it->second));
+			it->second->getMessage().setVerb("");
 		}
 		rmClients();
 	}
@@ -130,6 +132,7 @@ void	Server::execute(Client &client) {
 	} else if (_cmds.find(verb) != _cmds.end()) {
 		(this->*_cmds.at(verb))(client);
 	} else {
+		return;
 		throw std::runtime_error("Command does not exist");
 	}
 }
@@ -174,6 +177,7 @@ void	Server::rmClients(void) {
 	}
 }
 
-void	Server::nick(Client &client) {
-	std::cout << client.getMessage().getVerb() << std::endl;
-}
+/*void	Server::user(Client &client) {
+		std::cout << "éasdhfékadjhfgéaksjhg" << std::endl;
+		client.sendMessage("Ceci est un message");
+}*/

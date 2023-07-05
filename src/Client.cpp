@@ -4,10 +4,15 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 Client::Client(int sd) :
 	_sd(sd),
 	_status(CONNECTED),
-	_recvString("") {
+	_isRegistered(false),
+	_nickname("*"),
+	_recvString(""){
 }
 
 Client::Client(const Client &ref) {
@@ -30,50 +35,51 @@ Client::~Client(void) {
 }
 
 void	Client::recvPackets(void) {
-	int	rc;
-
 	while (true) {
-		bzero(_recvBuffer, 512);
-		rc = recv(_sd, _recvBuffer, sizeof(_recvBuffer), 0);
+		bzero(_recvBuff, 512);
+		int rc = recv(_sd, _recvBuff, sizeof(_recvBuff), 0);
 		if (rc < 0 && errno != EWOULDBLOCK) {
-			throw std::runtime_error(std::strerror(errno)); //"recv() failed"
+			//"recv() failed"
+			throw std::runtime_error(std::strerror(errno));
 		} else if (rc < 0) {
 			break;
 		} else if (rc == 0) {
 			setStatus(DISCONNECTED);
 			break;
 		} else {
-			std::cout << _sd << ":Pckt recv: " << _recvBuffer << std::endl;
-			_recvString.append(_recvBuffer);
+			std::cout << _sd << ":Pckt recv: " << _recvBuff << std::endl;
+			_recvString.append(_recvBuff);
 		}
 	}
 }
 
 void	Client::sendPackets(void) {
-	int	rc;
-
-	while (!_sendBuffer.empty()) {
-		rc = send(_sd, _sendBuffer.c_str(), sizeof(_sendBuffer), 0);
+	while (!_sendBuff.empty()) {
+		int rc = send(_sd, _sendBuff.c_str(), _sendBuff.length(), 0);
 		if (rc < 0 && errno != EWOULDBLOCK) {
-			throw std::runtime_error(std::strerror(errno)); //"send() failed"
+			//"send() failed"
+			throw std::runtime_error(std::strerror(errno));
 		} else if (rc < 0) {
 			break;
+		} else if (rc == 0) {
+			setStatus(DISCONNECTED);
+			break;
 		} else {
-			std::cout << _sd << ":Pckt sent: " << _sendBuffer << std::endl;
+			_sendBuff.erase(_sendBuff.begin(), _sendBuff.begin() + rc);
 		}
 	}
 }
 
-void	Client::parse(void) {
-	std::string::size_type pos;
+void	Client::sendMessage(const std::string &msg) {
+	_sendBuff.append(msg + "\r\n");
+}
 
-	pos = _recvString.find("\r\n");
+void	Client::parse(void) {
+	std::string::size_type pos = _recvString.find("\r\n");
 	if (pos != std::string::npos) {
-		//_recvMessage.reset();
-		_recvMessage.parse(_recvString.substr(0, pos+2));
-		std::cout << "Parsing message..." << std::endl;
-		std::cout << _recvString.substr(0, pos+2) << std::endl;
-		_recvString.erase(0, pos+2);
+		_recvMessage.clearMessage();
+		_recvMessage.parse(_recvString.substr(0, pos));
+		_recvString.erase(0, pos + 2);
 	} else if (_recvString.size() > 512) {
 		throw std::runtime_error("Client sent message too long");
 	}
@@ -87,6 +93,48 @@ bool	Client::getStatus(void) const {
 	return _status;
 }
 
-Message	Client::getMessage(void) const {
+Message	&Client::getMessage(void) {
 	return _recvMessage;
+}
+
+// ------- GETTERS AND SETTERS -------
+
+std::string	Client::getNickname(void) const
+{
+	return (this->_nickname);
+}
+
+std::string	Client::getUsername(void) const
+{
+	return (this->_username);
+}
+
+std::string	Client::getRealname(void) const
+{
+	return (this->_realname);
+}
+
+bool	Client::getIsRegistered(void) const
+{
+	return (this->_isRegistered);
+}
+
+void	Client::setNickname(std::string newNick)
+{
+	this->_nickname = newNick;
+}
+
+void	Client::setUsername(std::string username)
+{
+	this->_username = username;
+}
+
+void	Client::setRealname(std::string realname)
+{
+	this->_realname = realname;
+}
+
+void	Client::setIsRegistered(bool status)
+{
+	this->_isRegistered = status;
 }

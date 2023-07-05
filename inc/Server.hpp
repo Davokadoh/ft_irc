@@ -17,6 +17,7 @@
 # include <arpa/inet.h>
 # include <sys/wait.h>
 # include <signal.h>
+# include "Channel.hpp"
 
 class Server;
 
@@ -32,6 +33,9 @@ class Server {
 		void				cull(void);
 		void				execute(Client &client);
 		void				nick(Client &client);
+		void				user(Client &client);
+		void				join(Client &client);
+		bool				isNickInUse(const std::string &nick);
 		static std::map<std::string, FunPtr>	createMap(void);
 	
 		static const std::map<std::string, FunPtr>	_cmds;
@@ -44,6 +48,9 @@ class Server {
 		int						_maxSd;
 		std::string				_port;
 		std::string				_password;
+		std::string				_name;
+
+		std::map<std::string, Channel*> _channels;
 
 	public:
 		Server(const std::string &port = "6667", const std::string &password = "");
@@ -53,6 +60,7 @@ class Server {
 
 		void	watch(void);
 		void	run(void);
+
 };
 
 #endif

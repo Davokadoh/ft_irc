@@ -31,3 +31,7 @@
 *.out
 *.app
 ft_irc
+
+# Misc
+.DS_Store
+.vscode
