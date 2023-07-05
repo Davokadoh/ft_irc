@@ -34,21 +34,23 @@ class Server {
 		void				execute(Client &client);
 		void				nick(Client &client);
 		void				user(Client &client);
+		void				join(Client &client);
+		bool				isNickInUse(const std::string &nick);
 		static std::map<std::string, FunPtr>	createMap(void);
 	
 		static const std::map<std::string, FunPtr>	_cmds;
+		std::map<std::string, Channel*> _channels;
 		std::map<std::string, Client*>	_nicknames;
 		std::map<int, Client*>			_clients;
+		std::string						_password;
+		std::string						_port;
+		std::string						_name;
 		fd_set							_mainSet;
 		fd_set							_recvSet;
 		fd_set							_sendSet;
 		bool							_status;
 		int								_listenSd;
 		int								_maxSd;
-		std::string						_port;
-		std::string						_password;
-		std::string						_name;
-		std::map<std::string, Channel*> _channels;
 
 	public:
 		Server(const std::string &port = "6667", const std::string &password = "");
@@ -58,11 +60,6 @@ class Server {
 
 		void	watch(void);
 		void	run(void);
-
-		// ------ COMMANDS ------
-		void	join(Client &client);
-		//void    nick(Client &client);
-		bool	isNickInUse(const std::string &nick);
 };
 
 #endif

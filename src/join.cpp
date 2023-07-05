@@ -6,6 +6,10 @@ void	Server::join(Client &client)
 {
 	// need to check if cmd can be excecuted
 	std::string	channel = client.getMessage().getParameters()[0];
+	if (channel[0] != '#')
+	{
+		channel.insert(0, 1, '#');
+	}
 	std::map<std::string, Channel*>::iterator it = this->_channels.find(channel);
 	if (it == this->_channels.end())
 	{

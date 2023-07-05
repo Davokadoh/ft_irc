@@ -12,6 +12,7 @@ class Client {
 	private:
 		int				_sd;
 		bool			_status;
+		bool			_isRegistered;
 		std::string		_ip;
 		std::string		_nickname;
 		std::string		_username;
@@ -28,7 +29,13 @@ class Client {
 		~Client(void);
 
 		std::string	getNickname(void) const;
+		std::string	getUsername(void) const;
+		std::string	getRealname(void) const;
+		bool		getIsRegistered(void) const;
 		void		setNickname(std::string newNick);
+		void		setUsername(std::string username);
+		void		setRealname(std::string realname);
+		void		setIsRegistered(bool status);
 
 		void	recvPackets(void);
 		void	sendPackets(void);
