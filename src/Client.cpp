@@ -4,11 +4,15 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 Client::Client(int sd) :
 	_sd(sd),
 	_status(CONNECTED),
+	_isRegistered(false),
 	_nickname("*"),
-	_recvString("") {
+	_recvString(""){
 }
 
 Client::Client(const Client &ref) {
@@ -51,7 +55,7 @@ void	Client::recvPackets(void) {
 
 void	Client::sendPackets(void) {
 	while (!_sendBuff.empty()) {
-		int rc = send(_sd, _sendBuff.c_str(), sizeof(_sendBuff), 0);
+		int rc = send(_sd, _sendBuff.c_str(), _sendBuff.length(), 0);
 		if (rc < 0 && errno != EWOULDBLOCK) {
 			//"send() failed"
 			throw std::runtime_error(std::strerror(errno));
@@ -67,7 +71,7 @@ void	Client::sendPackets(void) {
 }
 
 void	Client::sendMessage(const std::string &msg) {
-	_sendBuff.append(this->getMessage().getHostname() + this->getMessage().getNick() + msg + "\r\n");
+	_sendBuff.append(msg + "\r\n");
 }
 
 void	Client::parse(void) {
@@ -100,7 +104,37 @@ std::string	Client::getNickname(void) const
 	return (this->_nickname);
 }
 
+std::string	Client::getUsername(void) const
+{
+	return (this->_username);
+}
+
+std::string	Client::getRealname(void) const
+{
+	return (this->_realname);
+}
+
+bool	Client::getIsRegistered(void) const
+{
+	return (this->_isRegistered);
+}
+
 void	Client::setNickname(std::string newNick)
 {
 	this->_nickname = newNick;
+}
+
+void	Client::setUsername(std::string username)
+{
+	this->_username = username;
+}
+
+void	Client::setRealname(std::string realname)
+{
+	this->_realname = realname;
+}
+
+void	Client::setIsRegistered(bool status)
+{
+	this->_isRegistered = status;
 }

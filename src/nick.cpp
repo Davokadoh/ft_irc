@@ -17,35 +17,31 @@ bool	Server::isNickInUse(const std::string &nick)
 	return 0;
 }
 
-# define ERR_NONICKNAMEGIVEN() (":No nickname given\r\n")
-# define ERR_NICKNAMEINUSE() (": Nickname aleardy in use\r\n")
+# define ERR_NONICKNAMEGIVEN(nickname) " 431 " + nickname + " :No nickname given"
+# define ERR_ERRONEUSNICKNAME(nickname) " 432 " + nickname + " :Erroneus nickname"
+# define ERR_NICKNAMEINUSE(nickname) " 433 " + nickname + " :Nickname aleardy in use bite"
 
 void    Server::nick(Client &client) {
-	/*if (client.getMessage().getParameters().size() != 1)
-	{
-		std::cout << "Error: wrong number of paramaters" << std::endl;
-		return;
-	}*/
+
     std::string    nickname = client.getMessage().getParameters()[0];
 
-	if (isNickInUse(nickname))
+	if (nickname.empty())
 	{
-		return client.sendMessage(ERR_NONICKNAMEGIVEN());
-		std::cout << "Error: nickname aleardy in use" << std::endl;
-		return;
-		//reply("COLLISION"); //ERR_NICKNAMEINUSE
+		client.sendMessage(this->_name + ERR_NONICKNAMEGIVEN(client.getNickname()));
 	}
 	else if (!isNickValid(nickname))
 	{
-		std::cout << "Error: unvalid character in nickname" << std::endl;
-		return;
-		//reply("Invalid char"); //ERR_ERRONEUSNICKNAME
+		client.sendMessage(this->_name + ERR_ERRONEUSNICKNAME(client.getNickname()));
+	}
+	else if (isNickInUse(nickname))
+	{
+		client.sendMessage(this->_name + ERR_NICKNAMEINUSE(client.getNickname()));
 	}
 	else
 	{
+		std::string	oldNick = client.getNickname();
 		client.setNickname(nickname);
-		// reply("SUCCESS");
-		//sendToAll("SUCCESS");
+		client.sendMessage(":" + oldNick + " NICK " + client.getNickname());
 	}
 	std::cout << "client nickname: " << client.getNickname() << std::endl;
 }
