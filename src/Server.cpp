@@ -9,14 +9,12 @@ std::map<std::string, FunPtr>	Server::createMap(void) {
 	cmds["NICK"] = &Server::nick;
 	cmds["USER"] = &Server::user;
 	cmds["JOIN"] = &Server::join;
-	//cmdMap["USER"] = &Client::user;
 	return cmds;
 }
 
 const std::map<std::string, FunPtr> Server::_cmds = Server::createMap();
 
-Server::Server(const std::string &port, const std::string &password) :
-	_status(true), _maxSd(1), _port(port), _password(password), _name(":127.0.0.1") {
+Server::Server(const std::string &port, const std::string &password) : _password(password), _port(port), _name(":ft_irc.42.ch"), _status(true), _maxSd(1) {
 	FD_ZERO(&_mainSet);
 	FD_ZERO(&_recvSet);
 	FD_ZERO(&_sendSet);
@@ -74,10 +72,10 @@ struct addrinfo	*Server::getAddr(void) {
 	struct addrinfo	hints, *servinfo;
 
 	memset(&hints, 0, sizeof hints);
-    hints.ai_family = AF_UNSPEC;
+    hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
-	if (getaddrinfo(NULL, _port.c_str(), &hints, &servinfo) != 0) {
+	if (getaddrinfo(NULL, _port.c_str(), &hints, &servinfo)) {
 		//what about gai_strerror() ?
 		throw std::runtime_error("getaddrinfo() failed");
 	}
@@ -151,17 +149,19 @@ void	Server::cull(void) {
 
 void	Server::addClients(void) {
 	int	sd;
+	socklen_t	len = sizeof(struct sockaddr);
+    struct sockaddr_in addr;
 
 	do {
-		sd = accept(_listenSd, NULL, NULL);
+		sd = accept(_listenSd, (struct sockaddr *) &addr, &len);
 		if (sd < 0 && errno != EWOULDBLOCK) {
 			throw std::runtime_error("accept() failed");
 		} else if (sd < 0) {
 			break;
 		}
-		std::cout << "Inserting client" << std::endl;
 		addSocket(sd);
-		_clients.insert(std::make_pair(sd, new Client(sd)));
+		_clients.insert(std::make_pair(
+			sd, new Client(sd, inet_ntoa(addr.sin_addr))));
 	} while (sd >= 0);
 	FD_CLR(_listenSd, &_recvSet);
 }
@@ -170,6 +170,7 @@ void	Server::rmClients(void) {
 	for (std::map<int, Client*>::iterator it = _clients.begin(), last = _clients.end(); it != last; ) {
 		if (it->second->getStatus()) {
 			rmSocket(it->first);
+			_nicknames.erase(it->second->getNickname());
 			it = _clients.erase(it);
 		} else {
 			++it;
