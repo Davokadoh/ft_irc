@@ -118,7 +118,6 @@ void	Server::run(void) {
 		for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
 			it->second->parse();
 			execute(*(it->second));
-			it->second->getMessage().setVerb("");
 		}
 		rmClients();
 	}

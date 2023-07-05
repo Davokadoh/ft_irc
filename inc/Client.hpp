@@ -40,7 +40,8 @@ class Client {
 		void	sendPackets(void);
 		void	setStatus(bool status);
 		bool	getStatus(void) const;
-		Message	&getMessage(void);
+		Message	getMessage(void) const;
+		void	resetMessage(void);
 		void	parse(void);
 		void	sendMessage(const std::string &msg);
 };

@@ -39,7 +39,7 @@ class	Message
 		void	parse(std::string toParse);
 		void	splitParameters(std::string tmp);
 		void	srcSplit(void);
-		void	clearMessage(void);
+		void	clear(void);
 
 		void	print(void);
 };
