@@ -23,7 +23,7 @@ class Client {
 		Message			_recvMessage;
 
 	public:
-		Client(int sd = -1);
+		Client(int sd = -1, const std::string &ip = "0");
 		Client(const Client &ref);
 		Client	&operator=(const Client &rhs);
 		~Client(void);

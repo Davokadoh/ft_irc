@@ -12,12 +12,14 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-Client::Client(int sd) :
+Client::Client(int sd, const std::string &ip) :
 	_sd(sd),
 	_status(CONNECTED),
 	_isRegistered(false),
+	_ip(ip),
 	_nickname("*"),
 	_recvString(""){
+		std::cout << "ip: " << _ip << std::endl;
 }
 
 Client::Client(const Client &ref) {

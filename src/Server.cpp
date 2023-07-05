@@ -159,9 +159,9 @@ void	Server::addClients(void) {
 		} else if (sd < 0) {
 			break;
 		}
-		std::cout << inet_ntoa(addr.sin_addr) << std::endl;
 		addSocket(sd);
-		_clients.insert(std::make_pair(sd, new Client(sd)));
+		_clients.insert(std::make_pair(
+			sd, new Client(sd, inet_ntoa(addr.sin_addr))));
 	} while (sd >= 0);
 	FD_CLR(_listenSd, &_recvSet);
 }
