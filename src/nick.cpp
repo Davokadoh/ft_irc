@@ -1,6 +1,6 @@
 #include	"Server.hpp"
 
-#define VALID_CHARS "\\[]{}|abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" //Need to check this list
+#define VALID_CHARS "\\[]{}|abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" //Need to check this list
 
 bool	isNickValid(const std::string &nick)
 {
@@ -18,8 +18,8 @@ bool	Server::isNickInUse(const std::string &nick)
 }
 
 # define ERR_NONICKNAMEGIVEN(nickname) " 431 " + nickname + " :No nickname given"
-# define ERR_ERRONEUSNICKNAME(nickname) " 432 " + nickname + " :Erroneus nickname"
-# define ERR_NICKNAMEINUSE(nickname) " 433 " + nickname + " :Nickname aleardy in use bite"
+# define ERR_ERRONEUSNICKNAME(nickname, newNick) " 432 " + nickname + " " + newNick + " :Erroneous Nickname"
+# define ERR_NICKNAMEINUSE(nickname, newNick) " 433 " + nickname + " " + newNick + " :Nickname aleardy in use"
 
 void    Server::nick(Client &client) {
 
@@ -31,11 +31,13 @@ void    Server::nick(Client &client) {
 	}
 	else if (!isNickValid(nickname))
 	{
-		client.sendMessage(this->_name + ERR_ERRONEUSNICKNAME(client.getNickname()));
+		std::cout << "test coucou" << std::endl;
+		client.sendMessage(this->_name + ERR_ERRONEUSNICKNAME(client.getNickname(), nickname));
 	}
 	else if (isNickInUse(nickname))
 	{
-		client.sendMessage(this->_name + ERR_NICKNAMEINUSE(client.getNickname()));
+		std::cout << "pourquoi ---------" << std::endl;
+		client.sendMessage(this->_name + ERR_NICKNAMEINUSE(client.getNickname(), nickname));
 	}
 	else
 	{
