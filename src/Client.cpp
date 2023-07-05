@@ -83,8 +83,8 @@ void	Client::sendMessage(const std::string &msg) {
 
 void	Client::parse(void) {
 	std::string::size_type pos = _recvString.find("\r\n");
+	_recvMessage.clear();
 	if (pos != std::string::npos) {
-		_recvMessage.clearMessage();
 		_recvMessage.parse(_recvString.substr(0, pos));
 		_recvString.erase(0, pos + 2);
 	} else if (_recvString.size() > 512) {
@@ -100,7 +100,7 @@ bool	Client::getStatus(void) const {
 	return _status;
 }
 
-Message	&Client::getMessage(void) {
+Message	Client::getMessage(void) const {
 	return _recvMessage;
 }
 
@@ -145,3 +145,8 @@ void	Client::setIsRegistered(bool status)
 {
 	this->_isRegistered = status;
 }
+
+void	Client::resetMessage(void) {
+	_recvMessage.clear();
+}
+

@@ -138,7 +138,7 @@ void	Message::parse(std::string toParse)
 	//this->print();
 }
 
-void	Message::clearMessage(void)
+void	Message::clear(void)
 {
 	this->_src.clear();
 	this->_nick.clear();
