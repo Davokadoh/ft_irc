@@ -1,10 +1,16 @@
 //Command: JOIN
 #include "Server.hpp"
 
+#define RPL_TOPIC(nickname, channel) " 332 " + nickname + " " + channel + " :No topic"
+#define ERR_NOTREGISTERED(nickname) " 451 " + nickname + " :You have not registered"
 
 void	Server::join(Client &client)
 {
-	// need to check if cmd can be excecuted
+	if (client.getIsRegistered() == false)
+	{
+		client.sendMessage(this->_name + ERR_NOTREGISTERED(client.getNickname()));
+		return;
+	}
 	std::string	channel = client.getMessage().getParameters()[0];
 	if (channel[0] != '#')
 	{
@@ -16,6 +22,8 @@ void	Server::join(Client &client)
 		this->_channels[channel] = new Channel;
 	}
 	this->_channels[channel]->addClient(&client);
+	client.sendMessage(this->_name + RPL_TOPIC(client.getNickname(), channel));
+	this->names(client);
 	
 	// just to check
 	for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)

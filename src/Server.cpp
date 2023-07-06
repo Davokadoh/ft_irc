@@ -4,17 +4,25 @@
 #include <fcntl.h>
 #include <iostream>
 
+#define RPL_WELCOME(nickname, servername) " 001 " + nickname + " :Welcome to the " + servername + " Network " + nickname
+#define RPL_YOURHOST(nickname, servername) " 002 " + nickname + " :Your host is " + servername
+#define RPL_CREATED(nickname) " 003 " + nickname + " :This server was created today"
+#define RPL_MYINFO(nickname, servername) " 004 " + nickname + " " + servername
+#define RPL_ISUPPORT(nickname) " 005 " + nickname + " JE SAIS PAS"
+
 std::map<std::string, FunPtr>	Server::createMap(void) {
 	std::map<std::string, FunPtr>	cmds;
 	cmds["NICK"] = &Server::nick;
 	cmds["USER"] = &Server::user;
 	cmds["JOIN"] = &Server::join;
+	cmds["NAMES"] = &Server::names;
 	return cmds;
 }
 
 const std::map<std::string, FunPtr> Server::_cmds = Server::createMap();
 
-Server::Server(const std::string &port, const std::string &password) : _password(password), _port(port), _name(":ft_irc.42.ch"), _status(true), _maxSd(1) {
+Server::Server(const std::string &port, const std::string &password) :
+	_status(true), _maxSd(1), _port(port), _password(password), _name(":ft_irc.42.ch") {
 	FD_ZERO(&_mainSet);
 	FD_ZERO(&_recvSet);
 	FD_ZERO(&_sendSet);
@@ -175,6 +183,16 @@ void	Server::rmClients(void) {
 			++it;
 		}
 	}
+}
+
+void	Server::registration(Client &client)
+{
+	client.setIsRegistered(true);
+	client.sendMessage(this->_name + RPL_WELCOME(client.getNickname(), this->_name));
+	client.sendMessage(this->_name + RPL_YOURHOST(client.getNickname(), this->_name));
+	client.sendMessage(this->_name + RPL_CREATED(client.getNickname()));
+	client.sendMessage(this->_name + RPL_MYINFO(client.getNickname(), this->_name));
+	client.sendMessage(this->_name + RPL_ISUPPORT(client.getNickname()));
 }
 
 /*void	Server::user(Client &client) {
