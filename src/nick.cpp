@@ -23,7 +23,7 @@ void    Server::nick(Client &client) {
 
 	if (nickname.empty()) {
 		client.sendMessage(this->_name + ERR_NONICKNAMEGIVEN(client.getNickname()));
-  } else if (!isNickValid(nickname)) {
+  } else if (isNickValid(nickname)) {
 		client.sendMessage(this->_name + ERR_ERRONEUSNICKNAME(client.getNickname(), nickname));
 	}
 	else if (isNickInUse(nickname)) {
