@@ -21,8 +21,7 @@ std::map<std::string, FunPtr>	Server::createMap(void) {
 
 const std::map<std::string, FunPtr> Server::_cmds = Server::createMap();
 
-Server::Server(const std::string &port, const std::string &password) :
-	_status(true), _maxSd(1), _port(port), _password(password), _name(":ft_irc.42.ch") {
+Server::Server(const std::string &port, const std::string &password) : _password(password), _port(port), _name(":ft_irc.42.ch"), _status(true), _maxSd(1) {
 	FD_ZERO(&_mainSet);
 	FD_ZERO(&_recvSet);
 	FD_ZERO(&_sendSet);
