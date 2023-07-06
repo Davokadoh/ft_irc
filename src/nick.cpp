@@ -27,7 +27,6 @@ void    Server::nick(Client &client) {
 		client.sendMessage(this->_name + ERR_ERRONEUSNICKNAME(client.getNickname(), nickname));
 	}
 	else if (isNickInUse(nickname)) {
-		std::cout << "used ---------" << std::endl;
 		client.sendMessage(this->_name + ERR_NICKNAMEINUSE(client.getNickname(), nickname));
 	} else {
 		std::string	oldNick = client.getNickname();
