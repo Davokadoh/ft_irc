@@ -18,6 +18,8 @@ Client::Client(int sd, const std::string &ip) :
 	_isRegistered(false),
 	_ip(ip),
 	_nickname("*"),
+	_username(""),
+	_realname(""),
 	_recvString(""){
 		std::cout << "ip: " << _ip << std::endl;
 }

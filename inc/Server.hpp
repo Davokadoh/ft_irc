@@ -35,6 +35,8 @@ class Server {
 		void				nick(Client &client);
 		void				user(Client &client);
 		void				join(Client &client);
+		void				names(Client &client);
+		void				registration(Client &client);
 		bool				isNickInUse(const std::string &nick);
 		static std::map<std::string, FunPtr>	createMap(void);
 	

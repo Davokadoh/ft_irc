@@ -4,6 +4,7 @@
 #define ERR_NEEDMOREPARAMS(nickname) " 461 " + nickname + " :Not enough parameters"
 #define ERR_ALREADYREGISTERED(nickname) " 462 " + nickname + " :You may not reregister"
 
+
 void	Server::user(Client &client)
 {
 	if (client.getMessage().getParameters().size() < 4)
@@ -20,7 +21,7 @@ void	Server::user(Client &client)
 		client.setRealname(client.getMessage().getParameters()[3]);
 		if (client.getNickname() != "*")
 		{
-			client.setIsRegistered(true);
+			this->registration(client);
 		}
 	}
 }
