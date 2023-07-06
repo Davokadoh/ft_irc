@@ -2,52 +2,43 @@
 
 #define VALID_CHARS "\\[]{}|_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" //Need to check this list
 
-bool	isNickValid(const std::string &nick)
-{
-	if (nick.find_first_not_of(VALID_CHARS) != std::string::npos)
-		return 0;
-	return 1;
+bool	isNickValid(const std::string &nick) {
+	return (nick.find_first_not_of(VALID_CHARS) != std::string::npos) ? 1 : 0;
 }
 
-bool	Server::isNickInUse(const std::string &nick)
-{
-	for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
-		if ((it->second->getNickname() == nick))
-			return 1;
-	return 0;
+bool	Server::isNickInUse(const std::string &nick) {
+	return (_nicknames.find(nick) != _nicknames.end()) ? 1 : 0;
 }
 
-# define ERR_NONICKNAMEGIVEN(nickname) " 431 " + nickname + " :No nickname given"
-# define ERR_ERRONEUSNICKNAME(nickname, newNick) " 432 " + nickname + " " + newNick + " :Erroneous Nickname"
-# define ERR_NICKNAMEINUSE(nickname, newNick) " 433 " + nickname + " " + newNick + " :Nickname already in use."
-
+#define ERR_NONICKNAMEGIVEN(nickname) " 431 " + nickname + " :No nickname given"
+#define ERR_ERRONEUSNICKNAME(nickname, newNick) " 432 " + nickname + " " + newNick + " :Erroneous Nickname"
+#define ERR_NICKNAMEINUSE(nickname, newNick) " 433 " + nickname + " " + newNick + " :Nickname already in use."
 void    Server::nick(Client &client) {
+	std::vector<std::string>	p = client.getMessage().getParameters();
+    std::string					nickname = "";
 
-    std::string    nickname = client.getMessage().getParameters()[0];
-
-	if (nickname.empty())
-	{
-		client.sendMessage(this->_name + ERR_NONICKNAMEGIVEN(client.getNickname()));
+	if (p.size() != 0) {
+		nickname = p[0];
 	}
-	else if (!isNickValid(nickname))
-	{
-		std::cout << "not valid ..........." << std::endl;
+
+	if (nickname.empty()) {
+		client.sendMessage(this->_name + ERR_NONICKNAMEGIVEN(client.getNickname()));
+  } else if (!isNickValid(nickname)) {
 		client.sendMessage(this->_name + ERR_ERRONEUSNICKNAME(client.getNickname(), nickname));
 	}
-	else if (isNickInUse(nickname))
-	{
+	else if (isNickInUse(nickname)) {
 		std::cout << "used ---------" << std::endl;
 		client.sendMessage(this->_name + ERR_NICKNAMEINUSE(client.getNickname(), nickname));
-	}
-	else
-	{
+	} else {
 		std::string	oldNick = client.getNickname();
+    if (nickname != "*") {
+			_nicknames.erase(client.getNickname());
+		}
+		_nicknames.insert(std::make_pair(nickname, &client));
 		client.setNickname(nickname);
 		client.sendMessage(":" + oldNick + " NICK " + client.getNickname());
-		if (client.getUsername() != "" && client.getRealname() != "" && client.getIsRegistered() == false)
-		{
+		if (client.getUsername() != "" && client.getRealname() != "" && client.getIsRegistered() == false) {
 			this->registration(client);
 		}
 	}
-	std::cout << "client nickname: " << client.getNickname() << std::endl;
 }

@@ -16,7 +16,6 @@ std::map<std::string, FunPtr>	Server::createMap(void) {
 	cmds["USER"] = &Server::user;
 	cmds["JOIN"] = &Server::join;
 	cmds["NAMES"] = &Server::names;
-	//cmdMap["USER"] = &Client::user;
 	return cmds;
 }
 
@@ -81,10 +80,10 @@ struct addrinfo	*Server::getAddr(void) {
 	struct addrinfo	hints, *servinfo;
 
 	memset(&hints, 0, sizeof hints);
-    hints.ai_family = AF_UNSPEC;
+    hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
-	if (getaddrinfo(NULL, _port.c_str(), &hints, &servinfo) != 0) {
+	if (getaddrinfo(NULL, _port.c_str(), &hints, &servinfo)) {
 		//what about gai_strerror() ?
 		throw std::runtime_error("getaddrinfo() failed");
 	}
@@ -125,7 +124,6 @@ void	Server::run(void) {
 		for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
 			it->second->parse();
 			execute(*(it->second));
-			it->second->getMessage().setVerb("");
 		}
 		rmClients();
 	}
@@ -158,17 +156,19 @@ void	Server::cull(void) {
 
 void	Server::addClients(void) {
 	int	sd;
+	socklen_t	len = sizeof(struct sockaddr);
+    struct sockaddr_in addr;
 
 	do {
-		sd = accept(_listenSd, NULL, NULL);
+		sd = accept(_listenSd, (struct sockaddr *) &addr, &len);
 		if (sd < 0 && errno != EWOULDBLOCK) {
 			throw std::runtime_error("accept() failed");
 		} else if (sd < 0) {
 			break;
 		}
-		std::cout << "Inserting client" << std::endl;
 		addSocket(sd);
-		_clients.insert(std::make_pair(sd, new Client(sd)));
+		_clients.insert(std::make_pair(
+			sd, new Client(sd, inet_ntoa(addr.sin_addr))));
 	} while (sd >= 0);
 	FD_CLR(_listenSd, &_recvSet);
 }
@@ -177,6 +177,7 @@ void	Server::rmClients(void) {
 	for (std::map<int, Client*>::iterator it = _clients.begin(), last = _clients.end(); it != last; ) {
 		if (it->second->getStatus()) {
 			rmSocket(it->first);
+			_nicknames.erase(it->second->getNickname());
 			it = _clients.erase(it);
 		} else {
 			++it;

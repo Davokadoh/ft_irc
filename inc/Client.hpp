@@ -13,6 +13,7 @@ class Client {
 		int				_sd;
 		bool			_status;
 		bool			_isRegistered;
+		std::string		_ip;
 		std::string		_nickname;
 		std::string		_username;
 		std::string		_realname;
@@ -22,7 +23,7 @@ class Client {
 		Message			_recvMessage;
 
 	public:
-		Client(int sd = -1);
+		Client(int sd = -1, const std::string &ip = "0");
 		Client(const Client &ref);
 		Client	&operator=(const Client &rhs);
 		~Client(void);
@@ -40,7 +41,8 @@ class Client {
 		void	sendPackets(void);
 		void	setStatus(bool status);
 		bool	getStatus(void) const;
-		Message	&getMessage(void);
+		Message	getMessage(void) const;
+		void	resetMessage(void);
 		void	parse(void);
 		void	sendMessage(const std::string &msg);
 };

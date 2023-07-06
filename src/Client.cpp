@@ -3,18 +3,25 @@
 #include <sys/socket.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdio.h>
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-Client::Client(int sd) :
+Client::Client(int sd, const std::string &ip) :
 	_sd(sd),
 	_status(CONNECTED),
 	_isRegistered(false),
+	_ip(ip),
 	_nickname("*"),
 	_username(""),
 	_realname(""),
 	_recvString(""){
+		std::cout << "ip: " << _ip << std::endl;
 }
 
 Client::Client(const Client &ref) {
@@ -78,8 +85,8 @@ void	Client::sendMessage(const std::string &msg) {
 
 void	Client::parse(void) {
 	std::string::size_type pos = _recvString.find("\r\n");
+	_recvMessage.clear();
 	if (pos != std::string::npos) {
-		_recvMessage.clearMessage();
 		_recvMessage.parse(_recvString.substr(0, pos));
 		_recvString.erase(0, pos + 2);
 	} else if (_recvString.size() > 512) {
@@ -95,7 +102,7 @@ bool	Client::getStatus(void) const {
 	return _status;
 }
 
-Message	&Client::getMessage(void) {
+Message	Client::getMessage(void) const {
 	return _recvMessage;
 }
 
@@ -140,3 +147,8 @@ void	Client::setIsRegistered(bool status)
 {
 	this->_isRegistered = status;
 }
+
+void	Client::resetMessage(void) {
+	_recvMessage.clear();
+}
+
