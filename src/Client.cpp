@@ -12,6 +12,8 @@ Client::Client(int sd) :
 	_status(CONNECTED),
 	_isRegistered(false),
 	_nickname("*"),
+	_username(""),
+	_realname(""),
 	_recvString(""){
 }
 

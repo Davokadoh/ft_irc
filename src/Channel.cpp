@@ -39,6 +39,6 @@ void	Channel::printClientList(void)
 	std::cout << "Clients: " << std::endl;
 	for (std::set<Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
 	{
-		std::cout << *it << std::endl;
+		std::cout << (*it)->getNickname() << std::endl;
 	}
 }

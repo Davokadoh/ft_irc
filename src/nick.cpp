@@ -1,6 +1,6 @@
 #include	"Server.hpp"
 
-#define VALID_CHARS "\\[]{}|abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" //Need to check this list
+#define VALID_CHARS "\\[]{}|_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" //Need to check this list
 
 bool	isNickValid(const std::string &nick)
 {
@@ -44,6 +44,10 @@ void    Server::nick(Client &client) {
 		std::string	oldNick = client.getNickname();
 		client.setNickname(nickname);
 		client.sendMessage(":" + oldNick + " NICK " + client.getNickname());
+		if (client.getUsername() != "" && client.getRealname() != "" && client.getIsRegistered() == false)
+		{
+			this->registration(client);
+		}
 	}
 	std::cout << "client nickname: " << client.getNickname() << std::endl;
 }
