@@ -22,6 +22,7 @@ SRCS		=	$(SRC_DIR)/main.cpp \
 				$(SRC_DIR)/nick.cpp \
 				$(SRC_DIR)/user.cpp \
 				$(SRC_DIR)/names.cpp \
+				$(SRC_DIR)/topic.cpp \
 
 INCS		=	inc
 

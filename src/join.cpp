@@ -19,7 +19,7 @@ void	Server::join(Client &client)
 	std::map<std::string, Channel*>::iterator it = this->_channels.find(channel);
 	if (it == this->_channels.end())
 	{
-		this->_channels[channel] = new Channel;
+		this->_channels[channel] = new Channel(channel);
 	}
 	this->_channels[channel]->addClient(&client);
 	client.sendMessage(this->_name + RPL_TOPIC(client.getNickname(), channel));
