@@ -11,8 +11,8 @@
 class Client {
 	private:
 		int				_sd;
-		bool			_status;
-		bool			_isRegistered;
+		bool			_status;		//How about an enum ?
+		bool			_isRegistered;	//How about an enum ?
 		std::string		_ip;
 		std::string		_nickname;
 		std::string		_username;
