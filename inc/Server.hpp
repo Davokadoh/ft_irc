@@ -18,6 +18,7 @@
 # include <sys/wait.h>
 # include <signal.h>
 # include "Channel.hpp"
+# include "Macros.hpp"
 
 class Server;
 

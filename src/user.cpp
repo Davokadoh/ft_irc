@@ -1,10 +1,6 @@
 #include	"Server.hpp"
 #include 	<netdb.h>
 
-#define ERR_NEEDMOREPARAMS(nickname) " 461 " + nickname + " :Not enough parameters"
-#define ERR_ALREADYREGISTERED(nickname) " 462 " + nickname + " :You may not reregister"
-
-
 void	Server::user(Client &client)
 {
 	if (client.getMessage().getParameters().size() < 4)
