@@ -131,6 +131,7 @@ void	Server::run(void) {
 void	Server::execute(Client &client) {
 	std::string	verb = client.getMessage().getVerb();
 
+	client.setSource(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getIp());
 	if (verb.empty()) {
 		return;
 	} else if (_cmds.find(verb) != _cmds.end()) {
@@ -186,7 +187,7 @@ void	Server::rmClients(void) {
 
 void	Server::registration(Client &client)
 {
-client.setIsRegistered(true);
+	client.setIsRegistered(true);
 	client.sendMessage(this->_name + RPL_WELCOME(client.getNickname(), this->_name));
 	client.sendMessage(this->_name + RPL_YOURHOST(client.getNickname(), this->_name));
 	client.sendMessage(this->_name + RPL_CREATED(client.getNickname()));
