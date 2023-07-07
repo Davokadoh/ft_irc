@@ -32,12 +32,14 @@ class Server {
 		void				rmClients(void);
 		void				cull(void);
 		void				execute(Client &client);
+		void				registration(Client &client);
+		bool				isNickInUse(const std::string &nick);
+
 		void				nick(Client &client);
 		void				user(Client &client);
 		void				join(Client &client);
 		void				names(Client &client);
-		void				registration(Client &client);
-		bool				isNickInUse(const std::string &nick);
+		void				topic(Client &client);
 		static std::map<std::string, FunPtr>	createMap(void);
 	
 		static const std::map<std::string, FunPtr>	_cmds;
