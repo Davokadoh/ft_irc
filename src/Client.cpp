@@ -19,6 +19,7 @@ Client::Client(int sd, const std::string &ip) :
 	_ip(ip),
 	_nickname("*"),
 	_username(""),
+	_source(""),
 	_realname(""),
 	_recvString(""){
 		std::cout << "ip: " << _ip << std::endl;
@@ -123,6 +124,16 @@ std::string	Client::getRealname(void) const
 	return (this->_realname);
 }
 
+std::string	Client::getSource(void) const
+{
+	return (this->_source);
+}
+
+std::string	Client::getIp(void) const
+{
+	return (this->_ip);
+}
+
 bool	Client::getIsRegistered(void) const
 {
 	return (this->_isRegistered);
@@ -141,6 +152,11 @@ void	Client::setUsername(std::string username)
 void	Client::setRealname(std::string realname)
 {
 	this->_realname = realname;
+}
+
+void	Client::setSource(std::string source)
+{
+	this->_source = source;
 }
 
 void	Client::setIsRegistered(bool status)

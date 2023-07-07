@@ -10,6 +10,8 @@
 #define RPL_MYINFO(nickname, servername) " 004 " + nickname + " " + servername
 #define RPL_ISUPPORT(nickname) " 005 " + nickname + " JE SAIS PAS"
 
+#define ERR_UNKNOWNCOMMAND(nickname) " 421 " + nickname + " :Unknown command"
+
 std::map<std::string, FunPtr>	Server::createMap(void) {
 	std::map<std::string, FunPtr>	cmds;
 	cmds["NICK"] = &Server::nick;
@@ -131,13 +133,13 @@ void	Server::run(void) {
 void	Server::execute(Client &client) {
 	std::string	verb = client.getMessage().getVerb();
 
+	client.setSource(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getIp());
 	if (verb.empty()) {
 		return;
 	} else if (_cmds.find(verb) != _cmds.end()) {
 		(this->*_cmds.at(verb))(client);
 	} else {
-		return;
-		throw std::runtime_error("Command does not exist");
+		client.sendMessage(this->_name + ERR_UNKNOWNCOMMAND(client.getNickname()));
 	}
 }
 
@@ -191,10 +193,11 @@ void	Server::registration(Client &client)
 	client.sendMessage(this->_name + RPL_YOURHOST(client.getNickname(), this->_name));
 	client.sendMessage(this->_name + RPL_CREATED(client.getNickname()));
 	client.sendMessage(this->_name + RPL_MYINFO(client.getNickname(), this->_name));
-	client.sendMessage(this->_name + RPL_ISUPPORT(client.getNickname()));
+	//client.sendMessage(this->_name + RPL_ISUPPORT(client.getNickname()));
+	client.sendMessage(this->_name + " 251 " + client.getNickname() + " :There are 1 users and 0 services on 1 servers");
+	client.sendMessage(this->_name + " 252 " + client.getNickname() + " 0 :operator(s) online");
+	client.sendMessage(this->_name + " 253 " + client.getNickname() + " 0 :unknown connection(s)");
+	client.sendMessage(this->_name + " 254 " + client.getNickname() + " 0 :channels formed");
+	client.sendMessage(this->_name + " 255 " + client.getNickname() + " :I have 1 clients and 1 servers");
+	client.sendMessage(this->_name + " 422 " + client.getNickname() + " :MOTD File is missing");
 }
-
-/*void	Server::user(Client &client) {
-		std::cout << "éasdhfékadjhfgéaksjhg" << std::endl;
-		client.sendMessage("Ceci est un message");
-}*/
