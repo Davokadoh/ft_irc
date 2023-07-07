@@ -22,6 +22,7 @@ void	Server::join(Client &client) {
 
 	//_channels[channel]->sendToAll(&client);
 	_channels[channel]->addClient(&client);
+	client.sendMessage(client.getSource() + " JOIN #" + channel);
 	client.sendMessage(_name + RPL_TOPIC(client.getNickname(), channel));
 	names(client);
 }
