@@ -10,6 +10,8 @@
 #define RPL_MYINFO(nickname, servername) " 004 " + nickname + " " + servername
 #define RPL_ISUPPORT(nickname) " 005 " + nickname + " JE SAIS PAS"
 
+#define ERR_UNKNOWNCOMMAND(nickname) " 421 " + nickname + " :Unknown command"
+
 std::map<std::string, FunPtr>	Server::createMap(void) {
 	std::map<std::string, FunPtr>	cmds;
 	cmds["NICK"] = &Server::nick;
@@ -137,8 +139,7 @@ void	Server::execute(Client &client) {
 	} else if (_cmds.find(verb) != _cmds.end()) {
 		(this->*_cmds.at(verb))(client);
 	} else {
-		return;
-		throw std::runtime_error("Command does not exist");
+		client.sendMessage(this->_name + ERR_UNKNOWNCOMMAND(client.getNickname()));
 	}
 }
 
