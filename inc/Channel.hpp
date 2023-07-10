@@ -33,6 +33,8 @@ class	Channel
 		void				setTopicMode(const std::string &mode);
 		void				addClient(Client *client);
 		void				rmClient(Client *client);
+		void				addOperator(Client &client);
+		void				rmOperator(Client &client);
 		std::set<Client*>	getClients(void) const;
 		std::set<Client*>	getOperators(void) const;
 		void				printClientList(void);

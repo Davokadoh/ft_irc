@@ -11,6 +11,7 @@ std::map<std::string, FunPtr>	Server::createMap(void) {
 	cmds["JOIN"] = &Server::join;
 	cmds["NAMES"] = &Server::names;
 	cmds["TOPIC"] = &Server::topic;
+	cmds["KICK"] = &Server::kick;
 	return cmds;
 }
 

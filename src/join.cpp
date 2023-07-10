@@ -13,6 +13,7 @@ void	Server::join(Client &client) {
 	std::map<std::string, Channel*>::iterator it = _channels.find(channel);
 	if (it == _channels.end()) {
 		_channels[channel] = new Channel(channel);
+		_channels[channel]->addOperator(client);
 	}
 
 	_channels[channel]->addClient(&client);

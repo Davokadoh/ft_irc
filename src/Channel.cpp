@@ -1,4 +1,5 @@
 #include "Channel.hpp"
+#include <algorithm>
 
 // ------- COPLIEN -------
 
@@ -23,19 +24,19 @@ std::string	Channel::getName(void) const {
 	return _name;
 }
 
-std::string			Channel::getTopic(void) const {
+std::string	Channel::getTopic(void) const {
 	return _topic;
 }
 
-void				Channel::setTopic(const std::string &topic) {
+void	Channel::setTopic(const std::string &topic) {
 	_topic = topic;
 }
 
-bool				Channel::getTopicMode(void) const {
+bool	Channel::getTopicMode(void) const {
 	return _topicMode;
 }
 
-void				Channel::setTopicMode(const std::string &mode) {
+void	Channel::setTopicMode(const std::string &mode) {
 	(void) mode;
 	std::cerr << "Not implemented yet" << std::endl;
 }
@@ -44,8 +45,16 @@ void	Channel::addClient(Client *client) {
 	_clients.insert(client);
 }
 
-void				Channel::rmClient(Client *client) {
+void	Channel::rmClient(Client *client) {
 	_clients.erase(client);
+}
+
+void	Channel::addOperator(Client &client) {
+	_operators.insert(&client);
+}
+
+void	Channel::rmOperator(Client &client) {
+	_operators.erase(&client);
 }
 
 std::set<Client*>	Channel::getClients(void) const {
