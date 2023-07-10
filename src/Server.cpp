@@ -4,14 +4,6 @@
 #include <fcntl.h>
 #include <iostream>
 
-#define RPL_WELCOME(nickname, servername) " 001 " + nickname + " :Welcome to the " + servername + " Network " + nickname
-#define RPL_YOURHOST(nickname, servername) " 002 " + nickname + " :Your host is " + servername
-#define RPL_CREATED(nickname) " 003 " + nickname + " :This server was created today"
-#define RPL_MYINFO(nickname, servername) " 004 " + nickname + " " + servername
-#define RPL_ISUPPORT(nickname) " 005 " + nickname + " JE SAIS PAS"
-
-#define ERR_UNKNOWNCOMMAND(nickname) " 421 " + nickname + " :Unknown command"
-
 std::map<std::string, FunPtr>	Server::createMap(void) {
 	std::map<std::string, FunPtr>	cmds;
 	cmds["NICK"] = &Server::nick;
