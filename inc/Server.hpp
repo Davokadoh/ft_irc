@@ -34,6 +34,7 @@ class Server {
 		void				cull(void);
 		void				execute(Client &client);
 		void				registration(Client &client);
+		int					nbrRegistered(void);
 		bool				isNickInUse(const std::string &nick);
 
 		void				nick(Client &client);
