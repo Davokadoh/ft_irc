@@ -1,13 +1,14 @@
 #include "Server.hpp"
 #include "Macros.hpp"
 
-
-Parameters: <channel> <user> *( "," <user> ) [<comment>]
+//Parameters: <channel> <user> *( "," <user> ) [<comment>]
 void	Server::kick(Client &client) {
 	std::map<std::string, Channel*>::iterator	channelIt;
 	std::vector<std::string>					parameters;
 	std::set<Client*>							operators;
 	std::set<Client*>							clients;
+	Client										*target;
+	Channel										*channel;
 	Message										message;
 
 	if (client.getIsRegistered() == false) {
@@ -28,20 +29,26 @@ void	Server::kick(Client &client) {
 		return;
 	}
 
-	clients = channelIt->second->getClients();
-	operators = channelIt->second->getOperators();
-	target = _nicknames.find(target);
+	channel = channelIt->second;
+	clients = channel->getClients();
+	operators = channel->getOperators();
+	if (_nicknames.find(std::string(parameters[1])) == _nicknames.end()) {
+		client.sendMessage(_name + ERR_USERNOTINCHANNEL(client.getNickname(), parameters[1], channel->getName()));
+		return;
+	}
+		
+	target = _nicknames.find(std::string(parameters[1]))->second;
 	if (clients.find(&client) == clients.end()) {
 		client.sendMessage(_name + ERR_NOTONCHANNEL(client.getNickname(), channel->getName()));
 		return;
 	} else if (operators.find(&client) == operators.end()) {
 		client.sendMessage(_name + ERR_CHANOPRIVSNEEDED(client.getNickname(), channel->getName()));
 		return;
-	} else if (target == _nicknames.end() || (clients.find(target) == clients.end()) {
-		rply(ERR_USERNOTINCHANNEL(client.getNickname(), targetName, _name);
+	} else if (clients.find(target) == clients.end()) {
+		client.sendMessage(_name + ERR_USERNOTINCHANNEL(client.getNickname(), parameters[1], channel->getName()));
 		return;
 	} else {
-		client.sendMessage("You got kicked lol");
-		channel.rmClient(target);
+		target->sendMessage(client.getSource() + " KICK " + channel->getName() + " " + target->getNickname());
+		channelIt->second->rmClient(target);
 	}
 }

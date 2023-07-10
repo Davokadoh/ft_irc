@@ -42,6 +42,7 @@ class Server {
 		void				join(Client &client);
 		void				names(Client &client);
 		void				topic(Client &client);
+		void				kick(Client &client);
 		static std::map<std::string, FunPtr>	createMap(void);
 	
 		static const std::map<std::string, FunPtr>	_cmds;
