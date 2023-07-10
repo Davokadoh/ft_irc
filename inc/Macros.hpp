@@ -6,6 +6,7 @@
 # define RPL_CREATED(nickname) " 003 " + nickname + " :This server was created today"
 # define RPL_MYINFO(nickname, servername) " 004 " + nickname + " " + servername
 # define RPL_ISUPPORT(nickname) " 005 " + nickname + " JE SAIS PAS"
+# define RPL_LUSERCLIENT(nickname, nbrUsers, nbrChannel) " 251 " + nickname + " :There are " + nbrUsers + "  users and 0 invisible on " + nbrChannel + " servers"
 # define RPL_NOTOPIC(client, channel) " 331 " + client + " " + channel + " :No topic is set"
 # define RPL_TOPIC(client, channel, topic) " 332 " + client + " " + channel + " " + topic
 # define RPL_NAMREPLY(channel) " 353 " + channel + " = "

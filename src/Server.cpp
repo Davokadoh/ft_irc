@@ -181,13 +181,20 @@ void	Server::rmClients(void) {
 
 void	Server::registration(Client &client)
 {
+	std::stringstream	ss;
+	ss << this->_clients.size();
+	std::string nbrClients = ss.str();
+	std::stringstream	ss2;
+	ss2 << this->_channels.size();
+	std::string nbrChannels = ss2.str();
+
 	client.setIsRegistered(true);
 	client.sendMessage(this->_name + RPL_WELCOME(client.getNickname(), this->_name));
 	client.sendMessage(this->_name + RPL_YOURHOST(client.getNickname(), this->_name));
 	client.sendMessage(this->_name + RPL_CREATED(client.getNickname()));
 	client.sendMessage(this->_name + RPL_MYINFO(client.getNickname(), this->_name));
 	//client.sendMessage(this->_name + RPL_ISUPPORT(client.getNickname()));
-	client.sendMessage(this->_name + " 251 " + client.getNickname() + " :There are 1 users and 0 services on 1 servers");
+	client.sendMessage(this->_name + RPL_LUSERCLIENT(client.getNickname(), nbrClients, nbrChannels));
 	client.sendMessage(this->_name + " 252 " + client.getNickname() + " 0 :operator(s) online");
 	client.sendMessage(this->_name + " 253 " + client.getNickname() + " 0 :unknown connection(s)");
 	client.sendMessage(this->_name + " 254 " + client.getNickname() + " 0 :channels formed");
