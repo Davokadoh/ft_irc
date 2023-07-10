@@ -9,8 +9,8 @@
 # define RPL_LUSERCLIENT(nickname, nbrUsers, nbrChannel) " 251 " + nickname + " :There are " + nbrUsers + "  users and 0 invisible on " + nbrChannel + " servers"
 # define RPL_NOTOPIC(client, channel) " 331 " + client + " " + channel + " :No topic is set"
 # define RPL_TOPIC(client, channel, topic) " 332 " + client + " " + channel + " " + topic
-# define RPL_NAMREPLY(channel) " 353 " + channel + " = "
-# define RPL_ENDOFNAMES(channel) " 366 " + channel + " :End of /NAMES list"
+# define RPL_NAMREPLY(client, channel, nick) " 353 " + client + " = " + channel + " " + nick
+# define RPL_ENDOFNAMES(client, channel) " 366 " + client + " " + channel + " :End of /NAMES list"
 # define ERR_NOSUCHCHANNEL(client, channel) " 403 " + client + " " + channel  + " :No such channel"
 # define ERR_UNKNOWNCOMMAND(nickname) " 421 " + nickname + " :Unknown command"
 # define ERR_NOTONCHANNEL(client, channel) " 442 " + client + " " + channel + " :You're not on that channel"
