@@ -5,17 +5,19 @@
 # define CONNECTED 0
 
 # include "Message.hpp"
+# include "Macros.hpp"
 # include <string>
 # include <map>
 
 class Client {
 	private:
 		int				_sd;
-		bool			_status;
-		bool			_isRegistered;
+		bool			_status;		//How about an enum ?
+		bool			_isRegistered;	//How about an enum ?
 		std::string		_ip;
 		std::string		_nickname;
 		std::string		_username;
+		std::string		_source;
 		std::string		_realname;
 		std::string		_sendBuff;
 		char			_recvBuff[512];
@@ -31,10 +33,13 @@ class Client {
 		std::string	getNickname(void) const;
 		std::string	getUsername(void) const;
 		std::string	getRealname(void) const;
+		std::string getSource(void) const;
+		std::string	getIp(void) const;
 		bool		getIsRegistered(void) const;
 		void		setNickname(std::string newNick);
 		void		setUsername(std::string username);
 		void		setRealname(std::string realname);
+		void		setSource(std::string source);
 		void		setIsRegistered(bool status);
 
 		void	recvPackets(void);

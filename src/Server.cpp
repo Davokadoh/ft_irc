@@ -4,18 +4,13 @@
 #include <fcntl.h>
 #include <iostream>
 
-#define RPL_WELCOME(nickname, servername) " 001 " + nickname + " :Welcome to the " + servername + " Network " + nickname
-#define RPL_YOURHOST(nickname, servername) " 002 " + nickname + " :Your host is " + servername
-#define RPL_CREATED(nickname) " 003 " + nickname + " :This server was created today"
-#define RPL_MYINFO(nickname, servername) " 004 " + nickname + " " + servername
-#define RPL_ISUPPORT(nickname) " 005 " + nickname + " JE SAIS PAS"
-
 std::map<std::string, FunPtr>	Server::createMap(void) {
 	std::map<std::string, FunPtr>	cmds;
 	cmds["NICK"] = &Server::nick;
 	cmds["USER"] = &Server::user;
 	cmds["JOIN"] = &Server::join;
 	cmds["NAMES"] = &Server::names;
+	cmds["TOPIC"] = &Server::topic;
 	return cmds;
 }
 
@@ -131,13 +126,13 @@ void	Server::run(void) {
 void	Server::execute(Client &client) {
 	std::string	verb = client.getMessage().getVerb();
 
+	client.setSource(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getIp());
 	if (verb.empty()) {
 		return;
 	} else if (_cmds.find(verb) != _cmds.end()) {
 		(this->*_cmds.at(verb))(client);
 	} else {
-		return;
-		throw std::runtime_error("Command does not exist");
+		client.sendMessage(this->_name + ERR_UNKNOWNCOMMAND(client.getNickname()));
 	}
 }
 

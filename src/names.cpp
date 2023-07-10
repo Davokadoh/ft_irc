@@ -1,13 +1,29 @@
 #include	"Server.hpp"
+#include	"Macros.hpp"
 
-#define RPL_NAMREPLY(channel) " 353 " + channel + " = "
-#define RPL_ENDOFNAMES(channel) " 366 " + channel + " :End of /NAMES list"
+void	Server::names(Client &client) {
+	std::string channelName = client.getMessage().getParameters()[0]; //Need to check param.size()
+	std::map<std::string, Channel*>::iterator	channelIt;
+	Channel				*channel;
+	std::set<Client*>	clients;
 
+	channelIt = _channels.find(channelName);
+	if (channelIt == _channels.end()) {
+		client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), channelName));
+		return;
+	}
 
-void	Server::names(Client &client)
-{
-	std::string channel = client.getMessage().getParameters()[0];
+	channel = channelIt->second;
+	clients = channel->getClients();
 
-	client.sendMessage(this->_name + RPL_NAMREPLY(channel) + client.getNickname()); // a modifier avec tous les client co au channel
-	client.sendMessage(this->_name + RPL_ENDOFNAMES(channel));
+	for (std::set<Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
+		client.sendMessage(_name + RPL_NAMREPLY(client.getNickname(), channelName, (*it)->getNickname()));
+	}
+
+	client.sendMessage(_name + RPL_ENDOFNAMES(client.getNickname(), channelName));
 }
+
+/*
+< :server_name 366 jo #pomme :End of /NAMES list.
+< :server_name 366 #pomme :End of /NAMES list
+*/

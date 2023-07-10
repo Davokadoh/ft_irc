@@ -1,37 +1,37 @@
-//Command: JOIN
 #include "Server.hpp"
+#include "Macros.hpp"
 
-#define RPL_TOPIC(nickname, channel) " 332 " + nickname + " " + channel + " :No topic"
-#define ERR_NOTREGISTERED(nickname) " 451 " + nickname + " :You have not registered"
+//#define RPL_TOPIC(nickname, channel) " 332 " + nickname + " " + channel + " :No topic"
+//#define ERR_NOTREGISTERED(nickname) " 451 " + nickname + " :You have not registered"
 
-void	Server::join(Client &client)
-{
-	if (client.getIsRegistered() == false)
-	{
-		client.sendMessage(this->_name + ERR_NOTREGISTERED(client.getNickname()));
+void	Server::join(Client &client) {
+	if (client.getIsRegistered() == false) {
+		client.sendMessage(_name + ERR_NOTREGISTERED(client.getNickname()));
 		return;
 	}
+
 	std::string	channel = client.getMessage().getParameters()[0];
-	if (channel[0] != '#')
-	{
+	if (channel[0] != '#') {
 		channel.insert(0, 1, '#');
 	}
-	std::map<std::string, Channel*>::iterator it = this->_channels.find(channel);
-	if (it == this->_channels.end())
-	{
-		this->_channels[channel] = new Channel;
+
+	std::map<std::string, Channel*>::iterator it = _channels.find(channel);
+	if (it == _channels.end()) {
+		_channels[channel] = new Channel(channel);
 	}
-	this->_channels[channel]->addClient(&client);
-	client.sendMessage(this->_name + RPL_TOPIC(client.getNickname(), channel));
-	this->names(client);
-	
-	// just to check
+
+	_channels[channel]->addClient(&client);
+	client.sendMessage(client.getSource() + " JOIN #" + channel);
+	//_channels[channel]->sendToAll(&client); //Do this after adding instead, will reply & notice everyone 
+	//client.sendMessage(_name + RPL_TOPIC(client.getNickname(), channel));
+	client.sendMessage(_name + RPL_TOPIC(client.getNickname(), channel, _channels.find(channel)->second->getTopic()));
+	names(client);
+
+	/*
 	for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
 	{
 		std::cout << "Channel: " << it->first << std::endl;
 		it->second->printClientList();
 	}
-	// just to check
-	
-	//send(); //Send success or error
+	*/
 }
