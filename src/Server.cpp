@@ -194,3 +194,9 @@ void	Server::registration(Client &client)
 	client.sendMessage(this->_name + " 255 " + client.getNickname() + " :I have 1 clients and 1 servers");
 	client.sendMessage(this->_name + " 422 " + client.getNickname() + " :MOTD File is missing");
 }
+
+void	Server::addHashtag(std::string &str) {
+	if (str[0] != '#') {
+		str.insert(0, "#");
+	}
+}
