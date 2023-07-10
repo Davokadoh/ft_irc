@@ -7,6 +7,7 @@ void	Server::names(Client &client) {
 	Channel				*channel;
 	std::set<Client*>	clients;
 
+	addHashtag(channelName);
 	channelIt = _channels.find(channelName);
 	if (channelIt == _channels.end()) {
 		client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), channelName));

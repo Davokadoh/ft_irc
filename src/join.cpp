@@ -1,9 +1,6 @@
 #include "Server.hpp"
 #include "Macros.hpp"
 
-//#define RPL_TOPIC(nickname, channel) " 332 " + nickname + " " + channel + " :No topic"
-//#define ERR_NOTREGISTERED(nickname) " 451 " + nickname + " :You have not registered"
-
 void	Server::join(Client &client) {
 	if (client.getIsRegistered() == false) {
 		client.sendMessage(_name + ERR_NOTREGISTERED(client.getNickname()));
@@ -11,9 +8,7 @@ void	Server::join(Client &client) {
 	}
 
 	std::string	channel = client.getMessage().getParameters()[0];
-	if (channel[0] != '#') {
-		channel.insert(0, 1, '#');
-	}
+	addHashtag(channel);
 
 	std::map<std::string, Channel*>::iterator it = _channels.find(channel);
 	if (it == _channels.end()) {
@@ -21,10 +16,11 @@ void	Server::join(Client &client) {
 	}
 
 	_channels[channel]->addClient(&client);
-	client.sendMessage(client.getSource() + " JOIN #" + channel);
+	client.sendMessage(client.getSource() + " JOIN " + channel);
 	//_channels[channel]->sendToAll(&client); //Do this after adding instead, will reply & notice everyone 
 	//client.sendMessage(_name + RPL_TOPIC(client.getNickname(), channel));
-	client.sendMessage(_name + RPL_TOPIC(client.getNickname(), channel, _channels.find(channel)->second->getTopic()));
+	//client.sendMessage(_name + RPL_TOPIC(client.getNickname(), channel, _channels.find(channel)->second->getTopic()));
+	topic(client);
 	names(client);
 
 	/*
