@@ -12,6 +12,7 @@ std::map<std::string, FunPtr>	Server::createMap(void) {
 	cmds["JOIN"] = &Server::join;
 	cmds["NAMES"] = &Server::names;
 	cmds["TOPIC"] = &Server::topic;
+	cmds["KICK"] = &Server::kick;
 	return cmds;
 }
 
@@ -231,4 +232,10 @@ void	Server::registration(Client &client)
 	client.sendMessage(this->_name + RPL_LUSERCHANNELS(client.getNickname(), nbrChannels));
 	client.sendMessage(this->_name + RPL_LUSERME(client.getNickname(), nbrClients));
 	client.sendMessage(this->_name + ERR_NOMOTD(client.getNickname()));
+}
+
+void	Server::addHashtag(std::string &str) {
+	if (str[0] != '#') {
+		str.insert(0, "#");
+	}
 }

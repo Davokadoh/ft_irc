@@ -17,6 +17,7 @@
 # define ERR_NOSUCHCHANNEL(client, channel) " 403 " + client + " " + channel  + " :No such channel"
 # define ERR_UNKNOWNCOMMAND(nickname) " 421 " + nickname + " :Unknown command"
 # define ERR_NOMOTD(nickname) " 422 " + nickname + " :MOTD File is missing"
+# define ERR_USERNOTINCHANNEL(client, nickname, channel) " 441 " + client + " " + nickname + " " + channel + " :They aren't on that channel"
 # define ERR_NOTONCHANNEL(client, channel) " 442 " + client + " " + channel + " :You're not on that channel"
 # define ERR_NOTREGISTERED(nickname) " 451 " + nickname + " :You have not registered"
 # define ERR_NEEDMOREPARAMS(nickname) " 461 " + nickname + " :Not enough parameters"
