@@ -5,6 +5,7 @@
 # define CONNECTED 0
 
 # include "Message.hpp"
+# include "Macros.hpp"
 # include <string>
 # include <map>
 

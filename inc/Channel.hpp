@@ -4,6 +4,7 @@
 # include <iostream>
 # include <set>
 # include "Client.hpp"
+# include "Macros.hpp"
 
 class	Channel
 {
