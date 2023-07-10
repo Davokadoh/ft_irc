@@ -1,8 +1,6 @@
 #include "Channel.hpp"
 #include <algorithm>
 
-// ------- COPLIEN -------
-
 Channel::Channel(void) {}
 
 Channel::Channel(const std::string &name) : _name(name) {}
@@ -19,6 +17,12 @@ Channel	&Channel::operator=(const Channel &rhs) {
 }
 
 Channel::~Channel(void) {}
+
+void	Channel::sendToAll(const std::string &msg) {
+	for (std::set<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
+		(*it)->sendMessage(msg);
+	}
+}
 
 std::string	Channel::getName(void) const {
 	return _name;

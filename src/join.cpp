@@ -17,10 +17,7 @@ void	Server::join(Client &client) {
 	}
 
 	_channels[channel]->addClient(&client);
-	client.sendMessage(client.getSource() + " JOIN " + channel);
-	//_channels[channel]->sendToAll(&client); //Do this after adding instead, will reply & notice everyone 
-	//client.sendMessage(_name + RPL_TOPIC(client.getNickname(), channel));
-	//client.sendMessage(_name + RPL_TOPIC(client.getNickname(), channel, _channels.find(channel)->second->getTopic()));
+	_channels[channel]->sendToAll(client.getSource() + " JOIN " + channel);
 	topic(client);
 	names(client);
 
