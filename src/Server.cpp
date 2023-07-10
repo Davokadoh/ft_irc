@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <iostream>
+#include <ctime>
 
 std::map<std::string, FunPtr>	Server::createMap(void) {
 	std::map<std::string, FunPtr>	cmds;
@@ -180,20 +181,57 @@ void	Server::rmClients(void) {
 	}
 }
 
+std::string	intToString(int toStr)
+{
+	std::stringstream ss;
+	ss << toStr;
+	std::string result = ss.str();
+	return (result);
+}
+
+std::string	getDateCreation(void)
+{
+	std::time_t now = std::time(NULL);
+	struct std::tm* timeinfo = std::localtime(&now);
+
+	char buffer[80];
+	std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
+
+	std::string result = buffer;
+	return (result);
+}
+
+int	Server::nbrRegistered(void)
+{
+	int	clientRegist = 0;
+
+	for (std::map<int, Client*>::iterator	it = this->_clients.begin(); it !=this->_clients.end(); it++)
+	{
+		if (it->second->getIsRegistered() == true)
+		{
+			clientRegist++;
+		}
+	}
+	return (clientRegist);
+}
+
 void	Server::registration(Client &client)
 {
 	client.setIsRegistered(true);
-	client.sendMessage(this->_name + RPL_WELCOME(client.getNickname(), this->_name));
-	client.sendMessage(this->_name + RPL_YOURHOST(client.getNickname(), this->_name));
-	client.sendMessage(this->_name + RPL_CREATED(client.getNickname()));
+	
+	std::string nbrClients = intToString(this->nbrRegistered());
+	std::string nbrChannels = intToString(this->_channels.size());
+
+	client.sendMessage(this->_name + RPL_WELCOME(client.getNickname()));
+	client.sendMessage(this->_name + RPL_YOURHOST(client.getNickname()));
+	client.sendMessage(this->_name + RPL_CREATED(client.getNickname(), getDateCreation()));
 	client.sendMessage(this->_name + RPL_MYINFO(client.getNickname(), this->_name));
 	//client.sendMessage(this->_name + RPL_ISUPPORT(client.getNickname()));
-	client.sendMessage(this->_name + " 251 " + client.getNickname() + " :There are 1 users and 0 services on 1 servers");
-	client.sendMessage(this->_name + " 252 " + client.getNickname() + " 0 :operator(s) online");
-	client.sendMessage(this->_name + " 253 " + client.getNickname() + " 0 :unknown connection(s)");
-	client.sendMessage(this->_name + " 254 " + client.getNickname() + " 0 :channels formed");
-	client.sendMessage(this->_name + " 255 " + client.getNickname() + " :I have 1 clients and 1 servers");
-	client.sendMessage(this->_name + " 422 " + client.getNickname() + " :MOTD File is missing");
+	client.sendMessage(this->_name + RPL_LUSERCLIENT(client.getNickname(), nbrClients));
+	client.sendMessage(this->_name + RPL_LUSEROP(client.getNickname()));
+	client.sendMessage(this->_name + RPL_LUSERCHANNELS(client.getNickname(), nbrChannels));
+	client.sendMessage(this->_name + RPL_LUSERME(client.getNickname(), nbrClients));
+	client.sendMessage(this->_name + ERR_NOMOTD(client.getNickname()));
 }
 
 void	Server::addHashtag(std::string &str) {
