@@ -239,9 +239,3 @@ void	Server::addHashtag(std::string &str) {
 		str.insert(0, "#");
 	}
 }
-
-void	Server::addHashtag(std::string &str) {
-	if (str[0] != '#') {
-		str.insert(0, "#");
-	}
-}
