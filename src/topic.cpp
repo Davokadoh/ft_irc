@@ -44,6 +44,5 @@ void	Server::topic(Client &client) {
 		}
 	}
 	channel->setTopic(parameters[1]);
-	//client.sendMessage(client.getSource() + RPL_TOPIC(client.getNickname(), channel->getName(), channel->getTopic()));
 	channel->sendToAll(client.getSource() + RPL_TOPIC(client.getNickname(), channel->getName(), channel->getTopic()));
 }
