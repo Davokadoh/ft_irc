@@ -15,45 +15,35 @@ bool	Server::isNickInUse(const std::string &nick)
 #define ERR_NONICKNAMEGIVEN(nickname) " 431 " + nickname + " :No nickname given"
 #define ERR_ERRONEUSNICKNAME(nickname, newNick) " 432 " + nickname + " " + newNick + " :Erroneous Nickname"
 #define ERR_NICKNAMEINUSE(nickname, newNick) " 433 " + nickname + " " + newNick + " :Nickname already in use."
-void	Server::nick(Client &client)
-{
+void	Server::nick(Client &client) {
 	std::vector<std::string> p = client.getMessage().getParameters();
 	std::string nickname = "";
 
-	if (p.size() != 0)
-	{
+	if (p.size() != 0) {
 		nickname = p[0];
 	}
 
-	if (nickname.empty())
-	{
+	if (nickname.empty()) {
 		client.sendMessage(this->_name + ERR_NONICKNAMEGIVEN(client.getNickname()));
-	}
-	else if (isNickValid(nickname))
-	{
+	} else if (isNickValid(nickname)) {
 		client.sendMessage(this->_name + ERR_ERRONEUSNICKNAME(client.getNickname(), nickname));
-	}
-	else if (isNickInUse(nickname))
-	{
+	} else if (isNickInUse(nickname)) {
 		client.sendMessage(this->_name + ERR_NICKNAMEINUSE(client.getNickname(), nickname));
-	}
-	else
-	{
-		if (nickname != "*")
-		{
+	} else {
+		if (client.getNickname() != "*") {
 			_nicknames.erase(client.getNickname());
 		}
 		_nicknames.insert(std::make_pair(nickname, &client));
-		if (client.getIsRegistered() == true)
-		{
-			client.sendMessage(client.getSource() + " NICK :" + nickname);
+		if (client.getIsRegistered() == true) {
+			for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it) {
+				if (it->second->getClients().find(&client) != it->second->getClients().end()) {
+					it->second->sendToAll(client.getSource() + " NICK :" + nickname);
+				}
+			}
 			client.setNickname(nickname);
-		}
-		else
-		{
+		} else {
 			client.setNickname(nickname);
-			if (client.getUsername() != "" && client.getRealname() != "" && client.getIsRegistered() == false)
-			{
+			if (client.getUsername() != "" && client.getRealname() != "") {
 				this->registration(client);
 			}
 		}

@@ -26,6 +26,7 @@ class	Channel
 		Channel(const std::string &name);
 		~Channel(void);
 
+		void				sendToAll(const std::string &msg);
 		std::string			getName(void) const;
 		std::string			getTopic(void) const;
 		void				setTopic(const std::string &topic);
