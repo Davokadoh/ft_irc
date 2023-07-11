@@ -164,3 +164,8 @@ void	Client::resetMessage(void) {
 	_recvMessage.clear();
 }
 
+void	Client::setMessage(std::string part, std::string channel)
+{
+	this->_recvMessage.setVerb(part);
+	this->_recvMessage.splitParameters(channel);
+}

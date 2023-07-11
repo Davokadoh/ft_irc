@@ -13,6 +13,7 @@ std::map<std::string, FunPtr>	Server::createMap(void) {
 	cmds["NAMES"] = &Server::names;
 	cmds["TOPIC"] = &Server::topic;
 	cmds["KICK"] = &Server::kick;
+	cmds["PART"] = &Server::part;
 	return cmds;
 }
 
@@ -101,20 +102,6 @@ void	Server::rmSocket(int sd) {
 	}
 }
 
-void	Server::clientQuit(Client &client)
-{
-	for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
-	{
-		for (std::set<Client*>::iterator it2 = it->second->getClients().begin(); it2 != it->second->getClients().end(); it2++)
-		{
-			if ((*it2)->getNickname() == client.getNickname());
-			{
-				it->second->sendToAll(client.getNickname() + " ")
-			}
-		}
-	}
-}
-
 void	Server::run(void) {
 	while (_status) {
 		cull();
@@ -186,7 +173,8 @@ void	Server::addClients(void) {
 void	Server::rmClients(void) {
 	for (std::map<int, Client*>::iterator it = _clients.begin(), last = _clients.end(); it != last; ) {
 		if (it->second->getStatus()) {
-			// client quit
+			std::cout << "test deco " << std::endl;
+			this->partChannels(*(it->second));
 			rmSocket(it->first);
 			_nicknames.erase(it->second->getNickname());
 			it = _clients.erase(it);
@@ -252,5 +240,18 @@ void	Server::registration(Client &client)
 void	Server::addHashtag(std::string &str) {
 	if (str[0] != '#') {
 		str.insert(0, "#");
+	}
+}
+
+void	Server::partChannels(Client &client)
+{
+	for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
+	{
+		if (it->second->getClients().find(&client) != it->second->getClients().end())
+		{
+			client.setMessage("PART", it->second->getName());
+			this->part(client);
+			client.resetMessage();
+		}
 	}
 }

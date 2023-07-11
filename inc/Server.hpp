@@ -34,7 +34,7 @@ class Server {
 		void				cull(void);
 		void				execute(Client &client);
 		void				registration(Client &client);
-		void				clientQuit(Client &client);
+		void				partChannels(Client &client);
 		int					nbrRegistered(void);
 		void				addHashtag(std::string &str);
 		bool				isNickInUse(const std::string &nick);

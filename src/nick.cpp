@@ -12,9 +12,6 @@ bool	Server::isNickInUse(const std::string &nick)
 	return (_nicknames.find(nick) != _nicknames.end()) ? 1 : 0;
 }
 
-#define ERR_NONICKNAMEGIVEN(nickname) " 431 " + nickname + " :No nickname given"
-#define ERR_ERRONEUSNICKNAME(nickname, newNick) " 432 " + nickname + " " + newNick + " :Erroneous Nickname"
-#define ERR_NICKNAMEINUSE(nickname, newNick) " 433 " + nickname + " " + newNick + " :Nickname already in use."
 void	Server::nick(Client &client) {
 	std::vector<std::string> p = client.getMessage().getParameters();
 	std::string nickname = "";

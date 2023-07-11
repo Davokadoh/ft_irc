@@ -50,6 +50,7 @@ class Client {
 		void	resetMessage(void);
 		void	parse(void);
 		void	sendMessage(const std::string &msg);
+		void	setMessage(std::string part, std::string channel);
 };
 
 #endif
