@@ -101,6 +101,20 @@ void	Server::rmSocket(int sd) {
 	}
 }
 
+void	Server::clientQuit(Client &client)
+{
+	for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
+	{
+		for (std::set<Client*>::iterator it2 = it->second->getClients().begin(); it2 != it->second->getClients().end(); it2++)
+		{
+			if ((*it2)->getNickname() == client.getNickname());
+			{
+				it->second->sendToAll(client.getNickname() + " ")
+			}
+		}
+	}
+}
+
 void	Server::run(void) {
 	while (_status) {
 		cull();
@@ -172,6 +186,7 @@ void	Server::addClients(void) {
 void	Server::rmClients(void) {
 	for (std::map<int, Client*>::iterator it = _clients.begin(), last = _clients.end(); it != last; ) {
 		if (it->second->getStatus()) {
+			// client quit
 			rmSocket(it->first);
 			_nicknames.erase(it->second->getNickname());
 			it = _clients.erase(it);

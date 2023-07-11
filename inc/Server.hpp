@@ -34,6 +34,7 @@ class Server {
 		void				cull(void);
 		void				execute(Client &client);
 		void				registration(Client &client);
+		void				clientQuit(Client &client);
 		int					nbrRegistered(void);
 		void				addHashtag(std::string &str);
 		bool				isNickInUse(const std::string &nick);
@@ -44,6 +45,7 @@ class Server {
 		void				names(Client &client);
 		void				topic(Client &client);
 		void				kick(Client &client);
+		void				part(Client &client);
 		static std::map<std::string, FunPtr>	createMap(void);
 	
 		static const std::map<std::string, FunPtr>	_cmds;
