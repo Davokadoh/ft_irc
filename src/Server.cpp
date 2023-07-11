@@ -13,6 +13,7 @@ std::map<std::string, FunPtr>	Server::createMap(void) {
 	cmds["NAMES"] = &Server::names;
 	cmds["TOPIC"] = &Server::topic;
 	cmds["KICK"] = &Server::kick;
+	cmds["MODE"] = &Server::mode;
 	return cmds;
 }
 
