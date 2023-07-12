@@ -173,7 +173,6 @@ void	Server::addClients(void) {
 void	Server::rmClients(void) {
 	for (std::map<int, Client*>::iterator it = _clients.begin(), last = _clients.end(); it != last; ) {
 		if (it->second->getStatus()) {
-			std::cout << "test deco " << std::endl;
 			this->partChannels(*(it->second));
 			rmSocket(it->first);
 			_nicknames.erase(it->second->getNickname());

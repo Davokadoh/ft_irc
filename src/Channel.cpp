@@ -82,11 +82,11 @@ bool	Channel::lookForClient(Client &client)
 {
 	if (this->getClients().find(&client) != this->getClients().end())
 	{
-		return (1);
+		return (0);
 	}
 	else
 	{
-		return (0);
+		return (1);
 	}
 }
 
