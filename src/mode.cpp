@@ -37,6 +37,7 @@ void	Server::mode(Client &client) {
 		return;
 	}
 
+	operators = channel.getOperators();
 	if (operators.find(&client) == operators.end()) {
 		client.sendMessage(ERR_CHANOPRIVSNEEDED);
 		return;
@@ -45,6 +46,7 @@ void	Server::mode(Client &client) {
 	std::string &mode = parameters.at(1);
 	if (mode.find_first_not_of("+-itokl") != std::string::npos) {
 		client.sendMessage(ERR_UMODEUNKNOWNFLAG);
+		return;
 	}
 
 	bool	sign = true;
@@ -58,13 +60,25 @@ void	Server::mode(Client &client) {
 		} else if (it == 't') {
 			channel.setTopicMode(sign);
 		} else if (it == 'k') {
+			if (parameters.next() == parameters.end()) {
+				client.sendMessage(ERR_NEEDMOREPARAMS);
+				continue;
+			}
 			if (channel.setPassword(sign ? parameters.next() : "")) {
 				client.sendMessage(ERR_INVALIDKEY);
 			}
 		} else if (it == 'l') {
-			channel.setLimit(sign ? parameters.next() : "");
+			if (parameters.next() == parameters.end()) {
+				client.sendMessage(ERR_NEEDMOREPARAMS);
+				continue;
+			}
+			channel.setLimit(sign ? std::atoi(parameters.next()) : 0); //Check if atoi transform non numeric to 0
+			ERR_INVALIDMODEPARAM
 		} else if (it == 'o') {
-			chClients.find(parameters.next());
+			if (parameters.next() == parameters.end()) {
+				client.sendMessage(ERR_NEEDMOREPARAMS);
+				continue;
+			}
 			if (chClients.find(parameters.next() == chClients.end()) {
 				client.sendMessage(ERR_USERNOTINCHANNEL);
 				continue;
