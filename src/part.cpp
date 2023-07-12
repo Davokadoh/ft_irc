@@ -16,9 +16,9 @@ void	Server::part(Client &client)
 		client.sendMessage(this->_name + ERR_NOSUCHCHANNEL(nickname, channel));
 		return;
 	}
-	else if (it->second->getClients().find(&client) == it->second->getClients().end())
+	else if (it->second->lookForClient(client))
 	{
-		client.sendMessage(this->_name + ERR_USERNOTINCHANNEL(nickname, client.getMessage().getParameters()[1], channel));
+		client.sendMessage(this->_name + ERR_USERNOTINCHANNEL(nickname, client.getMessage().getParameters()[1], channel));	
 	}
 	else
 	{

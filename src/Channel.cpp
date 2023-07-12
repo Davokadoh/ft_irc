@@ -78,6 +78,20 @@ void	Channel::printClientList(void) {
     std::for_each(_clients.begin(), _clients.end(), printClient);
 }
 
+bool	Channel::lookForClient(Client &client)
+{
+	if (this->getClients().find(&client) != this->getClients().end())
+	{
+		return (1);
+	}
+	else
+	{
+		return (0);
+	}
+}
+
+
+
 /*
 void	Channel::printClientList(void) {
 	std::cout << "Clients: " << std::endl;
