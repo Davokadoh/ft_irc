@@ -78,11 +78,35 @@ void	Channel::printClientList(void) {
     std::for_each(_clients.begin(), _clients.end(), printClient);
 }
 
-/*
-void	Channel::printClientList(void) {
+void	Channel::setInviteList(Client *client)
+{
+	this->_inviteList.insert(client);
+}
+
+bool	Channel::getInviteMode(void) const
+{
+	return (_inviteMode);
+}
+
+std::set<Client*>	Channel::getInviteList(void) const
+{
+	return (_inviteList);
+}
+
+bool	Channel::lookForClient(Client *client)
+{
+	if (this->_clients.find(client) != this->_clients.end())
+	{
+		return (false);
+	}
+	return (true);
+}
+
+
+/*void	Channel::printClientList(void) {
 	std::cout << "Clients: " << std::endl;
 	for (std::set<Client*>::iterator it = _clients.begin(); it != _clients.end(); it++) {
 		std::cout << (*it)->getNickname() << std::endl;
 	}
-}
-*/
+}*/
+

@@ -22,6 +22,13 @@ void	Server::names(Client &client) {
 	}
 
 	client.sendMessage(_name + RPL_ENDOFNAMES(client.getNickname(), channelName));
+	
+	for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
+	{
+		std::cout << "Channel: " << it->second->getName() << std::endl;
+		it->second->printClientList();
+		std::cout << std::endl;
+	}
 }
 
 /*
