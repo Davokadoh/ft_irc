@@ -15,7 +15,7 @@ class	Channel
 
 		std::set<Client*>	_clients;
 		std::set<Client*>	_operators;
-		//bool				_inviteMode;
+		bool				_inviteMode == true;
 		bool				_topicMode;
 		std::string			_topic;
 		std::string			_password;
