@@ -39,7 +39,6 @@ class	Channel
 		std::set<Client*>	getClients(void) const;
 		std::set<Client*>	getOperators(void) const;
 		void				printClientList(void);
-		bool				lookForClient(Client &client);
 };
 
 #endif
