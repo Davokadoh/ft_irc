@@ -15,7 +15,7 @@ class	Channel
 
 		std::set<Client*>	_clients;
 		std::set<Client*>	_operators;
-		bool				_inviteMode == true;
+		bool				_inviteMode;
 		bool				_topicMode;
 		std::string			_topic;
 		std::string			_password;
@@ -32,13 +32,19 @@ class	Channel
 		void				setTopic(const std::string &topic);
 		bool				getTopicMode(void) const;
 		void				setTopicMode(const std::string &mode);
+		std::set<Client*>	getClients(void) const; //to rm
+		bool				isClient(Client *client) const;
 		void				addClient(Client *client);
 		void				rmClient(Client *client);
+		std::set<Client*>	getOperators(void) const; //to rm
+		bool				isOperator(Client &client) const;
 		void				addOperator(Client &client);
 		void				rmOperator(Client &client);
-		std::set<Client*>	getClients(void) const;
-		std::set<Client*>	getOperators(void) const;
-		void				printClientList(void);
+		//std::set<Client*>	getInviteds(void) const; //to rm
+		bool				isInvited(Client &client) const;
+		void				addInvited(Client &client);
+		void				rmInvited(Client &client);
+		//void				printClientList(void);
 };
 
 #endif
