@@ -11,7 +11,7 @@ void	Server::topic(Client &client) {
 	message = client.getMessage();
 	parameters = message.getParameters();
 	if (parameters.size() < 1) {
-		client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname()));
+		client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname(), "TOPIC"));
 		return;
 	}
 

@@ -5,7 +5,7 @@ void	Server::user(Client &client)
 {
 	if (client.getMessage().getParameters().size() < 4)
 	{
-		client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname()));
+		client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname(), "USER"));
 	}
 	else if (client.getIsRegistered() == true)
 	{
