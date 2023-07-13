@@ -31,8 +31,7 @@ void	Server::invite(Client &client)
 	else
 	{
 		it->second->setInviteList(clientToInvite->second);
-		clientToInvite->second->setMessage("JOIN", channel);
-		this->join(*clientToInvite->second);
 		client.sendMessage(client.getSource() + RPL_INVITING(clientToInvite->second->getNickname(), channel));
+		clientToInvite->second->sendMessage(client.getSource() + " INVITE " + clientToInvite->second->getNickname() + " " + channel);
 	}
 }
