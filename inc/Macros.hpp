@@ -15,6 +15,7 @@
 # define RPL_NAMREPLY(client, channel, nick) " 353 " + client + " = " + channel + " " + nick
 # define RPL_ENDOFNAMES(client, channel) " 366 " + client + " " + channel + " :End of /NAMES list"
 # define ERR_NOSUCHCHANNEL(client, channel) " 403 " + client + " " + channel  + " :No such channel"
+# define ERR_NOTEXTTOSEND(nickname) " 412 " + nickname + " :No text to send"
 # define ERR_UNKNOWNCOMMAND(nickname) " 421 " + nickname + " :Unknown command"
 # define ERR_NOMOTD(nickname) " 422 " + nickname + " :MOTD File is missing"
 # define ERR_NONICKNAMEGIVEN(nickname) " 431 " + nickname + " :No nickname given"
