@@ -4,7 +4,7 @@ void	Server::invite(Client &client)
 {
 	if (client.getMessage().getParameters().size() < 2)
 	{
-		client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname()));
+		client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname(), "INVITE"));
 		return;
 	}
 	std::map<std::string, Client*>:: iterator clientToInvite = this->_nicknames.find(client.getMessage().getParameters()[0]);
@@ -31,7 +31,7 @@ void	Server::invite(Client &client)
 	else
 	{
 		it->second->setInviteList(clientToInvite->second);
-		client.sendMessage(client.getSource() + RPL_INVITING(clientToInvite->second->getNickname(), channel));
+		client.sendMessage(client.getSource() + RPL_INVITING(nickname, clientToInvite->second->getNickname(), channel));
 		clientToInvite->second->sendMessage(client.getSource() + " INVITE " + clientToInvite->second->getNickname() + " " + channel);
 	}
 }

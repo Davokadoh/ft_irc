@@ -102,6 +102,24 @@ bool	Channel::lookForClient(Client *client)
 	return (true);
 }
 
+bool	Channel::clientOnInvite(Client *client)
+{
+	if (this->_inviteList.find(client) == this->_inviteList.end() || this->_inviteList.empty())
+	{
+		return (false);
+	}
+	return (true);
+}
+
+void	Channel::rmClientFromInvite(Client *client)
+{
+	std::set<Client*>::iterator it = this->_inviteList.find(client);
+	if (it != this->_inviteList.end())
+	{
+		this->_inviteList.erase(it);
+	}
+}
+
 
 /*void	Channel::printClientList(void) {
 	std::cout << "Clients: " << std::endl;

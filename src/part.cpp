@@ -4,7 +4,7 @@ void	Server::part(Client &client)
 {
 	if (client.getMessage().getParameters().size() < 1)
 	{
-		client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname()));
+		client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname(), "PART"));
 		return;
 	}
 	std::string	channel = client.getMessage().getParameters()[0];

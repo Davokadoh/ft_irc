@@ -44,6 +44,8 @@ class	Channel
 		bool				getInviteMode(void) const;
 		std::set<Client*>	getInviteList(void) const;
 		bool				lookForClient(Client *client);
+		bool				clientOnInvite(Client *client);
+		void				rmClientFromInvite(Client *client);
 };
 
 #endif

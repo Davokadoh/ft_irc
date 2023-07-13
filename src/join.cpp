@@ -21,7 +21,7 @@ void	Server::join(Client &client) {
 	}
 	else if (it->second->getInviteMode() == true)
 	{
-		if (it->second->getInviteList().find(&client) == it->second->getInviteList().end() || it->second->getInviteList().empty())
+		if (!it->second->clientOnInvite(&client))
 		{
 			client.sendMessage(this->_name + ERR_INVITEONLYCHAN(client.getNickname(), channel));
 		}
@@ -31,6 +31,7 @@ void	Server::join(Client &client) {
 			_channels[channel]->sendToAll(client.getSource() + " JOIN " + channel);
 			topic(client);
 			names(client);
+			it->second->rmClientFromInvite(&client);
 		}
 	}
 	else
