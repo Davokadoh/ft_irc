@@ -19,7 +19,7 @@ void	Server::kick(Client &client) {
 	message = client.getMessage();
 	parameters = message.getParameters();
 	if (parameters.size() < 2) {
-		client.sendMessage(_name + ERR_NEEDMOREPARAMS(client.getNickname()));
+		client.sendMessage(_name + ERR_NEEDMOREPARAMS(client.getNickname(), "KICK"));
 		return;
 	}
 
