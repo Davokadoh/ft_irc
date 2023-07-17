@@ -16,6 +16,7 @@ std::map<std::string, FunPtr>	Server::createMap(void) {
 	cmds["PART"] = &Server::part;
 
 	cmds["PRIVMSG"] = &Server::privmsg;
+	cmds["NOTICE"] = &Server::notice;
 	return cmds;
 }
 

@@ -6,7 +6,7 @@
 #    By: gregoirebeaumann <gregoirebeaumann@stud    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/26 14:18:20 by jleroux           #+#    #+#              #
-#    Updated: 2023/07/13 12:02:22 by gregoirebea      ###   ########.fr        #
+#    Updated: 2023/07/17 10:06:44 by gregoirebea      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ SRCS		=	$(SRC_DIR)/main.cpp \
 				$(SRC_DIR)/kick.cpp \
 				$(SRC_DIR)/part.cpp \
 				$(SRC_DIR)/privmsg.cpp \
+				$(SRC_DIR)/notice.cpp \
 
 INCS		=	inc
 
