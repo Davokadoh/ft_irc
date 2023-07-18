@@ -260,13 +260,10 @@ void	Server::partChannels(Client &client)
 			{
 				it = this->_channels.erase(it);
 			}
-			//client.setMessage("PART", it->second->getName());
-			//this->part(client);
-			//client.resetMessage();
-		}
-		else
-		{
-			it++;
+			else
+			{
+				it++;
+			}
 		}
 	}
 }

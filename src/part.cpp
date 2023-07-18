@@ -34,8 +34,6 @@ void	Server::part(Client &client)
 		it->second->rmClient(&client);
 		if (it->second->getClients().empty())
 		{
-			std::cout << "avant de earse" << std::endl;
-			std::cout << it->second->getName() << std::endl;
 			this->_channels.erase(it);
 		}
 	}
