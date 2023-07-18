@@ -5,7 +5,6 @@
 # define RPL_YOURHOST(client) " 002 " + client + " :Your host is Ft_irc.42"
 # define RPL_CREATED(client, date) " 003 " + client + " :This server was created " + date
 # define RPL_MYINFO(client) " 004 " + client + " Ft_irc.42"
-# define RPL_ISUPPORT(client) " 005 " + client + " JE SAIS PAS" // a revoir
 # define RPL_LUSERCLIENT(client, nbrUsers) " 251 " + client + " :There are " + nbrUsers + "  users and 0 invisible on  1 servers"
 # define RPL_LUSEROP(client) " 252 " + client + " 0 :operator(s) online" // we do not handle server operator
 # define RPL_LUSERCHANNELS(client, nbrChannels) " 254 " + client + " " + nbrChannels + " :channels formed"
@@ -15,6 +14,9 @@
 # define RPL_INVITING(client, target, channel) " 341 " + client + " " + target + " " + channel
 # define RPL_NAMREPLY(client, channel, target) " 353 " + client + " = " + channel + " " + target
 # define RPL_ENDOFNAMES(client, channel) " 366 " + client + " " + channel + " :End of /NAMES list"
+# define RPL_MOTD(client, msg) " 372 " + client + " :" + msg 
+# define RPL_MOTDSTART(client) " 375 " + client + " :- Ft_irc.42 Message of the day - "
+# define RPL_ENDOFMOTD(client) " 376 " + client + " :End of /MOTD command."
 # define ERR_NOSUCHNICK(client, target) " 401 " + client + " " + target + " No such nick/channel"
 # define ERR_NOSUCHCHANNEL(client, channel) " 403 " + client + " " + channel  + " :No such channel"
 # define ERR_CANNOTSENDTOCHAN(client, channel) " 404 " + client + " " + channel + " :Cannot send to channel"

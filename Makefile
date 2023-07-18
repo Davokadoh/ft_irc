@@ -19,6 +19,7 @@ SRCS		=	$(SRC_DIR)/main.cpp \
 				$(SRC_DIR)/invite.cpp \
 				$(SRC_DIR)/privmsg.cpp \
 				$(SRC_DIR)/notice.cpp \
+				$(SRC_DIR)/motd.cpp \
 
 INCS		=	inc
 

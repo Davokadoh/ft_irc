@@ -52,8 +52,8 @@ private:
   void privmsg(Client &client);
   void notice(Client &client);
   void invite(Client &client);
+  void motd(Client &client);
   static std::map<std::string, FunPtr> createMap(void);
-
   static const std::map<std::string, FunPtr> _cmds;
   std::map<std::string, Channel *> _channels;
   std::map<std::string, Client *> _nicknames;
