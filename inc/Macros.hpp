@@ -20,7 +20,7 @@
 # define ERR_CANNOTSENDTOCHAN(client, channel) " 404 " + client + " " + channel + " :Cannot send to channel"
 # define ERR_NORECIPIENT(client, verb) " 411 " + client + " :No recipient given " + verb
 # define ERR_NOTEXTTOSEND(nickname) " 412 " + nickname + " :No text to send"
-# define ERR_UNKNOWNCOMMAND(nickname) " 421 " + nickname + " :Unknown command"
+# define ERR_UNKNOWNCOMMAND(nickname, verb) " 421 " + nickname +  " " + verb + " :Unknown command"
 # define ERR_NOMOTD(nickname) " 422 " + nickname + " :MOTD File is missing"
 # define ERR_NONICKNAMEGIVEN(nickname) " 431 " + nickname + " :No nickname given"
 # define ERR_ERRONEUSNICKNAME(nickname, newNick) " 432 " + nickname + " " + newNick + " :Erroneous Nickname"
