@@ -5,9 +5,9 @@
 void Server::kick(Client &client)
 {
     std::map<std::string, Channel *>::iterator channelIt;
-    std::vector<std::string>                   parameters;
-    Client                                    *target;
-    Channel                                   *channel;
+    std::vector<std::string> parameters;
+    Client *target;
+    Channel *channel;
 
     if (client.getIsRegistered() == false)
     {

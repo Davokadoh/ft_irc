@@ -67,7 +67,7 @@ Server::~Server(void)
 
 void Server::watch(void)
 {
-    int              yes = 1;
+    int yes = 1;
     struct addrinfo *addr = getAddr();
 
     _listenSd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
@@ -200,8 +200,8 @@ void Server::cull(void)
 
 void Server::addClients(void)
 {
-    int                sd;
-    socklen_t          len = sizeof(struct sockaddr);
+    int sd;
+    socklen_t len = sizeof(struct sockaddr);
     struct sockaddr_in addr;
 
     do
@@ -249,7 +249,7 @@ std::string intToString(int toStr)
 
 std::string getDateCreation(void)
 {
-    std::time_t     now = std::time(NULL);
+    std::time_t now = std::time(NULL);
     struct std::tm *timeinfo = std::localtime(&now);
 
     char buffer[80];
@@ -301,13 +301,20 @@ void Server::addHashtag(std::string &str)
 
 void Server::partChannels(Client &client)
 {
-    for (std::map<std::string, Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
+    for (std::map<std::string, Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end();)
     {
         if (it->second->getClients().find(&client) != it->second->getClients().end())
         {
-            client.setMessage("PART", it->second->getName());
-            this->part(client);
-            client.resetMessage();
+            it->second->sendToAll(client.getSource() + " PART " + it->second->getName() + " :Leaving");
+            it->second->rmClient(&client);
+            if (it->second->getClients().empty())
+            {
+                it = this->_channels.erase(it);
+            }
+            else
+            {
+                it++;
+            }
         }
     }
 }

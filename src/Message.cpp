@@ -96,7 +96,7 @@ void Message::setVerb(std::string str)
 void Message::splitParameters(std::string tmp)
 {
     std::istringstream iss(tmp);
-    std::string        token;
+    std::string token;
 
     while (iss >> token)
     {
@@ -116,7 +116,7 @@ void Message::srcSplit(void)
 void Message::parse(std::string toParse)
 {
     std::istringstream buffer(toParse);
-    std::string        tmp;
+    std::string tmp;
 
     if (toParse[0] == ':')
     {

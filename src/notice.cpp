@@ -6,8 +6,8 @@ void Server::notice(Client &client)
     {
         return;
     }
-    std::string                                sendTo = client.getMessage().getParameters()[0];
-    std::string                                message = client.getMessage().getParameters()[1];
+    std::string sendTo = client.getMessage().getParameters()[0];
+    std::string message = client.getMessage().getParameters()[1];
     std::map<std::string, Channel *>::iterator itChannel = this->_channels.find(sendTo);
     ;
 

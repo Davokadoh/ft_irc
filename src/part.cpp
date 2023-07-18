@@ -7,8 +7,8 @@ void Server::part(Client &client)
         client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname(), "PART"));
         return;
     }
-    std::string                                channel = client.getMessage().getParameters()[0];
-    std::string                                nickname = client.getNickname();
+    std::string channel = client.getMessage().getParameters()[0];
+    std::string nickname = client.getNickname();
     std::map<std::string, Channel *>::iterator it = this->_channels.find(channel);
 
     if (it == this->_channels.end())

@@ -4,10 +4,10 @@
 void Server::mode(Client &client)
 {
     std::vector<std::string> parameters;
-    std::string              modeString;
-    Channel                 *channel;
-    Client                  *target;
-    size_t                   modeArgIndex;
+    std::string modeString;
+    Channel *channel;
+    Client *target;
+    size_t modeArgIndex;
 
     if (!client.getIsRegistered())
         return client.sendMessage(_name + ERR_NOTREGISTERED(client.getNickname()));

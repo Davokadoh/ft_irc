@@ -4,7 +4,7 @@
 void Server::motd(Client &client)
 {
     std::ifstream motd;
-    std::string   line;
+    std::string line;
 
     motd.open("motd.txt");
 

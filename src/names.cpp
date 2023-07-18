@@ -5,8 +5,8 @@ void Server::names(Client &client)
 {
     std::string channelName = client.getMessage().getParameters()[0]; // Need to check param.size()
     std::map<std::string, Channel *>::iterator channelIt;
-    Channel                                   *channel;
-    std::set<Client *>                         clients;
+    Channel *channel;
+    std::set<Client *> clients;
 
     addHashtag(channelName);
     channelIt = _channels.find(channelName);
