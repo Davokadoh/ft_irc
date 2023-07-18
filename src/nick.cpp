@@ -37,6 +37,7 @@ void	Server::nick(Client &client) {
 					it->second->sendToAll(client.getSource() + " NICK :" + nickname);
 				}
 			}
+			client.sendMessage(client.getSource() + " NICK :" + nickname);
 			client.setNickname(nickname);
 		} else {
 			client.setNickname(nickname);
