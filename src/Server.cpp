@@ -1,24 +1,25 @@
 #include "Server.hpp"
-#include <sys/errno.h>
-#include <unistd.h>
+#include <ctime>
 #include <fcntl.h>
 #include <iostream>
-#include <ctime>
+#include <sys/errno.h>
+#include <unistd.h>
 
-std::map<std::string, FunPtr>	Server::createMap(void) {
-	std::map<std::string, FunPtr>	cmds;
-	cmds["NICK"] = &Server::nick;
-	cmds["USER"] = &Server::user;
-	cmds["JOIN"] = &Server::join;
-	cmds["NAMES"] = &Server::names;
-	cmds["TOPIC"] = &Server::topic;
-	cmds["KICK"] = &Server::kick;
-	cmds["PART"] = &Server::part;
-	cmds["PING"] = &Server::ping;
-	cmds["CAP"] = &Server::cap;
-	cmds["INVITE"] = &Server::invite;
-	cmds["PRIVMSG"] = &Server::privmsg;
-	cmds["NOTICE"] = &Server::notice;
+std::map<std::string, FunPtr> Server::createMap(void) {
+  std::map<std::string, FunPtr> cmds;
+  cmds["NICK"] = &Server::nick;
+  cmds["USER"] = &Server::user;
+  cmds["JOIN"] = &Server::join;
+  cmds["NAMES"] = &Server::names;
+  cmds["TOPIC"] = &Server::topic;
+  cmds["KICK"] = &Server::kick;
+  cmds["MODE"] = &Server::mode;
+  cmds["PART"] = &Server::part;
+  cmds["PING"] = &Server::ping;
+  cmds["CAP"] = &Server::cap;
+  cmds["INVITE"] = &Server::invite;
+  cmds["PRIVMSG"] = &Server::privmsg;
+  cmds["NOTICE"] = &Server::notice;
 	cmds["MOTD"] = &Server::motd;
 	return cmds;
 }
@@ -26,25 +27,25 @@ std::map<std::string, FunPtr>	Server::createMap(void) {
 const std::map<std::string, FunPtr> Server::_cmds = Server::createMap();
 
 Server::Server(const std::string &port, const std::string &password) : _password(password), _port(port), _name(":ft_irc.42.ch"), _status(true), _maxSd(1) {
-	FD_ZERO(&_mainSet);
-	FD_ZERO(&_recvSet);
-	FD_ZERO(&_sendSet);
+  FD_ZERO(&_mainSet);
+  FD_ZERO(&_recvSet);
+  FD_ZERO(&_sendSet);
 }
 
 Server::Server(const Server &ref) {
-	*this = ref;
+  *this = ref;
 }
 
-Server	&Server::operator=(const Server &rhs) {
-	if (this != &rhs) {
-		_listenSd = rhs._listenSd;
-		_clients = rhs._clients;
-		_mainSet = rhs._mainSet;
-		_recvSet = rhs._recvSet;
-		_sendSet = rhs._sendSet;
-	}
+Server &Server::operator=(const Server &rhs) {
+  if (this != &rhs) {
+    _listenSd = rhs._listenSd;
+    _clients = rhs._clients;
+    _mainSet = rhs._mainSet;
+    _recvSet = rhs._recvSet;
+    _sendSet = rhs._sendSet;
+  }
 
-	return *this;
+  return *this;
 }
 
 Server::~Server(void) {

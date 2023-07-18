@@ -12,6 +12,7 @@ SRCS		=	$(SRC_DIR)/main.cpp \
 				$(SRC_DIR)/names.cpp \
 				$(SRC_DIR)/topic.cpp \
 				$(SRC_DIR)/kick.cpp \
+				$(SRC_DIR)/mode.cpp \
 				$(SRC_DIR)/part.cpp \
 				$(SRC_DIR)/ping.cpp \
 				$(SRC_DIR)/cap.cpp \
