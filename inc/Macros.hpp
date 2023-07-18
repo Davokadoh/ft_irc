@@ -15,6 +15,9 @@
 # define RPL_INVITING(client, target, channel) " 341 " + client + " " + target + " " + channel
 # define RPL_NAMREPLY(client, channel, target) " 353 " + client + " = " + channel + " " + target
 # define RPL_ENDOFNAMES(client, channel) " 366 " + client + " " + channel + " :End of /NAMES list"
+# define RPL_MOTD(client, msg) " 372 " + client + " :" + msg 
+# define RPL_MOTDSTART(client) " 375 " + client + " :- Ft_irc.42 Message of the day - "
+# define RPL_ENDOFMOTD(client) " 376 " + client + " :End of /MOTD command."
 # define ERR_NOSUCHNICK(client, target) " 401 " + client + " " + target + " No such nick/channel"
 # define ERR_NOSUCHCHANNEL(client, channel) " 403 " + client + " " + channel  + " :No such channel"
 # define ERR_CANNOTSENDTOCHAN(client, channel) " 404 " + client + " " + channel + " :Cannot send to channel"
