@@ -234,7 +234,6 @@ void	Server::registration(Client &client)
 	client.sendMessage(this->_name + RPL_YOURHOST(client.getNickname()));
 	client.sendMessage(this->_name + RPL_CREATED(client.getNickname(), getDateCreation()));
 	client.sendMessage(this->_name + RPL_MYINFO(client.getNickname()));
-	//client.sendMessage(this->_name + RPL_ISUPPORT(client.getNickname()));
 	client.sendMessage(this->_name + RPL_LUSERCLIENT(client.getNickname(), nbrClients));
 	client.sendMessage(this->_name + RPL_LUSEROP(client.getNickname()));
 	client.sendMessage(this->_name + RPL_LUSERCHANNELS(client.getNickname(), nbrChannels));
