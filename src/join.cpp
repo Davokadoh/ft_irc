@@ -6,8 +6,18 @@ void	Server::join(Client &client) {
 		client.sendMessage(_name + ERR_NOTREGISTERED(client.getNickname()));
 		return;
 	}
-
+	if (client.getMessage().getParameters().empty())
+	{
+		client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname(), client.getMessage().getVerb()));
+		return;
+	}
 	std::string	channel = client.getMessage().getParameters()[0];
+	if (channel == "0")
+	{
+		client.resetMessage();
+		this->partChannels(client);
+		return;
+	}
 	addHashtag(channel);
 
 	std::map<std::string, Channel*>::iterator it = _channels.find(channel);

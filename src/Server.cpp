@@ -250,13 +250,23 @@ void	Server::addHashtag(std::string &str) {
 
 void	Server::partChannels(Client &client)
 {
-	for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
+	for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end();)
 	{
 		if (it->second->getClients().find(&client) != it->second->getClients().end())
 		{
-			client.setMessage("PART", it->second->getName());
-			this->part(client);
-			client.resetMessage();
+			it->second->sendToAll(client.getSource() + " PART " + it->second->getName() + " :Leaving");
+			it->second->rmClient(&client);
+			if (it->second->getClients().empty())
+			{
+				it = this->_channels.erase(it);
+			}
+			//client.setMessage("PART", it->second->getName());
+			//this->part(client);
+			//client.resetMessage();
+		}
+		else
+		{
+			it++;
 		}
 	}
 }
