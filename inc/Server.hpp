@@ -46,6 +46,8 @@ class Server {
 		void				topic(Client &client);
 		void				kick(Client &client);
 		void				part(Client &client);
+		void				ping(Client &client);
+		void				cap(Client &client);
 		void				privmsg(Client &client);
 		void				notice(Client &client);
 		void				invite(Client &client);

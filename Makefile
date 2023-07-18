@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: gregoirebeaumann <gregoirebeaumann@stud    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/06/26 14:18:20 by jleroux           #+#    #+#              #
-#    Updated: 2023/07/18 11:06:06 by gregoirebea      ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME		=	ircserv
 
 SRC_DIR		=	src
@@ -25,6 +13,8 @@ SRCS		=	$(SRC_DIR)/main.cpp \
 				$(SRC_DIR)/topic.cpp \
 				$(SRC_DIR)/kick.cpp \
 				$(SRC_DIR)/part.cpp \
+				$(SRC_DIR)/ping.cpp \
+				$(SRC_DIR)/cap.cpp \
 				$(SRC_DIR)/invite.cpp \
 				$(SRC_DIR)/privmsg.cpp \
 				$(SRC_DIR)/notice.cpp \
