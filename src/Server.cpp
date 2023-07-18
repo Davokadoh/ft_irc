@@ -233,7 +233,6 @@ void	Server::registration(Client &client)
 	client.sendMessage(this->_name + RPL_YOURHOST(client.getNickname()));
 	client.sendMessage(this->_name + RPL_CREATED(client.getNickname(), getDateCreation()));
 	client.sendMessage(this->_name + RPL_MYINFO(client.getNickname()));
-	//client.sendMessage(this->_name + RPL_ISUPPORT(client.getNickname()));
 	client.sendMessage(this->_name + RPL_LUSERCLIENT(client.getNickname(), nbrClients));
 	client.sendMessage(this->_name + RPL_LUSEROP(client.getNickname()));
 	client.sendMessage(this->_name + RPL_LUSERCHANNELS(client.getNickname(), nbrChannels));
@@ -249,13 +248,23 @@ void	Server::addHashtag(std::string &str) {
 
 void	Server::partChannels(Client &client)
 {
-	for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
+	for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end();)
 	{
 		if (it->second->getClients().find(&client) != it->second->getClients().end())
 		{
-			client.setMessage("PART", it->second->getName());
-			this->part(client);
-			client.resetMessage();
+			it->second->sendToAll(client.getSource() + " PART " + it->second->getName() + " :Leaving");
+			it->second->rmClient(&client);
+			if (it->second->getClients().empty())
+			{
+				it = this->_channels.erase(it);
+			}
+			//client.setMessage("PART", it->second->getName());
+			//this->part(client);
+			//client.resetMessage();
+		}
+		else
+		{
+			it++;
 		}
 	}
 }

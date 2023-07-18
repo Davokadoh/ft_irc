@@ -5,7 +5,6 @@
 # define RPL_YOURHOST(client) " 002 " + client + " :Your host is Ft_irc.42"
 # define RPL_CREATED(client, date) " 003 " + client + " :This server was created " + date
 # define RPL_MYINFO(client) " 004 " + client + " Ft_irc.42"
-# define RPL_ISUPPORT(client) " 005 " + client + " JE SAIS PAS" // a revoir
 # define RPL_LUSERCLIENT(client, nbrUsers) " 251 " + client + " :There are " + nbrUsers + "  users and 0 invisible on  1 servers"
 # define RPL_LUSEROP(client) " 252 " + client + " 0 :operator(s) online" // we do not handle server operator
 # define RPL_LUSERCHANNELS(client, nbrChannels) " 254 " + client + " " + nbrChannels + " :channels formed"
