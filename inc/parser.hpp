@@ -3,6 +3,6 @@
 
 #include "Msg.hpp"
 
-Msg	parse(const std::string &raw);
+Msg parse(const std::string &raw);
 
 #endif
