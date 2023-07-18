@@ -13,7 +13,7 @@ void Server::mode(Client &client) {
 
   parameters = client.getMessage().getParameters();
   if (parameters.size() < 1)
-    return client.sendMessage(_name + ERR_NEEDMOREPARAMS(client.getNickname()));
+    return client.sendMessage(_name + ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
   else if (_channels.find(parameters[0]) == _channels.end())
     return client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), parameters[0]));
 
@@ -32,7 +32,7 @@ void Server::mode(Client &client) {
     modeString += modeString.find_first_of("okl");
   }
   if (modeArgIndex < parameters.size() - 2)
-    return client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname()));
+    return client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
   modeString = parameters.at(0);
 
   bool sign = true;

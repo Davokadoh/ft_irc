@@ -50,12 +50,9 @@ void	Client::recvPackets(void) {
 	while (true) {
 		bzero(_recvBuff, 512);
 		int rc = recv(_sd, _recvBuff, sizeof(_recvBuff), 0);
-		if (rc < 0 && errno != EWOULDBLOCK) {
-			//"recv() failed"
-			throw std::runtime_error(std::strerror(errno));
-		} else if (rc < 0) {
+		if (rc < 0 && errno == EWOULDBLOCK) {
 			break;
-		} else if (rc == 0) {
+		} else if (rc <= 0) {
 			setStatus(DISCONNECTED);
 			break;
 		} else {
@@ -68,12 +65,9 @@ void	Client::recvPackets(void) {
 void	Client::sendPackets(void) {
 	while (!_sendBuff.empty()) {
 		int rc = send(_sd, _sendBuff.c_str(), _sendBuff.length(), 0);
-		if (rc < 0 && errno != EWOULDBLOCK) {
-			//"send() failed"
-			throw std::runtime_error(std::strerror(errno));
-		} else if (rc < 0) {
+		if (rc < 0 && errno == EWOULDBLOCK) {
 			break;
-		} else if (rc == 0) {
+		} else if (rc <= 0) {
 			setStatus(DISCONNECTED);
 			break;
 		} else {
@@ -170,3 +164,8 @@ void	Client::resetMessage(void) {
 	_recvMessage.clear();
 }
 
+void	Client::setMessage(std::string part, std::string channel)
+{
+	this->_recvMessage.setVerb(part);
+	this->_recvMessage.splitParameters(channel);
+}

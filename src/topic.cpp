@@ -11,28 +11,24 @@ void Server::topic(Client &client) {
   message = client.getMessage();
   parameters = message.getParameters();
   if (parameters.size() < 1) {
-    client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname()));
-    return;
+    return client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname(), "TOPIC"));
   }
 
   addHashtag(parameters[0]);
   channelIt = _channels.find(parameters[0]);
   if (channelIt == _channels.end()) {
-    client.sendMessage(this->_name + ERR_NOSUCHCHANNEL(client.getNickname(), parameters[0]));
-    return;
+    return client.sendMessage(this->_name + ERR_NOSUCHCHANNEL(client.getNickname(), parameters[0]));
   }
 
   channel = channelIt->second;
   if (!channel->isClient(&client)) {
-    client.sendMessage(this->_name + ERR_NOTONCHANNEL(client.getNickname(), channel->getName()));
-    return;
+    return client.sendMessage(this->_name + ERR_NOTONCHANNEL(client.getNickname(), channel->getName()));
   }
 
   if (parameters.size() == 1) {
-    (channel->getTopic().empty())
-        ? client.sendMessage(client.getSource() + RPL_NOTOPIC(client.getNickname(), channel->getName()))
-        : client.sendMessage(client.getSource() + RPL_TOPIC(client.getNickname(), channel->getName(), channel->getTopic()));
-    return;
+    return (channel->getTopic().empty())
+               ? client.sendMessage(client.getSource() + RPL_NOTOPIC(client.getNickname(), channel->getName()))
+               : client.sendMessage(client.getSource() + RPL_TOPIC(client.getNickname(), channel->getName(), channel->getTopic()));
   }
 
   if (channel->getTopicMode() && channel->isOperator(client)) {

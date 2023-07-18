@@ -14,6 +14,7 @@ private:
 
   std::set<Client *> _clients;
   std::set<Client *> _operators;
+  std::set<Client *> _inviteList;
   bool _inviteMode;
   bool _topicMode;
   std::string _topic;
@@ -48,15 +49,11 @@ public:
   bool isInvited(Client &client) const;
   void addInvited(Client &client);
   void rmInvited(Client &client);
-  // void				printClientList(void);
+  void setInviteList(Client *client);
+  std::set<Client *> getInviteList(void) const;
+  bool lookForClient(Client *client);
+  bool clientOnInvite(Client *client);
+  void rmClientFromInvite(Client *client);
 };
 
 #endif
-
-/*
-i: Invite-only channel
-t: Restricts TOPIC command to channel operators
-k: Set/remove the channel key (password)
-o: Give/take channel operator privilege
-l: Set/remove the user limit to channel
-*/

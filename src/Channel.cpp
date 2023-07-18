@@ -69,9 +69,7 @@ std::set<Client *> Channel::getClients(void) const {
 }
 
 bool Channel::isClient(Client *client) const {
-  return (_clients.find(client) == _clients.end())
-             ? false
-             : true;
+  return (_clients.find(client) == _clients.end());
 }
 
 void Channel::addClient(Client *client) {
@@ -81,12 +79,6 @@ void Channel::addClient(Client *client) {
 void Channel::rmClient(Client *client) {
   _clients.erase(client);
 }
-
-/*
-std::set<Client*>	Channel::getOperators(void) const {
-        return _operators;
-}
-*/
 
 bool Channel::isOperator(Client &client) const {
   return (_operators.find(&client) == _operators.end())
@@ -120,13 +112,31 @@ void Channel::rmInvited(Client &client) {
   _operators.erase(&client);
 }
 
-/*
-void	printClient(const Client *client) {
-        std::cout << client->getNickname() << std::endl;
+void Channel::setInviteList(Client *client) {
+  this->_inviteList.insert(client);
 }
 
-void	Channel::printClientList(void) {
-        std::cout << "Clients: " << std::endl;
-    std::for_each(_clients.begin(), _clients.end(), printClient);
+std::set<Client *> Channel::getInviteList(void) const {
+  return (_inviteList);
 }
-*/
+
+bool Channel::lookForClient(Client *client) {
+  if (this->_clients.find(client) != this->_clients.end()) {
+    return (false);
+  }
+  return (true);
+}
+
+bool Channel::clientOnInvite(Client *client) {
+  if (this->_inviteList.find(client) == this->_inviteList.end() || this->_inviteList.empty()) {
+    return (false);
+  }
+  return (true);
+}
+
+void Channel::rmClientFromInvite(Client *client) {
+  std::set<Client *>::iterator it = this->_inviteList.find(client);
+  if (it != this->_inviteList.end()) {
+    this->_inviteList.erase(it);
+  }
+}
