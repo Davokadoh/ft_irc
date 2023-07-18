@@ -15,13 +15,17 @@
 # define RPL_INVITING(client, target, channel) " 341 " + client + " " + target + " " + channel
 # define RPL_NAMREPLY(client, channel, target) " 353 " + client + " = " + channel + " " + target
 # define RPL_ENDOFNAMES(client, channel) " 366 " + client + " " + channel + " :End of /NAMES list"
+# define ERR_NOSUCHNICK(client, target) " 401 " + client + " " + target + " No such nick/channel"
 # define ERR_NOSUCHCHANNEL(client, channel) " 403 " + client + " " + channel  + " :No such channel"
-# define ERR_UNKNOWNCOMMAND(client, cmd) " 421 " + client + " " + cmd + " :Unknown command"
-# define ERR_NOMOTD(client) " 422 " + client + " :MOTD File is missing"
-# define ERR_NONICKNAMEGIVEN(client) " 431 " + client + " :No nickname given"
-# define ERR_ERRONEUSNICKNAME(client, newNick) " 432 " + client + " " + newNick + " :Erroneous Nickname"
-# define ERR_NICKNAMEINUSE(client, newNick) " 433 " + client + " " + newNick + " :Nickname already in use"
-# define ERR_USERNOTINCHANNEL(client, target, channel) " 441 " + client + " " + target + " " + channel + " :They aren't on that channel"
+# define ERR_CANNOTSENDTOCHAN(client, channel) " 404 " + client + " " + channel + " :Cannot send to channel"
+# define ERR_NORECIPIENT(client, verb) " 411 " + client + " :No recipient given " + verb
+# define ERR_NOTEXTTOSEND(nickname) " 412 " + nickname + " :No text to send"
+# define ERR_UNKNOWNCOMMAND(nickname, verb) " 421 " + nickname +  " " + verb + " :Unknown command"
+# define ERR_NOMOTD(nickname) " 422 " + nickname + " :MOTD File is missing"
+# define ERR_NONICKNAMEGIVEN(nickname) " 431 " + nickname + " :No nickname given"
+# define ERR_ERRONEUSNICKNAME(nickname, newNick) " 432 " + nickname + " " + newNick + " :Erroneous Nickname"
+# define ERR_NICKNAMEINUSE(nickname, newNick) " 433 " + nickname + " " + newNick + " :Nickname already in use"
+# define ERR_USERNOTINCHANNEL(client, nickname, channel) " 441 " + client + " " + nickname + " " + channel + " :They aren't on that channel"
 # define ERR_NOTONCHANNEL(client, channel) " 442 " + client + " " + channel + " :You're not on that channel"
 # define ERR_USERONCHANNEL(client, target, channel) " 443 " + client + " " + target + " " + channel + " :is already on channel"
 # define ERR_NOTREGISTERED(client) " 451 " + client + " :You have not registered"
