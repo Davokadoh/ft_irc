@@ -7,17 +7,14 @@ void Server::kick(Client &client) {
   std::vector<std::string> parameters;
   Client *target;
   Channel *channel;
-  Message message;
 
   if (client.getIsRegistered() == false) {
     return client.sendMessage(_name + ERR_NOTREGISTERED(client.getNickname()));
   }
 
-  message = client.getMessage();
-  parameters = message.getParameters();
+  parameters = client.getMessage().getParameters();
   if (parameters.size() < 2) {
-    client.sendMessage(_name + ERR_NEEDMOREPARAMS(client.getNickname(), "KICK"));
-    return;
+    return client.sendMessage(_name + ERR_NEEDMOREPARAMS(client.getNickname(), "KICK"));
   }
 
   channelIt = _channels.find(parameters[0]);
