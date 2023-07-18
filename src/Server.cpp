@@ -14,7 +14,7 @@ std::map<std::string, FunPtr>	Server::createMap(void) {
 	cmds["TOPIC"] = &Server::topic;
 	cmds["KICK"] = &Server::kick;
 	cmds["PART"] = &Server::part;
-
+	cmds["INVITE"] = &Server::invite;
 	cmds["PRIVMSG"] = &Server::privmsg;
 	cmds["NOTICE"] = &Server::notice;
 	return cmds;
@@ -138,7 +138,7 @@ void	Server::execute(Client &client) {
 	} else if (_cmds.find(verb) != _cmds.end()) {
 		(this->*_cmds.at(verb))(client);
 	} else {
-		client.sendMessage(this->_name + ERR_UNKNOWNCOMMAND(client.getNickname()));
+		client.sendMessage(this->_name + ERR_UNKNOWNCOMMAND(client.getNickname(), verb));
 	}
 }
 
@@ -230,7 +230,7 @@ void	Server::registration(Client &client)
 	client.sendMessage(this->_name + RPL_WELCOME(client.getNickname()));
 	client.sendMessage(this->_name + RPL_YOURHOST(client.getNickname()));
 	client.sendMessage(this->_name + RPL_CREATED(client.getNickname(), getDateCreation()));
-	client.sendMessage(this->_name + RPL_MYINFO(client.getNickname(), this->_name));
+	client.sendMessage(this->_name + RPL_MYINFO(client.getNickname()));
 	//client.sendMessage(this->_name + RPL_ISUPPORT(client.getNickname()));
 	client.sendMessage(this->_name + RPL_LUSERCLIENT(client.getNickname(), nbrClients));
 	client.sendMessage(this->_name + RPL_LUSEROP(client.getNickname()));

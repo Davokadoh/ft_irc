@@ -46,9 +46,9 @@ class Server {
 		void				topic(Client &client);
 		void				kick(Client &client);
 		void				part(Client &client);
-
 		void				privmsg(Client &client);
 		void				notice(Client &client);
+		void				invite(Client &client);
 		static std::map<std::string, FunPtr>	createMap(void);
 	
 		static const std::map<std::string, FunPtr>	_cmds;

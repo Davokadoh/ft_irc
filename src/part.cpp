@@ -4,7 +4,7 @@ void	Server::part(Client &client)
 {
 	if (client.getMessage().getParameters().size() < 1)
 	{
-		client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname()));
+		client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname(), "PART"));
 		return;
 	}
 	std::string	channel = client.getMessage().getParameters()[0];
@@ -16,9 +16,10 @@ void	Server::part(Client &client)
 		client.sendMessage(this->_name + ERR_NOSUCHCHANNEL(nickname, channel));
 		return;
 	}
-	else if (!(it->second->getClients().find(&client) != it->second->getClients().end()))
+	if (it->second->lookForClient(&client))
 	{
-		client.sendMessage(this->_name + ERR_USERNOTINCHANNEL(nickname, client.getMessage().getParameters()[1], channel));	
+		client.sendMessage(this->_name + ERR_NOTONCHANNEL(nickname, channel));
+		return;
 	}
 	else
 	{
