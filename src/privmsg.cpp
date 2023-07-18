@@ -15,43 +15,23 @@ void	Server::privmsg(Client &client)
 	std::string sendTo = client.getMessage().getParameters()[0];
 	std::string message = client.getMessage().getParameters()[1];
 	std::map<std::string, Channel*>::iterator itChannel = this->_channels.find(sendTo);
-	int			trigger = 0;
-	int			triggerOpe = 0;
 
 	for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
 	{
 		if (it->second->getNickname() == sendTo)
 		{
-			trigger++;
 			it->second->sendMessage(client.getSource() + " PRIVMSG " + it->second->getNickname() + " :" + message);
+			return;
 		}
 	}
-	if (sendTo.find("@") == 0)
-	{
-		triggerOpe++;
-		sendTo.erase(0, 1);
-	}
-
 	if(itChannel != this->_channels.end())
 	{
-		if (triggerOpe != 0)
-		{
-			std::cout << "CHECK OPERATOR" << std::endl;
-			/*if (!itChannel->second->isOpe(client))
-			{
-				client.sendMessage(this->_name + ERR_CHANOPRIVSNEEDED(client.getNickname(), sendTo));
-				return;
-			}
-			else
-			{
-				sendToChannelOpe(message);
-			}*/
-		}
+		if 
 		itChannel->second->sendToAll(client.getSource() + " PRIVMSG " + itChannel->second->getName() + " :" + message);
-		trigger++;
+		return;
 	}
 
-	if (trigger == 0)
+	else
 	{
 		client.sendMessage(this->_name + ERR_NOSUCHNICK(client.getNickname(), sendTo));
 	}

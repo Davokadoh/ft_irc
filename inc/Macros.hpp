@@ -16,6 +16,7 @@
 # define RPL_ENDOFNAMES(client, channel) " 366 " + client + " " + channel + " :End of /NAMES list"
 # define ERR_NOSUCHNICK(client, target) " 401 " + client + " " + target + " No such nick/channel"
 # define ERR_NOSUCHCHANNEL(client, channel) " 403 " + client + " " + channel  + " :No such channel"
+# define ERR_CANNOTSENDTOCHAN(client, channel) " 404 " + client + " " + channel + " :Cannot send to channel"
 # define ERR_NORECIPIENT(client, verb) " 411 " + client + " :No recipient given " + verb
 # define ERR_NOTEXTTOSEND(nickname) " 412 " + nickname + " :No text to send"
 # define ERR_UNKNOWNCOMMAND(nickname) " 421 " + nickname + " :Unknown command"
