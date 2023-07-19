@@ -1,76 +1,79 @@
 #include "Macros.hpp"
 #include "Server.hpp"
+#include <string>
 
 void Server::mode(Client &client)
 {
-    std::vector<std::string> parameters;
-    std::string              modeString;
-    Channel                 *channel;
-    Client                  *target;
-    size_t                   modeArgIndex;
+  std::vector<std::string>                   parameters;
+  std::string                                modeString;
+  std::map<std::string, Channel *>::iterator channel;
+  Client                                    *target;
+  size_t                                     modeIndex;
 
-    if (!client.getIsRegistered())
-        return client.sendMessage(_name + ERR_NOTREGISTERED(client.getNickname()));
+  parameters = client.getMessage().getParameters();
+  if (parameters.size() < 1)
+    return client.sendMessage(_name + ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
 
-    parameters = client.getMessage().getParameters();
-    if (parameters.size() < 1)
-        return client.sendMessage(_name + ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
-    else if (_channels.find(parameters[0]) == _channels.end())
-        return client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), parameters[0]));
+  channel = _channels.find(parameters[0]);
+  if (channel == _channels.end())
+    return client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), parameters[0]));
+  else if (!channel->second->isClient(&client))
+    return client.sendMessage(ERR_NOTONCHANNEL(client.getNickname(), channel->second->getName()));
+  else if (parameters.size() == 1)
+    return client.sendMessage(_name + " " + channel->second->getName());
+  else if (!channel->second->isOperator(client))
+    return client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), channel->second->getName()));
+  else if (parameters.size() < 2)
+    return client.sendMessage(_name + ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
 
-    channel = _channels.at(parameters[0]);
-    if (!channel->isClient(&client))
-        return client.sendMessage(ERR_NOTONCHANNEL(client.getNickname(), channel->getName()));
-    else if (parameters.size() == 1)
-        return client.sendMessage("RPL_CHANNELMODEIS");
-    else if (channel->isOperator(client))
-        return client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), channel->getName()));
+  modeString = parameters[1];
+  modeIndex = 0;
+  for (size_t i = 0; i < modeString.size(); ++i)
+    if (modeString[i] == 'o' || modeString[i] == 'k' || modeString[i] == 'l')
+      ++modeIndex;
+  std::cout << "ai: " << modeIndex << std::endl;
+  if (modeIndex < parameters.size() - 2)
+    return client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
 
-    modeString = parameters.at(0);
-    modeArgIndex = 0;
-    while (modeString.find_first_of("okl") != std::string::npos)
+  int         j = 0;
+  bool        sign = true;
+  std::string change;
+  for (size_t i = 0; i < modeString.size(); ++i)
+  {
+    if (modeString[i] == '+')
+      sign = true;
+    else if (modeString[i] == '-')
+      sign = false;
+    else if (modeString[i] == 'i')
+      change.append((channel->second->setInviteMode(sign)) ? (sign + "i") : "");
+    else if (modeString[i] == 't')
+      channel->second->setTopicMode(sign);
+    else if (modeString[i] == 'k')
     {
-        ++modeArgIndex;
-        modeString += modeString.find_first_of("okl");
+      if (channel->second->setPassword(sign ? parameters[++modeIndex] : ""))
+        client.sendMessage("ERR_INVALIDKEY");
+      else
+        client.sendMessage(client.getSource() + " MODE " + channel->second->getName() + " +k " + parameters[modeIndex]);
     }
-    if (modeArgIndex < parameters.size() - 2)
-        return client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
-    modeString = parameters.at(0);
-
-    bool sign = true;
-    for (size_t i = 0; i < modeString.size(); ++i)
+    else if (modeString[i] == 'l')
+      channel->second->setLimit(sign ? std::atoi(parameters[++modeIndex].c_str()) : 0); // ERR_INVALIDMODEPARAM
+    else if (modeString[i] == 'o')
     {
-        if (modeString[i] == '+')
-            sign = true;
-        else if (modeString[i] == '-')
-            sign = false;
-        else if (modeString[i] == 'i')
-            channel->setInviteMode(sign);
-        else if (modeString[i] == 't')
-            channel->setTopicMode(sign);
-        else if (modeString[i] == 'k')
-        {
-            if (channel->setPassword(sign ? parameters[++modeArgIndex] : "")) // ERR_INVALIDKEY
-                client.sendMessage("KEY ERROR");
-        }
-        else if (modeString[i] == 'l')
-            channel->setLimit(sign ? std::atoi(parameters[++modeArgIndex].c_str()) : 0); // ERR_INVALIDMODEPARAM
-        else if (modeString[i] == 'o')
-        {
-            if (_nicknames.find(parameters[++modeArgIndex]) == _nicknames.end())
-            {
-                client.sendMessage("ERR_USERNOTINCHANNEL");
-                continue;
-            }
-            target = _nicknames[parameters[modeArgIndex]];
-            if (channel->isClient(target))
-            {
-                client.sendMessage("ERR_USERNOTINCHANNEL");
-                continue;
-            }
-            (sign) ? channel->addOperator(*target) : channel->rmOperator(*target);
-        }
-        else
-            client.sendMessage("ERR_UMODEUNKNOWNFLAG");
+      if (_nicknames.find(parameters[++modeIndex]) == _nicknames.end())
+      {
+        client.sendMessage(_name + ERR_USERNOTINCHANNEL(client.getNickname(), parameters[modeIndex], channel->second->getName()));
+        continue;
+      }
+      target = _nicknames[parameters[modeIndex]];
+      if (channel->second->isClient(target))
+      {
+        client.sendMessage("ERR_USERNOTINCHANNEL");
+        continue;
+      }
+      (sign) ? channel->second->addOperator(*target) : channel->second->rmOperator(*target);
     }
+    else
+      client.sendMessage("ERR_UMODEUNKNOWNFLAG");
+  }
+  client.sendMessage(change);
 }

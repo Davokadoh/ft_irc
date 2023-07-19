@@ -2,41 +2,28 @@
 
 void Server::part(Client &client)
 {
-    if (client.getMessage().getParameters().size() < 1)
-    {
-        client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname(), "PART"));
-        return;
-    }
-    std::string                                channel = client.getMessage().getParameters()[0];
-    std::string                                nickname = client.getNickname();
-    std::map<std::string, Channel *>::iterator it = this->_channels.find(channel);
+  std::map<std::string, Channel *>::iterator channelIt;
+  std::vector<std::string>                   parameters;
+  std::string                                channel;
+  std::string                                nickname;
 
-    if (it == this->_channels.end())
-    {
-        client.sendMessage(this->_name + ERR_NOSUCHCHANNEL(nickname, channel));
-        return;
-    }
-    if (it->second->lookForClient(&client))
-    {
-        client.sendMessage(this->_name + ERR_NOTONCHANNEL(nickname, channel));
-        return;
-    }
-    else
-    {
-        if (client.getMessage().getParameters().size() > 1)
-        {
-            it->second->sendToAll(client.getSource() + " " + client.getMessage().getVerb() + " " + channel + " :" +
-                                  client.getMessage().getParameters()[1]);
-        }
-        else
-        {
-            it->second->sendToAll(client.getSource() + " " + client.getMessage().getVerb() + " " + channel +
-                                  " :Leaving");
-        }
-        it->second->rmClient(&client);
-        if (it->second->getClients().empty())
-        {
-            this->_channels.erase(it);
-        }
-    }
+  parameters = client.getMessage().getParameters();
+  if (parameters.size() < 1)
+    return client.sendMessage(_name + ERR_NEEDMOREPARAMS(client.getNickname(), "PART"));
+
+  channel = parameters[0];
+  nickname = client.getNickname();
+  channelIt = _channels.find(channel);
+
+  if (channelIt == _channels.end())
+    return client.sendMessage(_name + ERR_NOSUCHCHANNEL(nickname, channel));
+  if (!channelIt->second->isClient(&client))
+    return client.sendMessage(_name + ERR_NOTONCHANNEL(nickname, channel));
+
+  channelIt->second->sendToAll(
+    client.getSource() + " PART " + channel + " :" + (parameters.size() > 1 ? parameters[1] : "Leaving"));
+
+  channelIt->second->rmClient(&client);
+  if (channelIt->second->getClients().empty())
+    _channels.erase(channelIt);
 }
