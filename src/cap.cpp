@@ -2,11 +2,6 @@
 
 void Server::cap(Client &client)
 {
-    if (client.getIsPassOK() == false)
-    {
-        //client.setStatus(DISCONNECTED);
-        return;
-    }
     if (client.getMessage().getParameters().empty())
     {
         client.sendMessage(this->_name + " CAP :No protocol extensions");

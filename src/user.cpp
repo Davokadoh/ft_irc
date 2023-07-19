@@ -5,6 +5,7 @@ void Server::user(Client &client)
 {
     if (client.getIsPassOK() == false)
     {
+        client.setStatus(DISCONNECTED);
         return;
     }
     if (client.getMessage().getParameters().size() < 4)
