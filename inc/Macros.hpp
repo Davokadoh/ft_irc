@@ -33,11 +33,11 @@
 #define ERR_NOTONCHANNEL(client, channel) " 442 " + client + " " + channel + " :You're not on that channel"
 #define ERR_USERONCHANNEL(client, target, channel)                                                                     \
     " 443 " + client + " " + target + " " + channel + " :is already on channel"
-#define ERR_NOTREGISTERED(client) " 451 " + client + " :You have not registered"
-#define ERR_NEEDMOREPARAMS(client, cmd) " 461 " + client + " " + cmd + " :Not enough parameters"
-#define ERR_ALREADYREGISTERED(client) " 462 " + client + " :You may not reregister"
-#define ERR_PASSWDMISMATCH(client) " 464 " + client + " :Password incorrect"
-#define ERR_INVITEONLYCHAN(client, channel) " 473 " + client + " " + channel + " :Cannot join channel (+i)"
+#define ERR_NOTREGISTERED(client)             " 451 " + client + " :You have not registered"
+#define ERR_NEEDMOREPARAMS(client, cmd)       " 461 " + client + " " + cmd + " :Not enough parameters"
+#define ERR_ALREADYREGISTERED(client)         " 462 " + client + " :You may not reregister"
+#define ERR_PASSWDMISMATCH(client)            " 464 " + client + " :Password incorrect"
+#define ERR_INVITEONLYCHAN(client, channel)   " 473 " + client + " " + channel + " :Cannot join channel (+i)"
 #define ERR_CHANOPRIVSNEEDED(client, channel) " 482 " + client + " " + channel + " :You're not channel operator"
 
 #endif

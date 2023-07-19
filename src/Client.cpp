@@ -13,8 +13,8 @@
 #include <netinet/in.h>
 
 Client::Client(int sd, const std::string &ip)
-    : _sd(sd), _status(CONNECTED), _isRegistered(false), _isPassOK(false), _ip(ip), _nickname("*"), _username(""), _source(""),
-      _realname(""), _recvString("")
+    : _sd(sd), _status(CONNECTED), _isRegistered(false), _isPassOK(false), _ip(ip), _nickname("*"), _username(""),
+      _source(""), _realname(""), _recvString("")
 {
     std::cout << "ip: " << _ip << std::endl;
 }
