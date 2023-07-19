@@ -92,7 +92,7 @@ std::set<Client *> Channel::getClients(void) const
 
 bool Channel::isClient(Client *client) const
 {
-    return (_clients.find(client) == _clients.end());
+    return (_clients.find(client) != _clients.end());
 }
 
 void Channel::addClient(Client *client)

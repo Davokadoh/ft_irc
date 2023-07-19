@@ -9,11 +9,11 @@
 class Message
 {
   private:
-    std::string _src;
-    std::string _nick;
-    std::string _user;
-    std::string _hostname;
-    std::string _verb;
+    std::string              _src;
+    std::string              _nick;
+    std::string              _user;
+    std::string              _hostname;
+    std::string              _verb;
     std::vector<std::string> _parameters;
 
   public:
@@ -22,11 +22,11 @@ class Message
     Message &operator=(const Message &rhs);
     ~Message(void);
 
-    std::string getSrc(void) const;
-    std::string getNick(void) const;
-    std::string getUser(void) const;
-    std::string getHostname(void) const;
-    std::string getVerb(void) const;
+    std::string              getSrc(void) const;
+    std::string              getNick(void) const;
+    std::string              getUser(void) const;
+    std::string              getHostname(void) const;
+    std::string              getVerb(void) const;
     std::vector<std::string> getParameters(void) const;
 
     void setSrc(std::string str);

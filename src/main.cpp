@@ -3,8 +3,8 @@
 
 int main(int argc, char *argv[])
 {
-    //Server server;
-    int port;
+    Server server;
+    int    port;
 
     if (argc != 3)
     {
@@ -18,7 +18,6 @@ int main(int argc, char *argv[])
         {
             throw std::runtime_error("Invalid port");
         }
-       // server = Server(argv[1], argv[2]);
         Server server(argv[1], argv[2]);
         server.watch();
         server.run();
