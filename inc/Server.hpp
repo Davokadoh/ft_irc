@@ -28,17 +28,16 @@ class Server
 {
   private:
     struct addrinfo *getAddr(void);
-    void             addSocket(int sd);
-    void             rmSocket(int sd);
-    void             addClients(void);
-    void             rmClients(void);
-    void             cull(void);
-    void             execute(Client &client);
-    void             registration(Client &client);
-    void             partChannels(Client &client);
-    int              nbrRegistered(void);
-    void             addHashtag(std::string &str);
-    bool             isNickInUse(const std::string &nick);
+    void addSocket(int sd);
+    void rmSocket(int sd);
+    void addClients(void);
+    void rmClients(void);
+    void cull(void);
+    void execute(Client &client);
+    void registration(Client &client);
+    void partChannels(Client &client);
+    int nbrRegistered(void);
+    bool isNickInUse(const std::string &nick);
 
     void                                       nick(Client &client);
     void                                       user(Client &client);
