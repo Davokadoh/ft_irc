@@ -22,6 +22,7 @@ std::map<std::string, FunPtr> Server::createMap(void)
     cmds["PRIVMSG"] = &Server::privmsg;
     cmds["NOTICE"] = &Server::notice;
     cmds["MOTD"] = &Server::motd;
+    cmds["PASS"] = &Server::pass;
     return cmds;
 }
 
@@ -67,7 +68,7 @@ Server::~Server(void)
 
 void Server::watch(void)
 {
-    int yes = 1;
+    int              yes = 1;
     struct addrinfo *addr = getAddr();
 
     _listenSd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
@@ -200,8 +201,8 @@ void Server::cull(void)
 
 void Server::addClients(void)
 {
-    int sd;
-    socklen_t len = sizeof(struct sockaddr);
+    int                sd;
+    socklen_t          len = sizeof(struct sockaddr);
     struct sockaddr_in addr;
 
     do
@@ -249,7 +250,7 @@ std::string intToString(int toStr)
 
 std::string getDateCreation(void)
 {
-    std::time_t now = std::time(NULL);
+    std::time_t     now = std::time(NULL);
     struct std::tm *timeinfo = std::localtime(&now);
 
     char buffer[80];

@@ -3,6 +3,11 @@
 
 void Server::user(Client &client)
 {
+    if (client.getIsPassOK() == false)
+    {
+        client.setStatus(DISCONNECTED);
+        return;
+    }
     if (client.getMessage().getParameters().size() < 4)
     {
         client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname(), "USER"));
