@@ -38,6 +38,7 @@ class Client
     std::string getSource(void) const;
     std::string getIp(void) const;
     bool        getIsRegistered(void) const;
+    bool        getIsPassOK(void) const;
     void        setNickname(std::string newNick);
     void        setUsername(std::string username);
     void        setRealname(std::string realname);

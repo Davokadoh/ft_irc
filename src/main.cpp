@@ -3,8 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-    Server server;
-    int    port;
+    int port;
 
     if (argc != 3)
     {
