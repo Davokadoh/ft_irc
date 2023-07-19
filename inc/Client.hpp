@@ -15,6 +15,7 @@ class Client
     int         _sd;
     bool        _status;       // How about an enum ?
     bool        _isRegistered; // How about an enum ?
+    bool        _isPassOK;
     std::string _ip;
     std::string _nickname;
     std::string _username;
@@ -42,6 +43,7 @@ class Client
     void        setRealname(std::string realname);
     void        setSource(std::string source);
     void        setIsRegistered(bool status);
+    void        setIsPassOK(bool status);
 
     void    recvPackets(void);
     void    sendPackets(void);

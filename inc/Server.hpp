@@ -54,6 +54,7 @@ class Server
     void                                       notice(Client &client);
     void                                       invite(Client &client);
     void                                       motd(Client &client);
+    void                                       pass(Client &client);
     static std::map<std::string, FunPtr>       createMap(void);
     static const std::map<std::string, FunPtr> _cmds;
     std::map<std::string, Channel *>           _channels;
@@ -70,7 +71,7 @@ class Server
     int                                        _maxSd;
 
   public:
-    Server(const std::string &port = "6667", const std::string &password = "");
+    Server(const std::string &port, const std::string &password);
     Server(const Server &ref);
     Server &operator=(const Server &rhs);
     ~Server(void);
