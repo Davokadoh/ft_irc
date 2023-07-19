@@ -37,7 +37,6 @@ class Server
     void registration(Client &client);
     void partChannels(Client &client);
     int nbrRegistered(void);
-    void addHashtag(std::string &str);
     bool isNickInUse(const std::string &nick);
 
     void nick(Client &client);

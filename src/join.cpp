@@ -20,8 +20,11 @@ void Server::join(Client &client)
         this->partChannels(client);
         return;
     }
-    addHashtag(channel);
-
+    if (channel[0] != '#')
+    {
+        client.sendMessage(this->_name + ERR_NOSUCHCHANNEL(client.getNickname(), channel));
+        return;
+    }
     std::map<std::string, Channel *>::iterator it = _channels.find(channel);
     if (it == _channels.end())
     {

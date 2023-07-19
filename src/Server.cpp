@@ -291,14 +291,6 @@ void Server::registration(Client &client)
     this->motd(client);
 }
 
-void Server::addHashtag(std::string &str)
-{
-    if (str[0] != '#')
-    {
-        str.insert(0, "#");
-    }
-}
-
 void Server::partChannels(Client &client)
 {
     for (std::map<std::string, Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end();)

@@ -14,7 +14,6 @@ void Server::topic(Client &client)
     if (parameters.size() < 1)
         return client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname(), "TOPIC"));
 
-    addHashtag(parameters[0]);
     channelIt = _channels.find(parameters[0]);
     if (channelIt == _channels.end())
         return client.sendMessage(this->_name + ERR_NOSUCHCHANNEL(client.getNickname(), parameters[0]));
