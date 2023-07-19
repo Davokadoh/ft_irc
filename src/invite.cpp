@@ -9,8 +9,8 @@ void Server::invite(Client &client)
     }
     std::map<std::string, Client *>::iterator clientToInvite =
         this->_nicknames.find(client.getMessage().getParameters()[0]);
-    std::string channel = client.getMessage().getParameters()[1];
-    std::string nickname = client.getNickname();
+    std::string                                channel = client.getMessage().getParameters()[1];
+    std::string                                nickname = client.getNickname();
     std::map<std::string, Channel *>::iterator it = this->_channels.find(channel);
 
     if (it == this->_channels.end())

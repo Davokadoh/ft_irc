@@ -7,9 +7,9 @@
 struct Msg
 {
   public:
-    Client client;
-    std::string prefix;
-    std::string command;
+    Client                  client;
+    std::string             prefix;
+    std::string             command;
     std::deque<std::string> params;
 };
 

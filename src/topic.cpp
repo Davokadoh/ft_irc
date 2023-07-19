@@ -3,11 +3,11 @@
 void Server::topic(Client &client)
 {
     std::map<std::string, Channel *>::iterator channelIt;
-    std::vector<std::string> parameters;
-    std::set<Client *> clients;
-    std::set<Client *> operators;
-    Message message;
-    Channel *channel;
+    std::vector<std::string>                   parameters;
+    std::set<Client *>                         clients;
+    std::set<Client *>                         operators;
+    Message                                    message;
+    Channel                                   *channel;
 
     message = client.getMessage();
     parameters = message.getParameters();
