@@ -14,6 +14,10 @@ bool Server::isNickInUse(const std::string &nick)
 
 void Server::nick(Client &client)
 {
+    if (client.getIsPassOK() == false)
+    {
+        return;
+    }
     std::vector<std::string> p = client.getMessage().getParameters();
     std::string nickname = "";
 

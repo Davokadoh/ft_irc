@@ -20,6 +20,7 @@ SRCS		=	$(SRC_DIR)/main.cpp \
 				$(SRC_DIR)/privmsg.cpp \
 				$(SRC_DIR)/notice.cpp \
 				$(SRC_DIR)/motd.cpp \
+				$(SRC_DIR)/pass.cpp \
 
 INCS		=	inc
 
@@ -57,7 +58,7 @@ re: fclean $(NAME)
 
 run: all
 	clear
-	./$(NAME) 6667 password
+	./$(NAME) 6667 1234
 
 leaks: all
 	clear
