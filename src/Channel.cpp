@@ -1,4 +1,5 @@
 #include "Channel.hpp"
+#include "Macros.hpp"
 #include <algorithm>
 #include <stdlib.h>
 
@@ -6,8 +7,8 @@ Channel::Channel(void)
 {
 }
 
-Channel::Channel(const std::string &name)
-  : _name(name)
+Channel::Channel(const std::string &name, const std::string &serverName)
+  : _name(name), _serverName(serverName)
 {
 }
 
@@ -53,14 +54,13 @@ bool Channel::getTopicMode(void) const
   return _topicMode;
 }
 
-std::string Channel::setTopicMode(const bool mode)
+//< :jo!~jojo@185.25.ovp.mqm MODE #pomme +t
+void Channel::setTopicMode(Client &client, const bool mode)
 {
   if (_topicMode == mode)
-  {
-    _topicMode = mode;
-    return mode ? "+t" : "-t";
-  }
-  return "";
+    return;
+  _topicMode = mode;
+  client.sendMessage((mode ? "+t" : "-t");
 }
 
 bool Channel::getInviteMode(void) const
@@ -68,41 +68,34 @@ bool Channel::getInviteMode(void) const
   return _inviteMode;
 }
 
-std::string Channel::setInviteMode(const bool mode)
+void Channel::setInviteMode(Client &client, const bool mode)
 {
   if (_inviteMode == mode)
-  {
-    _inviteMode = mode;
-    return mode ? "+i" : "-i";
-  }
-  return "";
+    return;
+  _inviteMode = mode;
+  client.sendMessage(client.getSource() + " MODE " + _name + (mode ? " +i" : " -i"));
 }
 
-std::string Channel::setPassword(const bool sign, const std::string &password)
+void Channel::setPassword(Client &client, const bool mode, const std::string &password)
 {
   if (password.find(' ') != std::string::npos)
-    return "";
+    return client.sendMessage(_serverName + ERR_NOTONCHANNEL(client.getNickname(), _name)); // Need macro KEY
 
   _password = password;
-  return sign ? "+k" : "-k";
+  client.sendMessage(client.getSource() + " MODE " + _name + (mode ? " +k " : " -k ") + password);
 }
 
-std::string Channel::setLimit(std::vector<std::string> &change, const bool sign, unsigned int limit)
+//< :jo!~jojo@185.25.ovp.mqm MODE #pomme +l 32
+void Channel::setLimit(Client &client, const bool mode, const std::string &limitStr)
 {
-  if (sign && limit > 0)
-  {
-    _limit = limit;
-    change.push_back("" << limit);
-    return "+l";
-  }
-  else if (!sign && _limit > 0)
-  {
-    return "-l";
-  }
-  else
-  {
-    return "";
-  }
+  int limit = std::atoi(limitStr.c_str());
+  if (limit <= 0)
+    return;
+  else if (!mode)
+    return client.sendMessage(client.getSource() + " MODE " + _name + " -l ");
+
+  _limit = limit;
+  client.sendMessage(client.getSource() + " MODE " + _name + " +l " + limitStr);
 }
 
 std::set<Client *> Channel::getClients(void) const
@@ -132,6 +125,8 @@ bool Channel::isOperator(Client &client) const
 
 void Channel::addOperator(Client &client)
 {
+  //":irc-us1.alphachat.net 461 jo MODE :Not enough parameters"
+
   _operators.insert(&client);
 }
 

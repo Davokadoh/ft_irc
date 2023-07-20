@@ -25,7 +25,7 @@ void Server::join(Client &client)
   channelIt = _channels.find(channel);
   if (channelIt == _channels.end())
   {
-    _channels[channel] = new Channel(channel);
+    _channels[channel] = new Channel(channel, _name);
     _channels[channel]->addOperator(client);
   }
   else if (channelIt->second->getInviteMode() == true)

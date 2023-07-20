@@ -21,10 +21,11 @@ private:
   std::string        _topic;
   std::string        _password;
   std::string        _name;
+  std::string        _serverName;
   unsigned int       _limit;
 
 public:
-  Channel(const std::string &name);
+  Channel(const std::string &name, const std::string &serverName);
   ~Channel(void);
 
   void        sendToAll(const std::string &msg);
@@ -32,11 +33,11 @@ public:
   std::string getTopic(void) const;
   void        setTopic(const std::string &topic);
   bool        getTopicMode(void) const;
-  std::string setTopicMode(const bool mode);
+  void        setTopicMode(Client &client, const bool mode);
   bool        getInviteMode(void) const;
-  std::string setInviteMode(const bool mode);
-  std::string setPassword(const bool sign, const std::string &password);
-  std::string setLimit(const bool sign, unsigned int limit);
+  void        setInviteMode(Client &client, const bool mode);
+  void        setPassword(Client &client, const bool mode, const std::string &password);
+  void        setLimit(Client &client, const bool mode, const std::string &limitStr);
 
   std::set<Client *> getClients(void) const;
   bool               isClient(Client *client) const;

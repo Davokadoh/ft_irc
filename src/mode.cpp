@@ -33,7 +33,6 @@ void Server::mode(Client &client)
   if (modeIndex < parameters.size() - 2)
     return client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
 
-  int  j = 0;
   bool sign = true;
   for (size_t i = 0; i < modeString.size(); ++i)
   {
