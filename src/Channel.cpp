@@ -1,5 +1,6 @@
 #include "Channel.hpp"
 #include <algorithm>
+#include <stdlib.h>
 
 Channel::Channel(void)
 {
@@ -52,9 +53,14 @@ bool Channel::getTopicMode(void) const
   return _topicMode;
 }
 
-void Channel::setTopicMode(const bool mode)
+std::string Channel::setTopicMode(const bool mode)
 {
-  _topicMode = mode;
+  if (_topicMode == mode)
+  {
+    _topicMode = mode;
+    return mode ? "+t" : "-t";
+  }
+  return "";
 }
 
 bool Channel::getInviteMode(void) const
@@ -62,23 +68,41 @@ bool Channel::getInviteMode(void) const
   return _inviteMode;
 }
 
-void Channel::setInviteMode(const bool mode)
+std::string Channel::setInviteMode(const bool mode)
 {
-  _inviteMode = mode;
+  if (_inviteMode == mode)
+  {
+    _inviteMode = mode;
+    return mode ? "+i" : "-i";
+  }
+  return "";
 }
 
-bool Channel::setPassword(const std::string &password)
+std::string Channel::setPassword(const bool sign, const std::string &password)
 {
   if (password.find(' ') != std::string::npos)
-    return true;
+    return "";
 
   _password = password;
-  return false;
+  return sign ? "+k" : "-k";
 }
 
-void Channel::setLimit(unsigned int limit)
+std::string Channel::setLimit(std::vector<std::string> &change, const bool sign, unsigned int limit)
 {
-  _limit = limit;
+  if (sign && limit > 0)
+  {
+    _limit = limit;
+    change.push_back("" << limit);
+    return "+l";
+  }
+  else if (!sign && _limit > 0)
+  {
+    return "-l";
+  }
+  else
+  {
+    return "";
+  }
 }
 
 std::set<Client *> Channel::getClients(void) const

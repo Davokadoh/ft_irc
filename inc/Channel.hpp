@@ -32,11 +32,11 @@ public:
   std::string getTopic(void) const;
   void        setTopic(const std::string &topic);
   bool        getTopicMode(void) const;
-  void        setTopicMode(const bool mode);
+  std::string setTopicMode(const bool mode);
   bool        getInviteMode(void) const;
-  void        setInviteMode(const bool mode);
-  bool        setPassword(const std::string &password);
-  void        setLimit(unsigned int limit);
+  std::string setInviteMode(const bool mode);
+  std::string setPassword(const bool sign, const std::string &password);
+  std::string setLimit(const bool sign, unsigned int limit);
 
   std::set<Client *> getClients(void) const;
   bool               isClient(Client *client) const;

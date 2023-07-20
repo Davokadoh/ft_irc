@@ -1,6 +1,5 @@
 #include "Macros.hpp"
 #include "Server.hpp"
-#include <string>
 
 void Server::mode(Client &client)
 {
@@ -31,13 +30,11 @@ void Server::mode(Client &client)
   for (size_t i = 0; i < modeString.size(); ++i)
     if (modeString[i] == 'o' || modeString[i] == 'k' || modeString[i] == 'l')
       ++modeIndex;
-  std::cout << "ai: " << modeIndex << std::endl;
   if (modeIndex < parameters.size() - 2)
     return client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
 
-  int         j = 0;
-  bool        sign = true;
-  std::string change;
+  int  j = 0;
+  bool sign = true;
   for (size_t i = 0; i < modeString.size(); ++i)
   {
     if (modeString[i] == '+')
@@ -45,20 +42,21 @@ void Server::mode(Client &client)
     else if (modeString[i] == '-')
       sign = false;
     else if (modeString[i] == 'i')
-      change.append((channel->second->setInviteMode(sign)) ? (sign + "i") : "");
+      channel->second->setInviteMode(client, sign);
     else if (modeString[i] == 't')
-      channel->second->setTopicMode(sign);
+      channel->second->setTopicMode(client, sign);
     else if (modeString[i] == 'k')
-    {
-      if (channel->second->setPassword(sign ? parameters[++modeIndex] : ""))
-        client.sendMessage("ERR_INVALIDKEY");
-      else
-        client.sendMessage(client.getSource() + " MODE " + channel->second->getName() + " +k " + parameters[modeIndex]);
-    }
+      channel->second->setPassword(client, sign, parameters[++modeIndex]);
     else if (modeString[i] == 'l')
-      channel->second->setLimit(sign ? std::atoi(parameters[++modeIndex].c_str()) : 0); // ERR_INVALIDMODEPARAM
+      channel->second->setLimit(client, sign, parameters[++modeIndex]);
     else if (modeString[i] == 'o')
-    {
+      channel->second->setOperator(client, sign, parameters[++modeIndex]);
+    else
+      client.sendMessage("ERR_UMODEUNKNOWNFLAG");
+  }
+}
+
+/*
       if (_nicknames.find(parameters[++modeIndex]) == _nicknames.end())
       {
         client.sendMessage(_name + ERR_USERNOTINCHANNEL(client.getNickname(), parameters[modeIndex], channel->second->getName()));
@@ -70,10 +68,7 @@ void Server::mode(Client &client)
         client.sendMessage("ERR_USERNOTINCHANNEL");
         continue;
       }
-      (sign) ? channel->second->addOperator(*target) : channel->second->rmOperator(*target);
-    }
-    else
-      client.sendMessage("ERR_UMODEUNKNOWNFLAG");
-  }
-  client.sendMessage(change);
-}
+
+
+    (sign) ? channel->second->addOperator(*target) : channel->second->rmOperator(*target);
+*/
