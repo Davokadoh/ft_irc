@@ -187,7 +187,15 @@ void Server::cull(void)
 {
     int _selected;
     FD_COPY(&_mainSet, &_recvSet);
-    FD_COPY(&_mainSet, &_sendSet);
+    for (std::map<int, Client *>::iterator clientIT = _clients.begin(); clientIT != _clients.end(); clientIT++)
+    {
+        if (clientIT->second->getRdyToSend() == true)
+        {
+            FD_COPY(&_mainSet, &_sendSet);
+            clientIT->second->setRdyToSend(false);
+        }
+    }
+    // FD_COPY(&_mainSet, &_sendSet);
     _selected = select(_maxSd + 1, &_recvSet, &_sendSet, NULL, NULL);
     if (_selected == 0)
     {

@@ -13,6 +13,7 @@ class Client
 {
   private:
     int         _sd;
+    bool        _rdyToSend;
     bool        _status;       // How about an enum ?
     bool        _isRegistered; // How about an enum ?
     bool        _isPassOK;
@@ -37,14 +38,17 @@ class Client
     std::string getRealname(void) const;
     std::string getSource(void) const;
     std::string getIp(void) const;
+    std::string getSendBuff(void) const;
     bool        getIsRegistered(void) const;
     bool        getIsPassOK(void) const;
+    bool        getRdyToSend(void) const;
     void        setNickname(std::string newNick);
     void        setUsername(std::string username);
     void        setRealname(std::string realname);
     void        setSource(std::string source);
     void        setIsRegistered(bool status);
     void        setIsPassOK(bool status);
+    void        setRdyToSend(bool status);
 
     void    recvPackets(void);
     void    sendPackets(void);
