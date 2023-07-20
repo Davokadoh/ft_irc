@@ -48,14 +48,8 @@ void Server::nick(Client &client)
     _nicknames.insert(std::make_pair(nickname, &client));
     if (client.getIsRegistered() == true)
     {
-      for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-      {
-        if (it->second->getClients().find(&client) != it->second->getClients().end())
-        {
-          it->second->sendToAll(client.getSource() + " NICK :" + nickname);
-        }
-      }
-      client.sendMessage(client.getSource() + " NICK :" + nickname);
+      for (std::map<std::string, Client *>::iterator it = _nicknames.begin(); it != _nicknames.end(); ++it)
+        it->second->sendMessage(client.getSource() + " NICK :" + nickname);
       client.setNickname(nickname);
     }
     else

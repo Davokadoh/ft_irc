@@ -19,7 +19,7 @@ void Server::mode(Client &client)
   else if (!channel->second->isClient(&client))
     return client.sendMessage(ERR_NOTONCHANNEL(client.getNickname(), channel->second->getName()));
   else if (parameters.size() == 1)
-    return client.sendMessage(_name + " " + channel->second->getName());
+    return client.sendMessage(_name + " " + channel->second->getName() + " " + channel->second->getModes());
   else if (!channel->second->isOperator(client))
     return client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), channel->second->getName()));
   else if (parameters.size() < 2)
