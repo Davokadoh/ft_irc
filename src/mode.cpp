@@ -4,10 +4,10 @@
 void Server::mode(Client &client)
 {
   std::vector<std::string>                   parameters;
-  std::string                                modeString;
   std::map<std::string, Channel *>::iterator channel;
-  Client                                    *target;
+  std::string                                modeString;
   size_t                                     modeIndex;
+  bool                                       sign;
 
   parameters = client.getMessage().getParameters();
   if (parameters.size() < 1)
@@ -33,7 +33,8 @@ void Server::mode(Client &client)
   if (modeIndex < parameters.size() - 2)
     return client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
 
-  bool sign = true;
+  modeIndex = 1;
+  sign = true;
   for (size_t i = 0; i < modeString.size(); ++i)
   {
     if (modeString[i] == '+')
@@ -49,9 +50,12 @@ void Server::mode(Client &client)
     else if (modeString[i] == 'l')
       channel->second->setLimit(client, sign, parameters[++modeIndex]);
     else if (modeString[i] == 'o')
-      channel->second->setOperator(client, sign, parameters[++modeIndex]);
+    {
+      ++modeIndex;
+      channel->second->setOperatorMode(client, sign, parameters[modeIndex], _nicknames.find(parameters[modeIndex])->second);
+    }
     else
-      client.sendMessage("ERR_UMODEUNKNOWNFLAG");
+      client.sendMessage(ERR_UMODEUNKNOWNFLAG(client.getNickname()));
   }
 }
 
@@ -67,7 +71,5 @@ void Server::mode(Client &client)
         client.sendMessage("ERR_USERNOTINCHANNEL");
         continue;
       }
-
-
     (sign) ? channel->second->addOperator(*target) : channel->second->rmOperator(*target);
 */

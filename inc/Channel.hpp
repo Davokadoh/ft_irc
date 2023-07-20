@@ -38,12 +38,13 @@ public:
   void        setInviteMode(Client &client, const bool mode);
   void        setPassword(Client &client, const bool mode, const std::string &password);
   void        setLimit(Client &client, const bool mode, const std::string &limitStr);
+  void        setOperatorMode(Client &client, const bool mode, const std::string &nick, Client *target);
 
   std::set<Client *> getClients(void) const;
   bool               isClient(Client *client) const;
   void               addClient(Client *client);
   void               rmClient(Client *client);
-  // std::set<Client *> getOperator(void) const;
+  // std::set<Client *> getOperators(void) const;
   bool isOperator(Client &client) const;
   void addOperator(Client &client);
   void rmOperator(Client &client);

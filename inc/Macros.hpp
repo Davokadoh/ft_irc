@@ -37,6 +37,7 @@
 #define ERR_INVITEONLYCHAN(client, channel)         " 473 " + client + " " + channel + " :Cannot join channel (+i)"
 #define ERR_BADCHANNELKEY(client, channel)          " 475 " + client + " " + channel + " :Cannot join channel (+k)"
 #define ERR_CHANOPRIVSNEEDED(client, channel)       " 482 " + client + " " + channel + " :You're not channel operator"
+#define ERR_UMODEUNKNOWNFLAG(client)                " 501 " + client + " :Unknown MODE flag"
 #define ERR_INVALIDKEY(client, channel)             " 525 " + client + " " + channel + " :Key is not well-formed"
 
 #endif
