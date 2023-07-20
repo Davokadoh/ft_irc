@@ -58,12 +58,8 @@ Server &Server::operator=(const Server &rhs)
 Server::~Server(void)
 {
   for (int i = 0; i < _maxSd; ++i)
-  {
     if (FD_ISSET(i, &_mainSet))
-    {
       rmSocket(i);
-    }
-  }
 }
 
 void Server::watch(void)
@@ -73,25 +69,15 @@ void Server::watch(void)
 
   _listenSd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
   if (_listenSd < 0)
-  {
     throw std::runtime_error("socket() failed");
-  }
   if (setsockopt(_listenSd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) < 0)
-  {
     throw std::runtime_error("setsockopt() failed");
-  }
   if (fcntl(_listenSd, F_SETFL, O_NONBLOCK) < 0)
-  {
     throw std::runtime_error("fcntl() failed");
-  }
   if (bind(_listenSd, addr->ai_addr, addr->ai_addrlen) < 0)
-  {
     throw std::runtime_error("bind() failed");
-  }
   if (listen(_listenSd, 32) < 0)
-  {
     throw std::runtime_error("listen() failed");
-  }
   freeaddrinfo(addr);
   addSocket(_listenSd);
 }
@@ -112,48 +98,19 @@ struct addrinfo *Server::getAddr(void)
   return servinfo;
 }
 
-void Server::addSocket(int sd)
-{
-  FD_SET(sd, &_mainSet);
-  if (sd > _maxSd)
-  {
-    _maxSd = sd;
-  }
-}
-
-void Server::rmSocket(int sd)
-{
-  FD_CLR(sd, &_mainSet);
-  close(sd);
-  if (sd == _maxSd)
-  {
-    while (!FD_ISSET(--_maxSd, &_mainSet))
-      ;
-  }
-}
-
 void Server::run(void)
 {
   while (_status)
   {
     cull();
     if (FD_ISSET(_listenSd, &_recvSet))
-    {
       addClients();
-    }
     for (int i = 0; i <= _maxSd; ++i)
     {
       if (FD_ISSET(i, &_recvSet))
-      {
         _clients[i]->recvPackets();
-      }
-    }
-    for (int i = 0; i <= _maxSd; ++i)
-    {
       if (FD_ISSET(i, &_sendSet))
-      {
         _clients[i]->sendPackets();
-      }
     }
     for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
     {
@@ -170,17 +127,11 @@ void Server::execute(Client &client)
 
   client.setSource(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getIp());
   if (verb.empty())
-  {
     return;
-  }
   else if (_cmds.find(verb) != _cmds.end())
-  {
     (this->*_cmds.at(verb))(client);
-  }
   else
-  {
     client.sendMessage(this->_name + ERR_UNKNOWNCOMMAND(client.getNickname(), verb));
-  }
 }
 
 void Server::cull(void)
@@ -190,32 +141,41 @@ void Server::cull(void)
   FD_COPY(&_mainSet, &_sendSet);
   _selected = select(_maxSd + 1, &_recvSet, &_sendSet, NULL, NULL);
   if (_selected == 0)
-  {
     throw std::runtime_error("select() timed out");
-  }
   else if (_selected < 0)
-  {
     throw std::runtime_error("select() failed");
-  }
+}
+
+void Server::addSocket(int sd)
+{
+  FD_SET(sd, &_mainSet);
+  if (sd > _maxSd)
+    _maxSd = sd;
+}
+
+void Server::rmSocket(int sd)
+{
+  FD_CLR(sd, &_mainSet);
+  close(sd);
+  if (sd == _maxSd)
+    while (!FD_ISSET(--_maxSd, &_mainSet) && _maxSd > 2)
+      ;
 }
 
 void Server::addClients(void)
 {
   int                sd;
-  socklen_t          len = sizeof(struct sockaddr);
+  socklen_t          len;
   struct sockaddr_in addr;
 
+  len = sizeof(struct sockaddr);
   do
   {
     sd = accept(_listenSd, (struct sockaddr *)&addr, &len);
     if (sd < 0 && errno != EWOULDBLOCK)
-    {
       throw std::runtime_error("accept() failed");
-    }
     else if (sd < 0)
-    {
       break;
-    }
     addSocket(sd);
     _clients.insert(std::make_pair(sd, new Client(sd, inet_ntoa(addr.sin_addr))));
   } while (sd >= 0);
@@ -224,11 +184,11 @@ void Server::addClients(void)
 
 void Server::rmClients(void)
 {
-  for (std::map<int, Client *>::iterator it = _clients.begin(), last = _clients.end(); it != last;)
+  for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end();)
   {
     if (it->second->getStatus())
     {
-      this->partChannels(*(it->second));
+      partChannels(*(it->second));
       rmSocket(it->first);
       _nicknames.erase(it->second->getNickname());
       it = _clients.erase(it);
@@ -257,19 +217,17 @@ std::string getDateCreation(void)
   std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
 
   std::string result = buffer;
-  return (result);
+  return result;
 }
 
 int Server::nbrRegistered(void)
 {
   int clientRegist = 0;
 
-  for (std::map<int, Client *>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
+  for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
   {
-    if (it->second->getIsRegistered() == true)
-    {
-      clientRegist++;
-    }
+    if (it->second->getIsRegistered())
+      ++clientRegist;
   }
   return (clientRegist);
 }
@@ -278,36 +236,32 @@ void Server::registration(Client &client)
 {
   client.setIsRegistered(true);
 
-  std::string nbrClients = intToString(this->nbrRegistered());
-  std::string nbrChannels = intToString(this->_channels.size());
+  std::string nbrClients = intToString(nbrRegistered());
+  std::string nbrChannels = intToString(_channels.size());
 
-  client.sendMessage(this->_name + RPL_WELCOME(client.getNickname()));
-  client.sendMessage(this->_name + RPL_YOURHOST(client.getNickname()));
-  client.sendMessage(this->_name + RPL_CREATED(client.getNickname(), getDateCreation()));
-  client.sendMessage(this->_name + RPL_MYINFO(client.getNickname()));
-  client.sendMessage(this->_name + RPL_LUSERCLIENT(client.getNickname(), nbrClients));
-  client.sendMessage(this->_name + RPL_LUSEROP(client.getNickname()));
-  client.sendMessage(this->_name + RPL_LUSERCHANNELS(client.getNickname(), nbrChannels));
-  client.sendMessage(this->_name + RPL_LUSERME(client.getNickname(), nbrClients));
-  this->motd(client);
+  client.sendMessage(_name + RPL_WELCOME(client.getNickname()));
+  client.sendMessage(_name + RPL_YOURHOST(client.getNickname()));
+  client.sendMessage(_name + RPL_CREATED(client.getNickname(), getDateCreation()));
+  client.sendMessage(_name + RPL_MYINFO(client.getNickname()));
+  client.sendMessage(_name + RPL_LUSERCLIENT(client.getNickname(), nbrClients));
+  client.sendMessage(_name + RPL_LUSEROP(client.getNickname()));
+  client.sendMessage(_name + RPL_LUSERCHANNELS(client.getNickname(), nbrChannels));
+  client.sendMessage(_name + RPL_LUSERME(client.getNickname(), nbrClients));
+  motd(client);
 }
 
 void Server::partChannels(Client &client)
 {
-  for (std::map<std::string, Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end();)
+  for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end();)
   {
-    if (it->second->getClients().find(&client) != it->second->getClients().end())
+    if (it->second->isClient(&client))
     {
-      it->second->sendToAll(client.getSource() + " PART " + it->second->getName() + " :Leaving");
+      it->second->sendToAll(client.getSource() + " PART " + it->first + " :Leaving");
       it->second->rmClient(&client);
-      if (it->second->getClients().empty())
-      {
-        it = this->_channels.erase(it);
-      }
+      if (it->second->isEmpty())
+        it = _channels.erase(it);
       else
-      {
-        it++;
-      }
+        ++it;
     }
   }
 }

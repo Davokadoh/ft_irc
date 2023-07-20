@@ -37,6 +37,11 @@ std::string Channel::getName(void) const
   return _name;
 }
 
+std::string Channel::getModes(void) const
+{
+  return "+t";
+}
+
 std::string Channel::getTopic(void) const
 {
   return _topic;
@@ -113,9 +118,16 @@ void Channel::setOperatorMode(Client &client, const bool mode, const std::string
   }
 }
 
+/*
 std::set<Client *> Channel::getClients(void) const
 {
   return _clients;
+}
+*/
+
+bool Channel::isEmpty(void) const
+{
+  return _clients.size();
 }
 
 bool Channel::isClient(Client *client) const

@@ -1,43 +1,45 @@
 #include "Macros.hpp"
 #include "Server.hpp"
+#include <utility>
 
 void Server::join(Client &client)
 {
-  std::string                                channel;
+  std::vector<std::string>                   parameters;
   std::map<std::string, Channel *>::iterator channelIt;
 
   if (client.getIsRegistered() == false)
     return client.sendMessage(_name + ERR_NOTREGISTERED(client.getNickname()));
-  if (client.getMessage().getParameters().empty())
-    return client.sendMessage(_name + ERR_NEEDMOREPARAMS(client.getNickname(), client.getMessage().getVerb()));
 
-  channel = client.getMessage().getParameters()[0];
-  if (channel == "0")
+  parameters = client.getMessage().getParameters();
+  if (parameters.empty())
+    return client.sendMessage(_name + ERR_NEEDMOREPARAMS(client.getNickname(), "JOIN"));
+
+  if (parameters[0] == "0")
   {
     client.resetMessage();
     partChannels(client);
     return;
   }
 
-  if (channel[0] != '#')
-    return client.sendMessage(_name + ERR_NOSUCHCHANNEL(client.getNickname(), channel));
+  if (parameters[0][0] != '#')
+    return client.sendMessage(_name + ERR_NOSUCHCHANNEL(client.getNickname(), parameters[0]));
 
-  channelIt = _channels.find(channel);
+  channelIt = _channels.find(parameters[0]);
   if (channelIt == _channels.end())
   {
-    _channels[channel] = new Channel(channel, _name);
-    _channels[channel]->addOperator(client);
+    channelIt = _channels.insert(std::make_pair(parameters[0], new Channel(parameters[0], _name))).first;
+    channelIt->second->addOperator(client);
   }
   else if (channelIt->second->getInviteMode() == true)
   {
     if (channelIt->second->isInvited(client))
       channelIt->second->rmInvited(client);
     else
-      return client.sendMessage(_name + ERR_INVITEONLYCHAN(client.getNickname(), channel));
+      return client.sendMessage(_name + ERR_INVITEONLYCHAN(client.getNickname(), parameters[0]));
   }
 
-  _channels[channel]->addClient(&client);
-  _channels[channel]->sendToAll(client.getSource() + " JOIN " + channel);
+  channelIt->second->addClient(&client);
+  channelIt->second->sendToAll(client.getSource() + " JOIN " + parameters[0]);
   topic(client);
   names(client);
 }

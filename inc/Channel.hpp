@@ -6,6 +6,14 @@
 #include <iostream>
 #include <set>
 
+struct modes
+{
+  bool _invite;
+  bool _topic;
+  bool _password;
+  bool _limit;
+};
+
 class Channel
 {
 private:
@@ -16,6 +24,7 @@ private:
   std::set<Client *> _clients;
   std::set<Client *> _operators;
   std::set<Client *> _inviteList;
+  bool               _modes[4];
   bool               _inviteMode;
   bool               _topicMode;
   std::string        _topic;
@@ -30,20 +39,23 @@ public:
 
   void        sendToAll(const std::string &msg);
   std::string getName(void) const;
+  std::string getModes(void) const;
   std::string getTopic(void) const;
   void        setTopic(const std::string &topic);
-  bool        getTopicMode(void) const;
-  void        setTopicMode(Client &client, const bool mode);
-  bool        getInviteMode(void) const;
-  void        setInviteMode(Client &client, const bool mode);
-  void        setPassword(Client &client, const bool mode, const std::string &password);
-  void        setLimit(Client &client, const bool mode, const std::string &limitStr);
-  void        setOperatorMode(Client &client, const bool mode, const std::string &nick, Client *target);
 
-  std::set<Client *> getClients(void) const;
-  bool               isClient(Client *client) const;
-  void               addClient(Client *client);
-  void               rmClient(Client *client);
+  bool getTopicMode(void) const;
+  void setTopicMode(Client &client, const bool mode);
+  bool getInviteMode(void) const;
+  void setInviteMode(Client &client, const bool mode);
+  void setPassword(Client &client, const bool mode, const std::string &password);
+  void setLimit(Client &client, const bool mode, const std::string &limitStr);
+  void setOperatorMode(Client &client, const bool mode, const std::string &nick, Client *target);
+
+  // std::set<Client *> getClients(void) const;
+  bool isEmpty(void) const;
+  bool isClient(Client *client) const;
+  void addClient(Client *client);
+  void rmClient(Client *client);
   // std::set<Client *> getOperators(void) const;
   bool isOperator(Client &client) const;
   void addOperator(Client &client);
