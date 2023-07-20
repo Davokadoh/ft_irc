@@ -61,17 +61,14 @@ void Client::recvPackets(void)
         {
             std::cout << _sd << ":Pckt recv: " << _recvBuff << std::endl;
             _recvString.append(_recvBuff);
-            setRdyToSend(true);
         }
     }
 }
 
 void Client::sendPackets(void)
 {
-    std::cout << "sendPackets" << std::endl;
     while (!_sendBuff.empty())
     {
-        std::cout << "client " << std::endl;
         int rc = send(_sd, _sendBuff.c_str(), _sendBuff.length(), 0);
         if (rc < 0 && errno == EWOULDBLOCK)
         {
@@ -87,11 +84,13 @@ void Client::sendPackets(void)
             _sendBuff.erase(_sendBuff.begin(), _sendBuff.begin() + rc);
         }
     }
+    setRdyToSend(false);
 }
 
 void Client::sendMessage(const std::string &msg)
 {
     _sendBuff.append(msg + "\r\n");
+    setRdyToSend(true);
 }
 
 void Client::parse(void)

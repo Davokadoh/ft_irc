@@ -145,6 +145,7 @@ void Server::run(void)
         {
             if (FD_ISSET(i, &_recvSet))
             {
+                std::cout << " recv " << std::endl;
                 _clients[i]->recvPackets();
             }
         }
@@ -187,15 +188,14 @@ void Server::cull(void)
 {
     int _selected;
     FD_COPY(&_mainSet, &_recvSet);
+    FD_ZERO(&_sendSet);
     for (std::map<int, Client *>::iterator clientIT = _clients.begin(); clientIT != _clients.end(); clientIT++)
     {
         if (clientIT->second->getRdyToSend() == true)
         {
-            FD_COPY(&_mainSet, &_sendSet);
-            clientIT->second->setRdyToSend(false);
+            FD_SET(clientIT->first, &_sendSet);
         }
     }
-    // FD_COPY(&_mainSet, &_sendSet);
     _selected = select(_maxSd + 1, &_recvSet, &_sendSet, NULL, NULL);
     if (_selected == 0)
     {
