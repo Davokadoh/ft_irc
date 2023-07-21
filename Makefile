@@ -21,6 +21,7 @@ SRCS		=	$(SRC_DIR)/main.cpp \
 				$(SRC_DIR)/notice.cpp \
 				$(SRC_DIR)/motd.cpp \
 				$(SRC_DIR)/pass.cpp \
+				$(SRC_DIR)/who.cpp \
 
 INCS		=	inc
 
