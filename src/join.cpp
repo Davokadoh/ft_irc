@@ -24,6 +24,9 @@ void Server::join(Client &client)
   if (parameters[0][0] != '#')
     return client.sendMessage(_name + ERR_NOSUCHCHANNEL(client.getNickname(), parameters[0]));
 
+  if (&parameters[0][1].find_first_not_of(VALID_CHAR) != std::string::npos)
+    return client.sendMessage(_name + ERR_BADCHANMASK(parameters[0]));
+
   channelIt = _channels.find(parameters[0]);
   if (channelIt == _channels.end())
   {
@@ -39,13 +42,13 @@ void Server::join(Client &client)
   }
   if (channelIt->second->getMode(k) == true)
   {
-	  if (parameters.size() < 2 || parameters[1] != channelIt->second->getPassword())
-	      return client.sendMessage(_name + ERR_BADCHANNELKEY(client.getNickname(), parameters[0]));
+    if (parameters.size() < 2 || parameters[1] != channelIt->second->getPassword())
+      return client.sendMessage(_name + ERR_BADCHANNELKEY(client.getNickname(), parameters[0]));
   }
   if (channelIt->second->getMode(l) == true)
   {
-	  if (channelIt->second->getClients().size() >= channelIt->second->getLimit())
-	      return client.sendMessage(_name + ERR_CHANNELISFULL(client.getNickname(), parameters[0]));
+    if (channelIt->second->getClients().size() >= channelIt->second->getLimit())
+      return client.sendMessage(_name + ERR_CHANNELISFULL(client.getNickname(), parameters[0]));
   }
 
   channelIt->second->addClient(&client);
