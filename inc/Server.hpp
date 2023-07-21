@@ -38,6 +38,7 @@ private:
   void                                       partChannels(Client &client);
   int                                        nbrRegistered(void);
   bool                                       isNickInUse(const std::string &nick);
+  std::string                                getChannelWith(Client *client);
   void                                       nick(Client &client);
   void                                       user(Client &client);
   void                                       join(Client &client);

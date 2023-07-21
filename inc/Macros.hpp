@@ -14,8 +14,10 @@
 #define RPL_TOPIC(client, channel, topic)         " 332 " + client + " " + channel + " " + topic
 #define RPL_INVITING(client, target, channel)     " 341 " + client + " " + target + " " + channel
 
-#define RPL_WHOREPLY(client, channel, username, host, server, nick, flags, realname) \
-  " 352 " + client + " " + channel + " " + username + " " + host + " " + server + " " + nick + " " + flags + " :0 " + realname
+#define RPL_WHOREPLY(client, channel, username, host, server, nick, realname) \
+  " 352 " + client + " " + channel + " " + username + " " + host + " " + server + " " + nick + " " + " :0 " + realname
+//:*.freenode.net 352 jo_ #poire ~jojo freenode-k9a.g28.dc9e5h.IP *.freenode.net jo H@ :0 jl
+//:*.freenode.net 352 jo * ~jojo freenode-k9a.g28.dc9e5h.IP *.freenode.net jo_ H :0 jl
 
 #define RPL_ENDOFWHO(client, mask)                  " 315 " + client + " " + mask + " :End of /WHO list"
 #define RPL_NAMREPLY(client, channel, target)       " 353 " + client + " = " + channel + " " + target
