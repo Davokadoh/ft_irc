@@ -23,6 +23,7 @@ std::map<std::string, FunPtr> Server::createMap(void)
   cmds["NOTICE"] = &Server::notice;
   cmds["MOTD"] = &Server::motd;
   cmds["PASS"] = &Server::pass;
+  cmds["WHO"] = &Server::who;
   return cmds;
 }
 
