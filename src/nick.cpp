@@ -1,7 +1,5 @@
 #include "Server.hpp"
 
-#define VALID_CHARS "\\[]{}|_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" // Need to check this list
-
 bool isNickValid(const std::string &nick)
 {
   return (nick.find_first_not_of(VALID_CHARS) != std::string::npos);
