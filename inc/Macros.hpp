@@ -42,4 +42,6 @@
 #define ERR_CHANOPRIVSNEEDED(client, channel)       " 482 " + client + " " + channel + " :You're not channel operator"
 #define ERR_INVALIDKEY(client, channel)             " 525 " + client + " " + channel + " :Key is not well-formed"
 
+#define VALID_CHARS "\\[]{}|_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
 #endif
