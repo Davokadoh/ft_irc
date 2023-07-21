@@ -53,6 +53,7 @@ private:
   void                                       invite(Client &client);
   void                                       motd(Client &client);
   void                                       pass(Client &client);
+  void                                       who(Client &client);
   static std::map<std::string, FunPtr>       createMap(void);
   static const std::map<std::string, FunPtr> _cmds;
   std::map<std::string, Channel *>           _channels;
