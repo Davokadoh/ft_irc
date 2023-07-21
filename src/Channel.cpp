@@ -1,8 +1,8 @@
-#include "Server.hpp"
 #include "Channel.hpp"
 #include "Macros.hpp"
+#include "Server.hpp"
 
-const std::string Channel::_modesStr[4] = {"i", "t", "k", "l"};
+const std::string Channel::_modesStr[4] = {"i", "k", "l", "t"};
 
 Channel::Channel(void)
 {
@@ -11,8 +11,8 @@ Channel::Channel(void)
 Channel::Channel(const std::string &name, const std::string &serverName)
   : _name(name), _serverName(serverName)
 {
-	for (int i = 0; i < 4; ++i)
-		_modes[i] = false;
+  for (int i = 0; i < 4; ++i)
+    _modes[i] = false;
 }
 
 Channel::Channel(const Channel &rhs)
@@ -44,23 +44,23 @@ std::string Channel::getName(void) const
   return _name;
 }
 
-std::string /*&*/Channel::getModes(void) const
+std::string /*&*/ Channel::getModes(void) const
 {
   std::string modesStr = "";
 
-  modesStr.append(_modes[0] ? "i" : "");
-  modesStr.append(_modes[1] ? "k" : "");
-  modesStr.append(_modes[2] ? "l" : "");
-  modesStr.append(_modes[3] ? "t" : "");
-  modesStr.append(_modes[1] ? " " + _password : "");
-  modesStr.append(_modes[2] ? " " + intToString(_limit) : "");
+  modesStr.append(_modes[i] ? "i" : "");
+  modesStr.append(_modes[k] ? "k" : "");
+  modesStr.append(_modes[l] ? "l" : "");
+  modesStr.append(_modes[t] ? "t" : "");
+  modesStr.append(_modes[k] ? " " + _password : "");
+  modesStr.append(_modes[l] ? " " + intToString(_limit) : "");
   modesStr.insert(0, !modesStr.empty() ? "+" : "");
   return modesStr;
 }
 
 bool Channel::getMode(Mode mode) const
 {
-	return _modes[mode];
+  return _modes[mode];
 }
 
 void Channel::setMode(Client &client, Mode mode, bool sign)
@@ -73,9 +73,8 @@ void Channel::setMode(Client &client, Mode mode, bool sign)
 
 unsigned int Channel::getLimit(void) const
 {
-	return _limit;
+  return _limit;
 }
-
 
 std::string Channel::getTopic(void) const
 {
@@ -99,13 +98,13 @@ void Channel::setPassword(Client &client, const bool sign, const std::string &pa
 
 const std::string &Channel::getPassword(void) const
 {
-	return _password;
+  return _password;
 }
 
 void Channel::setLimit(Client &client, const bool sign, const std::string &limitStr)
 {
   int limit = std::atoi(limitStr.c_str());
-  if (limit <= 0)
+  if (sign && limit <= 0)
     return;
   else if (!sign)
     return sendToAll(client.getSource() + " MODE " + _name + " -l ", NULL);
