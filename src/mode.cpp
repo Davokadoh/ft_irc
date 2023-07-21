@@ -19,7 +19,7 @@ void Server::mode(Client &client)
   else if (!channel->second->isClient(&client))
     return client.sendMessage(ERR_NOTONCHANNEL(client.getNickname(), channel->second->getName()));
   else if (parameters.size() == 1)
-	return client.sendMessage(client.getSource() + RPL_CHANNELMODEIS(client.getNickname(), channel->second->getName(), channel->second->getModes()));
+    return client.sendMessage(client.getSource() + RPL_CHANNELMODEIS(client.getNickname(), channel->second->getName(), channel->second->getModes()));
   else if (!channel->second->isOperator(client))
     return client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), channel->second->getName()));
   else if (parameters.size() < 2)
@@ -27,9 +27,16 @@ void Server::mode(Client &client)
 
   modeString = parameters[1];
   modeIndex = 0;
+  sign = true;
   for (size_t i = 0; i < modeString.size(); ++i)
-    if (modeString[i] == 'o' || modeString[i] == 'k' || modeString[i] == 'l')
+  {
+    if (modeString[i] == '+')
+      sign = true;
+    else if (modeString[i] == '-')
+      sign = false;
+    if (modeString[i] == 'o' || modeString[i] == 'k' || (sign && modeString[i] == 'l'))
       ++modeIndex;
+  }
   if (modeIndex > parameters.size() - 2)
     return client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
 
