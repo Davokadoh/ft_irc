@@ -23,6 +23,6 @@ void Server::invite(Client &client)
     return client.sendMessage(_name + ERR_CHANOPRIVSNEEDED(client.getNickname(), channel->second->getName()));
 
   channel->second->addInvited(*target->second);
-  client.sendMessage(client.getSource() + RPL_INVITING(client.getNickname(), target->second->getNickname(), parameters[1]));
+  client.sendMessage(_name + RPL_INVITING(client.getNickname(), target->second->getNickname(), parameters[1]));
   target->second->sendMessage(client.getSource() + " INVITE " + target->second->getNickname() + " " + parameters[1]);
 }
