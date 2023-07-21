@@ -10,12 +10,12 @@ void Server::motd(Client &client)
 
   if (motd.is_open())
   {
-    client.sendMessage(client.getSource() + RPL_MOTDSTART(client.getNickname()));
+    client.sendMessage(_name + RPL_MOTDSTART(client.getNickname()));
     while (std::getline(motd, line))
     {
-      client.sendMessage(client.getSource() + RPL_MOTD(client.getNickname(), line));
+      client.sendMessage(_name + RPL_MOTD(client.getNickname(), line));
     }
-    client.sendMessage(client.getSource() + RPL_ENDOFMOTD(client.getNickname()));
+    client.sendMessage(_name + RPL_ENDOFMOTD(client.getNickname()));
     return;
   }
   else
