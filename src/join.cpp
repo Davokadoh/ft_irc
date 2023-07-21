@@ -24,7 +24,7 @@ void Server::join(Client &client)
   if (parameters[0][0] != '#')
     return client.sendMessage(_name + ERR_NOSUCHCHANNEL(client.getNickname(), parameters[0]));
 
-  if (&parameters[0][1].find_first_not_of(VALID_CHAR) != std::string::npos)
+  if (parameters[0].find_first_not_of(VALID_CHARS, 1) != std::string::npos)
     return client.sendMessage(_name + ERR_BADCHANMASK(parameters[0]));
 
   channelIt = _channels.find(parameters[0]);

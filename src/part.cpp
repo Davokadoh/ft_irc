@@ -21,6 +21,7 @@ void Server::part(Client &client)
     client.getSource() + " PART " + parameters[0] + " :" + (parameters.size() > 1 ? parameters[1] : "Leaving"), NULL);
 
   channelIt->second->rmClient(&client);
+  channelIt->second->rmOperator(client);
   if (channelIt->second->isEmpty())
     _channels.erase(channelIt);
 }
