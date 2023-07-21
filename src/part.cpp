@@ -18,7 +18,7 @@ void Server::part(Client &client)
     return client.sendMessage(_name + ERR_NOTONCHANNEL(client.getNickname(), parameters[0]));
 
   channelIt->second->sendToAll(
-    client.getSource() + " PART " + parameters[0] + " :" + (parameters.size() > 1 ? parameters[1] : "Leaving"));
+    client.getSource() + " PART " + parameters[0] + " :" + (parameters.size() > 1 ? parameters[1] : "Leaving"), NULL);
 
   channelIt->second->rmClient(&client);
   if (channelIt->second->isEmpty())

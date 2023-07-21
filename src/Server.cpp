@@ -106,12 +106,11 @@ void Server::run(void)
     if (FD_ISSET(_listenSd, &_recvSet))
       addClients();
     for (int i = 0; i <= _maxSd; ++i)
-    {
       if (FD_ISSET(i, &_recvSet))
         _clients[i]->recvPackets();
+    for (int i = 0; i <= _maxSd; ++i)
       if (FD_ISSET(i, &_sendSet))
         _clients[i]->sendPackets();
-    }
     for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
     {
       it->second->parse();
@@ -256,7 +255,7 @@ void Server::partChannels(Client &client)
   {
     if (it->second->isClient(&client))
     {
-      it->second->sendToAll(client.getSource() + " PART " + it->first + " :Leaving");
+      it->second->sendToAll(client.getSource() + " PART " + it->first + " :Leaving", NULL);
       it->second->rmClient(&client);
       if (it->second->isEmpty())
         it = _channels.erase(it);

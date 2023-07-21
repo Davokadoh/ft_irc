@@ -22,7 +22,7 @@ void Server::notice(Client &client)
 
   if (itChannel != this->_channels.end())
   {
-    itChannel->second->sendToAll(client.getSource() + " NOTICE " + itChannel->second->getName() + " :" + message);
+    itChannel->second->sendToAll(client.getSource() + " NOTICE " + itChannel->second->getName() + " :" + message, &client);
     return;
   }
 }

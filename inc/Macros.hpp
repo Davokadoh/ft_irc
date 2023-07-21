@@ -9,6 +9,7 @@
 #define RPL_LUSEROP(client)                         " 252 " + client + " 0 :operator(s) online" // we do not handle server operator
 #define RPL_LUSERCHANNELS(client, nbrChannels)      " 254 " + client + " " + nbrChannels + " :channels formed"
 #define RPL_LUSERME(client, nbrClients)             " 255 " + client + " :I have " + nbrClients + " clients and 1 servers"
+#define RPL_CHANNELMODEIS(client, channel, modes)   " 324 " + client + " " + channel + " " + modes
 #define RPL_NOTOPIC(client, channel)                " 331 " + client + " " + channel + " :No topic is set"
 #define RPL_TOPIC(client, channel, topic)           " 332 " + client + " " + channel + " " + topic
 #define RPL_INVITING(client, target, channel)       " 341 " + client + " " + target + " " + channel

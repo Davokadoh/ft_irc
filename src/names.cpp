@@ -3,20 +3,20 @@
 
 void Server::names(Client &client)
 {
-  std::string                                channelName = client.getMessage().getParameters()[0]; // Need to check param.size()
+  std::vector<std::string>                   parameters;
   std::map<std::string, Channel *>::iterator channelIt;
-  Channel                                   *channel;
   std::set<Client *>                         clients;
 
-  channelIt = _channels.find(channelName);
+  parameters = client.getMessage().getParameters();
+  if (parameters.size() < 1)
+    return client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "NAMES"));
+  channelIt = _channels.find(parameters[0]);
   if (channelIt == _channels.end())
-    return client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), channelName));
+    return client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), parameters[0]));
 
-  channel = channelIt->second;
-  clients = channel->getClients();
-
+  clients = channelIt->second->getClients();
   for (std::set<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
-    client.sendMessage(_name + RPL_NAMREPLY(client.getNickname(), channelName, (*it)->getNickname()));
+    client.sendMessage(_name + RPL_NAMREPLY(client.getNickname(), parameters[0], (*it)->getNickname()));
 
-  client.sendMessage(_name + RPL_ENDOFNAMES(client.getNickname(), channelName));
+  client.sendMessage(_name + RPL_ENDOFNAMES(client.getNickname(), parameters[0]));
 }

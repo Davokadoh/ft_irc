@@ -22,6 +22,6 @@ void Server::kick(Client &client)
   else if (!channel->second->isClient(target->second))
     return client.sendMessage(_name + ERR_USERNOTINCHANNEL(client.getNickname(), parameters[1], channel->second->getName()));
 
-  channel->second->sendToAll(client.getSource() + " KICK " + channel->second->getName() + " " + target->second->getNickname());
+  channel->second->sendToAll(client.getSource() + " KICK " + channel->second->getName() + " " + target->second->getNickname(), NULL);
   channel->second->rmClient(target->second);
 }

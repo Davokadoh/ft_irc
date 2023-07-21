@@ -26,15 +26,14 @@ void Server::privmsg(Client &client)
   }
   if (itChannel != this->_channels.end())
   {
-    if (itChannel->second->isClient(&client))
+    if (!itChannel->second->isClient(&client))
     {
       client.sendMessage(this->_name + ERR_CANNOTSENDTOCHAN(client.getNickname(), sendTo));
       return;
     }
     else
     {
-      itChannel->second->sendToAll(client.getSource() + " PRIVMSG " + itChannel->second->getName() + " :" +
-                                   message);
+      itChannel->second->sendToAll(client.getSource() + " PRIVMSG " + itChannel->second->getName() + " :" + message, &client);
       return;
     }
   }
