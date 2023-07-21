@@ -30,17 +30,22 @@ void Server::join(Client &client)
     channelIt = _channels.insert(std::make_pair(parameters[0], new Channel(parameters[0], _name))).first;
     channelIt->second->addOperator(client);
   }
-  else if (channelIt->second->getMode(k) == true)
-  {
-	  if (parameters.size() < 2 || parameters[1] != channelIt->second->getPassword())
-	      return client.sendMessage(_name + ERR_BADCHANNELKEY(client.getNickname(), parameters[0]));
-  }
-  else if (channelIt->second->getMode(i) == true)
+  if (channelIt->second->getMode(i) == true)
   {
     if (channelIt->second->isInvited(client))
       channelIt->second->rmInvited(client);
     else
       return client.sendMessage(_name + ERR_INVITEONLYCHAN(client.getNickname(), parameters[0]));
+  }
+  if (channelIt->second->getMode(k) == true)
+  {
+	  if (parameters.size() < 2 || parameters[1] != channelIt->second->getPassword())
+	      return client.sendMessage(_name + ERR_BADCHANNELKEY(client.getNickname(), parameters[0]));
+  }
+  if (channelIt->second->getMode(l) == true)
+  {
+	  if (channelIt->second->getClients().size() >= channelIt->second->getLimit())
+	      return client.sendMessage(_name + ERR_CHANNELISFULL(client.getNickname(), parameters[0]));
   }
 
   channelIt->second->addClient(&client);

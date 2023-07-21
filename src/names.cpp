@@ -16,7 +16,8 @@ void Server::names(Client &client)
 
   clients = channelIt->second->getClients();
   for (std::set<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
-    client.sendMessage(_name + RPL_NAMREPLY(client.getNickname(), parameters[0], (*it)->getNickname()));
+    client.sendMessage(_name + RPL_NAMREPLY(client.getNickname(), parameters[0],
+				(channelIt->second->isOperator(**it) ? "@" : "") + (*it)->getNickname()));
 
   client.sendMessage(_name + RPL_ENDOFNAMES(client.getNickname(), parameters[0]));
 }

@@ -71,6 +71,12 @@ void Channel::setMode(Client &client, Mode mode, bool sign)
   sendToAll(client.getSource() + std::string(" MODE ") + _name + (sign ? std::string(" +") : std::string(" -")) + _modesStr[mode], NULL);
 }
 
+unsigned int Channel::getLimit(void) const
+{
+	return _limit;
+}
+
+
 std::string Channel::getTopic(void) const
 {
   return _topic;
@@ -131,10 +137,10 @@ void Channel::setOperatorMode(Client &client, const bool sign, const std::string
 
 bool Channel::isEmpty(void) const
 {
-  return _clients.size();
+  return !_clients.size();
 }
 
-const std::set<Client *> &Channel::getClients(void) const
+std::set<Client *> Channel::getClients(void) const
 {
   return _clients;
 }

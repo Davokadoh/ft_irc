@@ -39,6 +39,7 @@ public:
   bool        getMode(Mode mode) const;
   void        setMode(Client &client, Mode mode, bool sign);
   
+  unsigned int getLimit(void) const;
   std::string getTopic(void) const;
   void        setTopic(const std::string &topic);
 
@@ -48,7 +49,7 @@ public:
   void setOperatorMode(Client &client, const bool mode, const std::string &nick, Client *target);
 
   bool isEmpty(void) const;
-  const std::set<Client *> &getClients(void) const;
+  std::set<Client *> getClients(void) const;
   bool isClient(Client *client) const;
   void addClient(Client *client);
   void rmClient(Client *client);

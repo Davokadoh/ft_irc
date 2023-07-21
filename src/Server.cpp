@@ -255,12 +255,14 @@ void Server::partChannels(Client &client)
   {
     if (it->second->isClient(&client))
     {
-      it->second->sendToAll(client.getSource() + " PART " + it->first + " :Leaving", NULL);
       it->second->rmClient(&client);
+      it->second->sendToAll(client.getSource() + " PART " + it->first + " :Leaving", NULL);
       if (it->second->isEmpty())
         it = _channels.erase(it);
       else
         ++it;
     }
+	else
+		++it;
   }
 }

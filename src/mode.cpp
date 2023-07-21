@@ -55,6 +55,6 @@ void Server::mode(Client &client)
       channel->second->setOperatorMode(client, sign, parameters[modeIndex], _nicknames.find(parameters[modeIndex])->second);
     }
     else
-      client.sendMessage(ERR_UMODEUNKNOWNFLAG(client.getNickname()));
+      client.sendMessage(ERR_UNKNOWNMODE(client.getNickname(), modeString[index]));
   }
 }
