@@ -1,68 +1,58 @@
 #include "Macros.hpp"
 #include "Server.hpp"
+#include <utility>
 
 void Server::join(Client &client)
 {
-    if (client.getIsRegistered() == false)
-    {
-        client.sendMessage(_name + ERR_NOTREGISTERED(client.getNickname()));
-        return;
-    }
-    if (client.getMessage().getParameters().empty())
-    {
-        client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname(), client.getMessage().getVerb()));
-        return;
-    }
-    std::string channel = client.getMessage().getParameters()[0];
-    if (channel == "0")
-    {
-        client.resetMessage();
-        this->partChannels(client);
-        return;
-    }
-    if (channel[0] != '#')
-    {
-        client.sendMessage(this->_name + ERR_NOSUCHCHANNEL(client.getNickname(), channel));
-        return;
-    }
-    std::map<std::string, Channel *>::iterator it = _channels.find(channel);
-    if (it == _channels.end())
-    {
-        _channels[channel] = new Channel(channel);
-        _channels[channel]->addOperator(client);
-        _channels[channel]->addClient(&client);
-        _channels[channel]->sendToAll(client.getSource() + " JOIN " + channel);
-        topic(client);
-        names(client);
-    }
-    else if (it->second->getInviteMode() == true)
-    {
-        if (!it->second->clientOnInvite(&client))
-        {
-            client.sendMessage(this->_name + ERR_INVITEONLYCHAN(client.getNickname(), channel));
-        }
-        else
-        {
-            _channels[channel]->addClient(&client);
-            _channels[channel]->sendToAll(client.getSource() + " JOIN " + channel);
-            topic(client);
-            names(client);
-            it->second->rmClientFromInvite(&client);
-        }
-    }
-    else
-    {
-        _channels[channel]->addClient(&client);
-        _channels[channel]->sendToAll(client.getSource() + " JOIN " + channel);
-        topic(client);
-        names(client);
-    }
+  std::vector<std::string>                   parameters;
+  std::map<std::string, Channel *>::iterator channelIt;
 
-    /*
-    for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
-    {
-            std::cout << "Channel: " << it->first << std::endl;
-            it->second->printClientList();
-    }
-    */
+  if (client.getIsRegistered() == false)
+    return client.sendMessage(_name + ERR_NOTREGISTERED(client.getNickname()));
+
+  parameters = client.getMessage().getParameters();
+  if (parameters.empty())
+    return client.sendMessage(_name + ERR_NEEDMOREPARAMS(client.getNickname(), "JOIN"));
+
+  if (parameters[0] == "0")
+  {
+    client.resetMessage();
+    partChannels(client);
+    return;
+  }
+
+  if (parameters[0][0] != '#')
+    return client.sendMessage(_name + ERR_NOSUCHCHANNEL(client.getNickname(), parameters[0]));
+
+  channelIt = _channels.find(parameters[0]);
+  if (channelIt == _channels.end())
+  {
+    channelIt = _channels.insert(std::make_pair(parameters[0], new Channel(parameters[0], _name))).first;
+    channelIt->second->addOperator(client);
+  }
+  if (channelIt->second->getMode(i) == true)
+  {
+    if (channelIt->second->isInvited(client))
+      channelIt->second->rmInvited(client);
+    else
+      return client.sendMessage(_name + ERR_INVITEONLYCHAN(client.getNickname(), parameters[0]));
+  }
+  if (channelIt->second->getMode(k) == true)
+  {
+	  if (parameters.size() < 2 || parameters[1] != channelIt->second->getPassword())
+	      return client.sendMessage(_name + ERR_BADCHANNELKEY(client.getNickname(), parameters[0]));
+  }
+  if (channelIt->second->getMode(l) == true)
+  {
+	  if (channelIt->second->getClients().size() >= channelIt->second->getLimit())
+	      return client.sendMessage(_name + ERR_CHANNELISFULL(client.getNickname(), parameters[0]));
+  }
+
+  channelIt->second->addClient(&client);
+  channelIt->second->sendToAll(client.getSource() + " JOIN " + parameters[0], NULL);
+  std::string copy(parameters[0]);
+  client.resetMessage();
+  client.setMessage("JOIN", copy);
+  topic(client);
+  names(client);
 }

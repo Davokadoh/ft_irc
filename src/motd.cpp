@@ -3,24 +3,24 @@
 
 void Server::motd(Client &client)
 {
-    std::ifstream motd;
-    std::string   line;
+  std::ifstream motd;
+  std::string   line;
 
-    motd.open("motd.txt");
+  motd.open("motd.txt");
 
-    if (motd.is_open())
+  if (motd.is_open())
+  {
+    client.sendMessage(client.getSource() + RPL_MOTDSTART(client.getNickname()));
+    while (std::getline(motd, line))
     {
-        client.sendMessage(client.getSource() + RPL_MOTDSTART(client.getNickname()));
-        while (std::getline(motd, line))
-        {
-            client.sendMessage(client.getSource() + RPL_MOTD(client.getNickname(), line));
-        }
-        client.sendMessage(client.getSource() + RPL_ENDOFMOTD(client.getNickname()));
-        return;
+      client.sendMessage(client.getSource() + RPL_MOTD(client.getNickname(), line));
     }
-    else
-    {
-        client.sendMessage(this->_name + ERR_NOMOTD(client.getNickname()));
-        return;
-    }
+    client.sendMessage(client.getSource() + RPL_ENDOFMOTD(client.getNickname()));
+    return;
+  }
+  else
+  {
+    client.sendMessage(this->_name + ERR_NOMOTD(client.getNickname()));
+    return;
+  }
 }
