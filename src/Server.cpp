@@ -104,13 +104,24 @@ void Server::run(void)
   {
     cull();
     if (FD_ISSET(_listenSd, &_recvSet))
+    {
       addClients();
+    }
     for (int i = 0; i <= _maxSd; ++i)
+    {
       if (FD_ISSET(i, &_recvSet))
+      {
+        std::cout << " recv " << std::endl;
         _clients[i]->recvPackets();
+      }
+    }
     for (int i = 0; i <= _maxSd; ++i)
+    {
       if (FD_ISSET(i, &_sendSet))
+      {
         _clients[i]->sendPackets();
+      }
+    }
     for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
     {
       it->second->parse();
@@ -137,12 +148,23 @@ void Server::cull(void)
 {
   int _selected;
   FD_COPY(&_mainSet, &_recvSet);
-  FD_COPY(&_mainSet, &_sendSet);
+  FD_ZERO(&_sendSet);
+  for (std::map<int, Client *>::iterator clientIT = _clients.begin(); clientIT != _clients.end(); clientIT++)
+  {
+    if (clientIT->second->getRdyToSend() == true)
+    {
+      FD_SET(clientIT->first, &_sendSet);
+    }
+  }
   _selected = select(_maxSd + 1, &_recvSet, &_sendSet, NULL, NULL);
   if (_selected == 0)
+  {
     throw std::runtime_error("select() timed out");
+  }
   else if (_selected < 0)
+  {
     throw std::runtime_error("select() failed");
+  }
 }
 
 void Server::addSocket(int sd)
@@ -262,7 +284,7 @@ void Server::partChannels(Client &client)
       else
         ++it;
     }
-	else
-		++it;
+    else
+      ++it;
   }
 }

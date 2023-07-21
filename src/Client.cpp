@@ -13,8 +13,8 @@
 #include <netinet/in.h>
 
 Client::Client(int sd, const std::string &ip)
-  : _sd(sd), _status(CONNECTED), _isRegistered(false), _isPassOK(false), _ip(ip), _nickname("*"), _username(""),
-    _source(""), _realname(""), _recvString("")
+  : _sd(sd), _rdyToSend(false), _status(CONNECTED), _isRegistered(false), _isPassOK(false), _ip(ip), _nickname("*"),
+    _username(""), _source(""), _realname(""), _recvString("")
 {
   std::cout << "ip: " << _ip << std::endl;
 }
@@ -84,11 +84,14 @@ void Client::sendPackets(void)
       _sendBuff.erase(_sendBuff.begin(), _sendBuff.begin() + rc);
     }
   }
+  if (_sendBuff.empty())
+    setRdyToSend(false);
 }
 
 void Client::sendMessage(const std::string &msg)
 {
   _sendBuff.append(msg + "\r\n");
+  setRdyToSend(true);
 }
 
 void Client::parse(void)
@@ -148,6 +151,11 @@ std::string Client::getIp(void) const
   return (this->_ip);
 }
 
+std::string Client::getSendBuff(void) const
+{
+  return (this->_ip);
+}
+
 bool Client::getIsRegistered(void) const
 {
   return (this->_isRegistered);
@@ -156,6 +164,11 @@ bool Client::getIsRegistered(void) const
 bool Client::getIsPassOK(void) const
 {
   return (this->_isPassOK);
+}
+
+bool Client::getRdyToSend(void) const
+{
+  return (this->_rdyToSend);
 }
 
 void Client::setNickname(std::string newNick)
@@ -186,6 +199,11 @@ void Client::setIsRegistered(bool status)
 void Client::setIsPassOK(bool status)
 {
   this->_isPassOK = status;
+}
+
+void Client::setRdyToSend(bool status)
+{
+  this->_rdyToSend = status;
 }
 
 void Client::resetMessage(void)
