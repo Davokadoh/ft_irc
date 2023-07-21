@@ -28,7 +28,7 @@ void Server::topic(Client &client)
                                  ? RPL_NOTOPIC(client.getNickname(), channel->getName())
                                  : RPL_TOPIC(client.getNickname(), channel->getName(), channel->getTopic())));
 
-  if (channel->getMode(t) && channel->isOperator(client))
+  if (channel->getMode(t) && !channel->isOperator(client))
     return client.sendMessage(this->_name + ERR_CHANOPRIVSNEEDED(client.getNickname(), channel->getName()));
   channel->setTopic(parameters[1]);
   channel->sendToAll(client.getSource() + RPL_TOPIC(client.getNickname(), channel->getName(), channel->getTopic()), NULL);
