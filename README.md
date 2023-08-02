@@ -12,3 +12,4 @@ Implementation of a simple irc server
 - https://ircgod.com/
 - https://github.com/execrate0/ft_irc/
 - https://github.com/Yes-l-CAN/YesYOUCAN/
+- https://beej.us/guide/bgnet/html/
