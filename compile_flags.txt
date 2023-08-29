@@ -1,8 +1,0 @@
--Wall
--Werror
--Wextra
--std=c++98
--L/usr/local/lib
--I/usr/local/include
--Iinc
--lfmt
