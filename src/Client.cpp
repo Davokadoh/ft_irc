@@ -67,25 +67,17 @@ void Client::recvPackets(void)
 
 void Client::sendPackets(void)
 {
-  while (!_sendBuff.empty())
+  int rc = 0;
+  if (!_sendBuff.empty())
+    rc = send(_sd, _sendBuff.c_str(), _sendBuff.length(), 0);
+  if (rc < 0)
   {
-    int rc = send(_sd, _sendBuff.c_str(), _sendBuff.length(), 0);
-    if (rc < 0 && errno == EWOULDBLOCK)
-    {
-      break;
-    }
-    else if (rc <= 0)
-    {
-      setStatus(DISCONNECTED);
-      break;
-    }
-    else
-    {
-      _sendBuff.erase(_sendBuff.begin(), _sendBuff.begin() + rc);
-    }
+    setStatus(DISCONNECTED);
   }
-  if (_sendBuff.empty())
-    setRdyToSend(false);
+  else
+  {
+    _sendBuff.erase(_sendBuff.begin(), _sendBuff.begin() + rc);
+  }
 }
 
 void Client::sendMessage(const std::string &msg)
