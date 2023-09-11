@@ -92,17 +92,13 @@ struct addrinfo *Server::getAddr(void) {
 void Server::run(void) {
   while (_status) {
     cull();
-    if (FD_ISSET(_listenSd, &_recvSet))
+    if (FD_ISSET(_listenSd, &_recvSet)) {
       addClients();
     }
-    for (int i = 0; i <= _maxSd; ++i)
-    {
-      if (FD_ISSET(i, &_sendSet))
-      {
+    for (int i = 0; i <= _maxSd; ++i) {
+      if (FD_ISSET(i, &_sendSet)) {
         _clients[i]->sendPackets();
-      }
-      else if (FD_ISSET(i, &_recvSet))
-      {
+      } else if (FD_ISSET(i, &_recvSet)) {
         _clients[i]->recvPackets();
       }
     }
