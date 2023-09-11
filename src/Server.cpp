@@ -94,11 +94,17 @@ void Server::run(void) {
     cull();
     if (FD_ISSET(_listenSd, &_recvSet))
       addClients();
-    for (int i = 0; i <= _maxSd; ++i) {
-      if (FD_ISSET(i, &_recvSet))
-        _clients[i]->recvPackets();
-      else if (FD_ISSET(i, &_sendSet))
+    }
+    for (int i = 0; i <= _maxSd; ++i)
+    {
+      if (FD_ISSET(i, &_sendSet))
+      {
         _clients[i]->sendPackets();
+      }
+      else if (FD_ISSET(i, &_recvSet))
+      {
+        _clients[i]->recvPackets();
+      }
     }
     for (std::map<int, Client *>::iterator it = _clients.begin();
          it != _clients.end(); ++it) {
