@@ -209,6 +209,7 @@ void Server::rmClients(void)
       partChannels(*(it->second));
       rmSocket(it->first);
       _nicknames.erase(it->second->getNickname());
+      delete it->second;
       _clients.erase(it++);
     }
     else

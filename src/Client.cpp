@@ -13,9 +13,7 @@
 #include <netinet/in.h>
 
 Client::Client(int sd, const std::string &ip)
-  : _sd(sd), _rdyToSend(false), _status(CONNECTED), _isRegistered(false),
-    _isPassOK(false), _ip(ip), _nickname("*"), _username(""), _source(""),
-    _realname(""), _recvString("")
+  : _sd(sd), _rdyToSend(false), _status(CONNECTED), _isRegistered(false), _isPassOK(false), _ip(ip), _nickname("*"), _username(""), _source(""), _realname(""), _recvString("")
 {
   std::cout << "ip: " << _ip << std::endl;
 }
@@ -34,7 +32,6 @@ Client &Client::operator=(const Client &rhs)
     _username = rhs._username;
     _realname = rhs._realname;
   }
-
   return *this;
 }
 
@@ -148,7 +145,7 @@ std::string Client::getIp(void) const
 
 std::string Client::getSendBuff(void) const
 {
-  return (this->_ip);
+  return (this->_sendBuff);
 }
 
 bool Client::getIsRegistered(void) const

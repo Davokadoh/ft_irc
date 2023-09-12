@@ -26,7 +26,7 @@ SRCS		=	$(SRC_DIR)/main.cpp \
 INCS		=	inc
 
 CXX			=	c++#g++-13
-CXXFLAGS	=	-std=c++98 -O2
+CXXFLAGS	=	-g -std=c++98 -O2
 CPPFLAGS	=	-Wall -Wextra -Werror -pedantic \
 				$(addprefix -I,$(INCS)) -MMD -MP \
 
@@ -55,7 +55,7 @@ clean:
 fclean: clean
 	$(RM) $(NAME)
 
-re: fclean $(NAME)
+re: fclean all
 
 run: all
 	clear
