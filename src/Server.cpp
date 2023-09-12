@@ -279,6 +279,7 @@ void Server::partChannels(Client &client)
       it->second->rmClient(&client);
       if (it->second->isEmpty())
       {
+        delete it->second;
         _channels.erase(it++);
       }
       else
