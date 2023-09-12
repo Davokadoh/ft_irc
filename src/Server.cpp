@@ -92,10 +92,11 @@ struct addrinfo *Server::getAddr(void)
   hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_flags = AI_PASSIVE;
-  if (getaddrinfo(NULL, _port.c_str(), &hints, &servinfo))
+
+  int gai_err = getaddrinfo(NULL, _port.c_str(), &hints, &servinfo);
+  if (gai_err != 0)
   {
-    // what about gai_strerror() ?
-    throw std::runtime_error("getaddrinfo() failed");
+    throw std::runtime_error(gai_strerror(errno));
   }
   return servinfo;
 }
