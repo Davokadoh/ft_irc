@@ -13,8 +13,9 @@
 #include <netinet/in.h>
 
 Client::Client(int sd, const std::string &ip)
-  : _sd(sd), _rdyToSend(false), _status(CONNECTED), _isRegistered(false), _isPassOK(false), _ip(ip), _nickname("*"),
-    _username(""), _source(""), _realname(""), _recvString("")
+  : _sd(sd), _rdyToSend(false), _status(CONNECTED), _isRegistered(false),
+    _isPassOK(false), _ip(ip), _nickname("*"), _username(""), _source(""),
+    _realname(""), _recvString("")
 {
   std::cout << "ip: " << _ip << std::endl;
 }
@@ -44,39 +45,41 @@ Client::~Client(void)
 
 void Client::recvPackets(void)
 {
-  while (true)
-  {
-    bzero(_recvBuff, 512);
-    int rc = recv(_sd, _recvBuff, sizeof(_recvBuff), 0);
-    if (rc < 0 && errno == EWOULDBLOCK)
-    {
-      break;
-    }
-    else if (rc <= 0)
-    {
-      setStatus(DISCONNECTED);
-      break;
-    }
-    else
-    {
-      std::cout << _sd << ":Pckt recv: " << _recvBuff << std::endl;
-      _recvString.append(_recvBuff);
-    }
-  }
-}
-
-void Client::sendPackets(void)
-{
-  int rc = 0;
-  if (!_sendBuff.empty())
-    rc = send(_sd, _sendBuff.c_str(), _sendBuff.length(), 0);
-  if (rc < 0)
+  if (getStatus() == DISCONNECTED)
+    return;
+  std::cout << "Receiving packet" << std::endl;
+  bzero(_recvBuff, 512);
+  int rc = recv(_sd, _recvBuff, sizeof(_recvBuff), 0);
+  if (rc <= 0)
   {
     setStatus(DISCONNECTED);
   }
   else
   {
+    _recvString.append(_recvBuff);
+  }
+}
+
+void Client::sendPackets(void)
+{
+  if (getStatus() == DISCONNECTED)
+    return;
+  std::cout << "Sending packet" << std::endl;
+  if (_sendBuff.empty())
+    return;
+  int rc = send(_sd, _sendBuff.c_str(), _sendBuff.length(), 0);
+  if (rc < 0)
+  {
+    setStatus(DISCONNECTED);
+    setRdyToSend(false);
+  }
+  else
+  {
     _sendBuff.erase(_sendBuff.begin(), _sendBuff.begin() + rc);
+  }
+  if (_sendBuff.empty())
+  {
+    setRdyToSend(false);
   }
 }
 
