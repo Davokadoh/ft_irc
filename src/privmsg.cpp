@@ -12,33 +12,42 @@ void Server::privmsg(Client &client)
     client.sendMessage(this->_name + ERR_NOTEXTTOSEND(client.getNickname()));
     return;
   }
-  std::string                                sendTo = client.getMessage().getParameters()[0];
-  std::string                                message = client.getMessage().getParameters()[1];
-  std::map<std::string, Channel *>::iterator itChannel = this->_channels.find(sendTo);
+  std::string                                message = client.getMessage().getParameters().back();
 
-  for (std::map<int, Client *>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
+  for (unsigned int i = 0; i < client.getMessage().getParameters().size() -1; ++i)
   {
-    if (it->second->getNickname() == sendTo)
+    std::string                                sendTo = client.getMessage().getParameters()[i];
+    std::map<std::string, Channel *>::iterator itChannel = this->_channels.find(sendTo);
+    int found = 0;
+
+    for (std::map<int, Client *>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
     {
-      it->second->sendMessage(client.getSource() + " PRIVMSG " + it->second->getNickname() + " :" + message);
-      return;
+      if (it->second->getNickname() == sendTo)
+      {
+        it->second->sendMessage(client.getSource() + " PRIVMSG " + it->second->getNickname() + " :" + message);
+        found = 1;
+      }
     }
-  }
-  if (itChannel != this->_channels.end())
-  {
-    if (!itChannel->second->isClient(&client))
+    if (found == 1)
     {
-      client.sendMessage(this->_name + ERR_CANNOTSENDTOCHAN(client.getNickname(), sendTo));
-      return;
+      continue;
+    }
+    if (itChannel != this->_channels.end())
+    {
+      if (!itChannel->second->isClient(&client))
+      {
+        client.sendMessage(this->_name + ERR_CANNOTSENDTOCHAN(client.getNickname(), sendTo));
+        continue;
+      }
+      else
+      {
+        itChannel->second->sendToAll(client.getSource() + " PRIVMSG " + itChannel->second->getName() + " :" + message, &client);
+        continue;
+      }
     }
     else
     {
-      itChannel->second->sendToAll(client.getSource() + " PRIVMSG " + itChannel->second->getName() + " :" + message, &client);
-      return;
+      client.sendMessage(this->_name + ERR_NOSUCHNICK(client.getNickname(), sendTo));
     }
-  }
-  else
-  {
-    client.sendMessage(this->_name + ERR_NOSUCHNICK(client.getNickname(), sendTo));
   }
 }
