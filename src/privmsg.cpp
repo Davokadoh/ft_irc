@@ -21,7 +21,7 @@ void Server::privmsg(Client &client)
 
 		if (itClient != this->_nicknames.end())
 		{
-			itClient->second->sendMessage(client.getSource() + " PRIVMSG " + itChannel->second->getName() + " :" + message);
+			itClient->second->sendMessage(client.getSource() + " PRIVMSG " + itClient->second->getNickname() + " :" + message);
 		}
 		else if (itChannel != this->_channels.end())
 		{
