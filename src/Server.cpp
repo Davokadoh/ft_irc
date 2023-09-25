@@ -97,9 +97,7 @@ struct addrinfo *Server::getAddr(void)
 
 	int gai_err = getaddrinfo(NULL, _port.c_str(), &hints, &servinfo);
 	if (gai_err != 0)
-	{
 		throw std::runtime_error(gai_strerror(errno));
-	}
 	return servinfo;
 }
 
@@ -109,9 +107,7 @@ void Server::run(void)
 	{
 		cull();
 		if (FD_ISSET(_listenSd, &_recvSet))
-		{
 			addClients();
-		}
 		for (int i = 0; i <= _maxSd; ++i)
 		{
 			if (FD_ISSET(i, &_sendSet))
@@ -148,21 +144,14 @@ void Server::cull(void)
 	FD_COPY(&_mainSet, &_recvSet);
 	FD_ZERO(&_sendSet);
 	for (std::map<int, Client *>::iterator clientIT = _clients.begin(); clientIT != _clients.end(); ++clientIT)
-	{
 		if (clientIT->second->getRdyToSend() == true)
-		{
 			FD_SET(clientIT->first, &_sendSet);
-		}
-	}
+
 	_selected = select(_maxSd + 1, &_recvSet, &_sendSet, NULL, NULL);
 	if (_selected == 0)
-	{
 		throw std::runtime_error("select() timed out");
-	}
 	else if (_selected < 0)
-	{
 		throw std::runtime_error("select() failed");
-	}
 }
 
 void Server::addSocket(int sd)
@@ -215,9 +204,7 @@ void Server::rmClients(void)
 			_clients.erase(it++);
 		}
 		else
-		{
 			++it;
-		}
 	}
 }
 
@@ -225,8 +212,7 @@ std::string intToString(int toStr)
 {
 	std::stringstream ss;
 	ss << toStr;
-	std::string result = ss.str();
-	return (result);
+	return ss.str();
 }
 
 std::string getDateCreation(void)
@@ -245,13 +231,10 @@ int Server::nbrRegistered(void)
 {
 	int clientRegist = 0;
 
-	for (std::map<int, Client *>::iterator it = _clients.begin();
-			 it != _clients.end(); ++it)
-	{
+	for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 		if (it->second->getIsRegistered())
 			++clientRegist;
-	}
-	return (clientRegist);
+	return clientRegist;
 }
 
 void Server::registration(Client &client)
@@ -291,8 +274,6 @@ void Server::partChannels(Client &client)
 			}
 		}
 		else
-		{
 			++it;
-		}
 	}
 }

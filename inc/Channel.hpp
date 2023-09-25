@@ -36,21 +36,18 @@ public:
 	Channel(const std::string &name, const std::string &serverName);
 	~Channel(void);
 
-	void				sendToAll(const std::string &msg, Client *exception);
-	std::string getName(void) const;
-	std::string getModes(void) const;
-	bool				getMode(Mode mode) const;
-	void				setMode(Client &client, Mode mode, bool sign);
-
-	unsigned int getLimit(void) const;
-	std::string	 getTopic(void) const;
-	void				 setTopic(const std::string &topic);
-
+	void							 sendToAll(const std::string &msg, Client *exception);
+	std::string				 getName(void) const;
+	std::string				 getModes(void) const;
+	bool							 getMode(Mode mode) const;
+	void							 setMode(Client &client, Mode mode, bool sign);
+	unsigned int			 getLimit(void) const;
+	std::string				 getTopic(void) const;
+	void							 setTopic(const std::string &topic);
 	void							 setPassword(Client &client, const bool mode, const std::string &password);
 	const std::string &getPassword(void) const;
 	void							 setLimit(Client &client, const bool mode, const std::string &limitStr);
 	void							 setOperatorMode(Client &client, const bool mode, Client &target);
-
 	bool							 isEmpty(void) const;
 	std::set<Client *> getClients(void) const;
 	bool							 isClient(Client &client) const;

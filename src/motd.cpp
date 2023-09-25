@@ -1,5 +1,5 @@
 #include "Server.hpp"
-#include "fstream"
+#include <fstream>
 
 void Server::motd(Client &client)
 {
@@ -12,9 +12,7 @@ void Server::motd(Client &client)
 	{
 		client.sendMessage(_name + RPL_MOTDSTART(client.getNickname()));
 		while (std::getline(motd, line))
-		{
 			client.sendMessage(_name + RPL_MOTD(client.getNickname(), line));
-		}
 		client.sendMessage(_name + RPL_ENDOFMOTD(client.getNickname()));
 		return;
 	}

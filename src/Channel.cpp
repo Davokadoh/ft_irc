@@ -144,7 +144,7 @@ std::set<Client *> Channel::getClients(void) const
 
 bool Channel::isClient(Client &client) const
 {
-	return (_clients.find(&client) != _clients.end());
+	return _clients.find(&client) != _clients.end();
 }
 
 void Channel::addClient(Client &client)
@@ -159,7 +159,7 @@ void Channel::rmClient(Client &client)
 
 bool Channel::isOperator(Client &client) const
 {
-	return (_operators.find(&client) != _operators.end());
+	return _operators.find(&client) != _operators.end();
 }
 
 void Channel::addOperator(Client &client)
@@ -174,7 +174,7 @@ void Channel::rmOperator(Client &client)
 
 bool Channel::isInvited(Client &client) const
 {
-	return (_operators.find(&client) == _operators.end());
+	return _operators.find(&client) == _operators.end();
 }
 
 void Channel::addInvited(Client &client)

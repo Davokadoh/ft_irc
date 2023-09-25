@@ -2,12 +2,12 @@
 
 bool isNickValid(const std::string &nick)
 {
-	return (nick.find_first_not_of(VALID_CHARS) != std::string::npos);
+	return nick.find_first_not_of(VALID_CHARS) != std::string::npos;
 }
 
 bool Server::isNickInUse(const std::string &nick)
 {
-	return (_nicknames.find(nick) != _nicknames.end());
+	return _nicknames.find(nick) != _nicknames.end();
 }
 
 void Server::nick(Client &client)
@@ -21,28 +21,18 @@ void Server::nick(Client &client)
 	std::string							 nickname = "";
 
 	if (p.size() != 0)
-	{
 		nickname = p[0];
-	}
 
 	if (nickname.empty())
-	{
 		client.sendMessage(this->_name + ERR_NONICKNAMEGIVEN(client.getNickname()));
-	}
 	else if (isNickValid(nickname))
-	{
 		client.sendMessage(this->_name + ERR_ERRONEUSNICKNAME(client.getNickname(), nickname));
-	}
 	else if (isNickInUse(nickname))
-	{
 		client.sendMessage(this->_name + ERR_NICKNAMEINUSE(client.getNickname(), nickname));
-	}
 	else
 	{
 		if (client.getNickname() != "*")
-		{
 			_nicknames.erase(client.getNickname());
-		}
 		_nicknames.insert(std::make_pair(nickname, &client));
 		if (client.getIsRegistered() == true)
 		{
@@ -54,9 +44,7 @@ void Server::nick(Client &client)
 		{
 			client.setNickname(nickname);
 			if (client.getUsername() != "" && client.getRealname() != "")
-			{
 				this->registration(client);
-			}
 		}
 	}
 }

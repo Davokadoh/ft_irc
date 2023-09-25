@@ -28,19 +28,15 @@ public:
 	std::string							 getHostname(void) const;
 	std::string							 getVerb(void) const;
 	std::vector<std::string> getParameters(void) const;
-
-	void setSrc(std::string str);
-	void setNick(std::string str);
-	void setUser(std::string str);
-	void setHostname(std::string str);
-	void setVerb(std::string str);
-
-	void parse(std::string toParse);
-	void splitParameters(std::string tmp);
-	void srcSplit(void);
-	void clear(void);
-
-	void print(void);
+	void										 setSrc(std::string str);
+	void										 setNick(std::string str);
+	void										 setUser(std::string str);
+	void										 setHostname(std::string str);
+	void										 setVerb(std::string str);
+	void										 parse(std::string toParse);
+	void										 splitParameters(std::string tmp);
+	void										 srcSplit(void);
+	void										 clear(void);
 };
 
 #endif
