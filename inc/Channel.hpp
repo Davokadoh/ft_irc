@@ -47,7 +47,7 @@ public:
 	void							 setPassword(Client &client, const bool mode, const std::string &password);
 	const std::string &getPassword(void) const;
 	void							 setLimit(Client &client, const bool mode, const std::string &limitStr);
-	void							 setOperatorMode(Client &client, const bool mode, Client &target);
+	void							 setOperatorMode(Client &client, const bool mode, std::map<std::string, Client *> nicknames, const std::string &nickname);
 	bool							 isEmpty(void) const;
 	std::set<Client *> getClients(void) const;
 	bool							 isClient(Client &client) const;

@@ -114,27 +114,28 @@ void Channel::setLimit(Client &client, const bool sign, const std::string &limit
 	sendToAll(client.getSource() + " MODE " + _name + " +l " + limitStr, NULL);
 }
 
-void Channel::setOperatorMode(Client &client, const bool sign, Client &target)
+void Channel::setOperatorMode(Client &client, const bool sign, std::map<std::string, Client *> nicknames, const std::string &nickname)
 {
-	if (!isClient(target))
+	std::map<std::string, Client *>::iterator target = nicknames.find(nickname);
+	if (target == nicknames.end())
 	{
-		return client.sendMessage(_serverName + ERR_USERNOTINCHANNEL(client.getNickname(), target.getNickname(), _name));
+		return client.sendMessage(_serverName + ERR_USERNOTINCHANNEL(client.getNickname(), nickname, _name));
 	}
-	else if (sign && !isOperator(target))
+	else if (sign && !isOperator(*target->second))
 	{
-		addOperator(target);
-		return sendToAll(client.getSource() + " MODE " + _name + " +o " + target.getNickname(), NULL);
+		addOperator(*target->second);
+		return sendToAll(client.getSource() + " MODE " + _name + " +o " + target->second->getNickname(), NULL);
 	}
-	else if (!sign && isOperator(target))
+	else if (!sign && isOperator(*target->second))
 	{
-		rmOperator(target);
-		return sendToAll(client.getSource() + " MODE " + _name + " -o " + target.getNickname(), NULL);
+		rmOperator(*target->second);
+		return sendToAll(client.getSource() + " MODE " + _name + " -o " + target->second->getNickname(), NULL);
 	}
 }
 
 bool Channel::isEmpty(void) const
 {
-	return !_clients.size();
+	return _clients.empty();
 }
 
 std::set<Client *> Channel::getClients(void) const
