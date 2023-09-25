@@ -19,7 +19,7 @@ void Server::topic(Client &client)
 		return client.sendMessage(this->_name + ERR_NOSUCHCHANNEL(client.getNickname(), parameters[0]));
 
 	channel = channelIt->second;
-	if (!channel->isClient(&client))
+	if (!channel->isClient(client))
 		return client.sendMessage(this->_name + ERR_NOTONCHANNEL(client.getNickname(), channel->getName()));
 
 	if (parameters.size() == 1)

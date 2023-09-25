@@ -114,25 +114,23 @@ void Channel::setLimit(Client &client, const bool sign, const std::string &limit
 	sendToAll(client.getSource() + " MODE " + _name + " +l " + limitStr, NULL);
 }
 
-void Channel::setOperatorMode(Client &client, const bool sign, const std::string &nick, Client *target)
+void Channel::setOperatorMode(Client &client, const bool sign, Client &target)
 {
 	if (!isClient(target))
 	{
-		return client.sendMessage(_serverName + ERR_USERNOTINCHANNEL(client.getNickname(), nick, _name));
+		return client.sendMessage(_serverName + ERR_USERNOTINCHANNEL(client.getNickname(), target.getNickname(), _name));
 	}
-	else if (sign && !isOperator(*target))
+	else if (sign && !isOperator(target))
 	{
-		addOperator(*target);
-		return sendToAll(client.getSource() + " MODE " + _name + " +o " + nick, NULL);
+		addOperator(target);
+		return sendToAll(client.getSource() + " MODE " + _name + " +o " + target.getNickname(), NULL);
 	}
-	else if (!sign && isOperator(*target))
+	else if (!sign && isOperator(target))
 	{
-		rmOperator(*target);
-		return sendToAll(client.getSource() + " MODE " + _name + " -o " + nick, NULL);
+		rmOperator(target);
+		return sendToAll(client.getSource() + " MODE " + _name + " -o " + target.getNickname(), NULL);
 	}
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool Channel::isEmpty(void) const
 {
@@ -144,19 +142,19 @@ std::set<Client *> Channel::getClients(void) const
 	return _clients;
 }
 
-bool Channel::isClient(Client *client) const
+bool Channel::isClient(Client &client) const
 {
-	return (_clients.find(client) != _clients.end());
+	return (_clients.find(&client) != _clients.end());
 }
 
-void Channel::addClient(Client *client)
+void Channel::addClient(Client &client)
 {
-	_clients.insert(client);
+	_clients.insert(&client);
 }
 
-void Channel::rmClient(Client *client)
+void Channel::rmClient(Client &client)
 {
-	_clients.erase(client);
+	_clients.erase(&client);
 }
 
 bool Channel::isOperator(Client &client) const

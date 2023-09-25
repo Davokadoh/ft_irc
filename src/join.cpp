@@ -51,7 +51,7 @@ void Server::join(Client &client)
 			return client.sendMessage(_name + ERR_CHANNELISFULL(client.getNickname(), parameters[0]));
 	}
 
-	channelIt->second->addClient(&client);
+	channelIt->second->addClient(client);
 	channelIt->second->sendToAll(client.getSource() + " JOIN " + parameters[0], NULL);
 	std::string copy(parameters[0]);
 	client.resetMessage();

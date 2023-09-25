@@ -16,7 +16,7 @@ void Server::mode(Client &client)
 	channel = _channels.find(parameters[0]);
 	if (channel == _channels.end())
 		return client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), parameters[0]));
-	else if (!channel->second->isClient(&client))
+	else if (!channel->second->isClient(client))
 		return client.sendMessage(ERR_NOTONCHANNEL(client.getNickname(), channel->second->getName()));
 	else if (parameters.size() == 1)
 		return client.sendMessage(_name + RPL_CHANNELMODEIS(client.getNickname(), channel->second->getName(), channel->second->getModes()));
@@ -59,7 +59,7 @@ void Server::mode(Client &client)
 		else if (modeString[index] == 'o')
 		{
 			++modeIndex;
-			channel->second->setOperatorMode(client, sign, parameters[modeIndex], _nicknames.find(parameters[modeIndex])->second);
+			channel->second->setOperatorMode(client, sign, *_nicknames.find(parameters[modeIndex])->second);
 		}
 		else
 			client.sendMessage(ERR_UNKNOWNMODE(client.getNickname(), modeString[index]));

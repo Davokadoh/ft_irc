@@ -49,22 +49,19 @@ public:
 	void							 setPassword(Client &client, const bool mode, const std::string &password);
 	const std::string &getPassword(void) const;
 	void							 setLimit(Client &client, const bool mode, const std::string &limitStr);
-	void							 setOperatorMode(Client &client, const bool mode, const std::string &nick, Client *target);
+	void							 setOperatorMode(Client &client, const bool mode, Client &target);
 
 	bool							 isEmpty(void) const;
 	std::set<Client *> getClients(void) const;
-	bool							 isClient(Client *client) const;
-	void							 addClient(Client *client);
-	void							 rmClient(Client *client);
-	// std::set<Client *> getOperators(void) const;
-	bool isOperator(Client &client) const;
-	void addOperator(Client &client);
-	void rmOperator(Client &client);
-	// std::set<Client *> getInviteList(void) const;
-	bool isInvited(Client &client) const;
-	void addInvited(Client &client);
-	void rmInvited(Client &client);
-	// void setInviteList(Client *client);
+	bool							 isClient(Client &client) const;
+	void							 addClient(Client &client);
+	void							 rmClient(Client &client);
+	bool							 isOperator(Client &client) const;
+	void							 addOperator(Client &client);
+	void							 rmOperator(Client &client);
+	bool							 isInvited(Client &client) const;
+	void							 addInvited(Client &client);
+	void							 rmInvited(Client &client);
 };
 
 #endif

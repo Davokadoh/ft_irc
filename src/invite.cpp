@@ -15,9 +15,9 @@ void Server::invite(Client &client)
 	channel = _channels.find(parameters[1]);
 	if (channel == _channels.end())
 		return client.sendMessage(_name + ERR_NOSUCHCHANNEL(client.getNickname(), parameters[1]));
-	else if (!channel->second->isClient(&client))
+	else if (!channel->second->isClient(client))
 		return client.sendMessage(_name + ERR_NOTONCHANNEL(client.getNickname(), parameters[1]));
-	else if (channel->second->isClient(target->second))
+	else if (channel->second->isClient(*target->second))
 		return client.sendMessage(_name + ERR_USERONCHANNEL(client.getNickname(), parameters[0], parameters[1]));
 	else if (channel->second->getMode(i) && !channel->second->isOperator(*target->second))
 		return client.sendMessage(_name + ERR_CHANOPRIVSNEEDED(client.getNickname(), channel->second->getName()));
