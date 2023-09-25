@@ -1,8 +1,10 @@
 #include "Server.hpp"
+#include <cstring>
 #include <ctime>
 #include <fcntl.h>
 #include <iostream>
 #include <sys/errno.h>
+#include <sys/select.h>
 #include <unistd.h>
 
 std::map<std::string, FunPtr> Server::createMap(void)
