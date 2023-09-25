@@ -134,11 +134,17 @@ void Server::execute(Client &client)
 
 	client.setSource(":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getIp());
 	if (verb.empty())
+	{
 		return;
+	}
 	else if (_cmds.find(verb) != _cmds.end())
+	{
 		(this->*_cmds.at(verb))(client);
+	}
 	else
+	{
 		client.sendMessage(this->_name + ERR_UNKNOWNCOMMAND(client.getNickname(), verb));
+	}
 }
 
 void Server::cull(void)
