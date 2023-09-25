@@ -3,7 +3,7 @@
 std::string Server::getChannelWith(Client *client)
 {
 	for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-		if (it->second->isClient(client))
+		if (it->second->isClient(*client))
 			return it->second->getName();
 	return "*";
 }

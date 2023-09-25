@@ -274,9 +274,9 @@ void Server::partChannels(Client &client)
 {
 	for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end();)
 	{
-		if (it->second->isClient(&client))
+		if (it->second->isClient(client))
 		{
-			it->second->rmClient(&client);
+			it->second->rmClient(client);
 			if (it->second->isEmpty())
 			{
 				delete it->second;

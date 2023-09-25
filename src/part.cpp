@@ -14,13 +14,13 @@ void Server::part(Client &client)
 
 	if (channelIt == _channels.end())
 		return client.sendMessage(_name + ERR_NOSUCHCHANNEL(client.getNickname(), parameters[0]));
-	if (!channelIt->second->isClient(&client))
+	if (!channelIt->second->isClient(client))
 		return client.sendMessage(_name + ERR_NOTONCHANNEL(client.getNickname(), parameters[0]));
 
 	channelIt->second->sendToAll(
 		client.getSource() + " PART " + parameters[0] + " :" + (parameters.size() > 1 ? parameters[1] : "Leaving"), NULL);
 
-	channelIt->second->rmClient(&client);
+	channelIt->second->rmClient(client);
 	channelIt->second->rmOperator(client);
 	if (channelIt->second->isEmpty())
 		_channels.erase(channelIt);

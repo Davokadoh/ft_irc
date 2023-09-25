@@ -98,7 +98,7 @@ void Message::splitParameters(std::string tmp)
 	std::istringstream iss(tmp);
 	std::string				 token;
 
-	while (iss >> token)
+	while (std::getline(iss, token, ' '))
 	{
 		this->_parameters.push_back(token);
 	}
@@ -125,6 +125,7 @@ void Message::parse(std::string toParse)
 		this->srcSplit();
 	}
 	std::getline(buffer, this->_verb, ' ');
+	this->_verb.erase(remove_if(this->_verb.begin(), this->_verb.end(), isspace));
 	std::getline(buffer, tmp, ':');
 	if (!tmp.empty())
 	{
@@ -137,7 +138,7 @@ void Message::parse(std::string toParse)
 	{
 		this->_parameters.push_back(tmp);
 	}
-	// this->print();
+	this->print();
 }
 
 void Message::clear(void)
@@ -157,7 +158,7 @@ void Message::print(void)
 	std::cout << "Src: " << this->getSrc() << std::endl;
 	std::cout << "Nick: " << this->getNick() << std::endl;
 	std::cout << "User: " << this->getUser() << std::endl;
-	std::cout << "hostname: " << this->getHostname() << std::endl;
+	std::cout << "Hostname: " << this->getHostname() << std::endl;
 	std::cout << "Verb: " << this->getVerb() << std::endl;
 	std::cout << "Parameters: ";
 	for (std::vector<std::string>::iterator it = tmp.begin(); it != tmp.end(); it++)
