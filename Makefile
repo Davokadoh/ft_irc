@@ -34,7 +34,7 @@ RM			=	rm -rf
 
 BUILD_DIR	=	bin
 OBJS		=	$(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
-DEPS        =	$(OBJS:.o=.d)
+DEPS		=	$(OBJS:.o=.d)
 
 all: $(NAME)
 

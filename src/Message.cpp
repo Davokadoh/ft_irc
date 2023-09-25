@@ -1,4 +1,5 @@
 #include "../inc/Message.hpp"
+#include <algorithm>
 
 // ------- COPLIEN -------
 
