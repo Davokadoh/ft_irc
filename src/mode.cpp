@@ -57,10 +57,7 @@ void Server::mode(Client &client)
 		else if (modeString[index] == 'l')
 			channel->second->setLimit(client, sign, parameters[++modeIndex]);
 		else if (modeString[index] == 'o')
-		{
-			++modeIndex;
-			channel->second->setOperatorMode(client, sign, *_nicknames.find(parameters[modeIndex])->second);
-		}
+			channel->second->setOperatorMode(client, sign, _nicknames, parameters[++modeIndex]);
 		else
 			client.sendMessage(ERR_UNKNOWNMODE(client.getNickname(), modeString[index]));
 	}
