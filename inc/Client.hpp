@@ -14,8 +14,8 @@ class Client
 private:
 	int					_sd;
 	bool				_rdyToSend;
-	bool				_status;			 // How about an enum ?
-	bool				_isRegistered; // How about an enum ?
+	bool				_status;
+	bool				_isRegistered;
 	bool				_isPassOK;
 	std::string _ip;
 	std::string _nickname;
@@ -49,16 +49,15 @@ public:
 	void				setIsRegistered(bool status);
 	void				setIsPassOK(bool status);
 	void				setRdyToSend(bool status);
-
-	void		recvPackets(void);
-	void		sendPackets(void);
-	void		setStatus(bool status);
-	bool		getStatus(void) const;
-	Message getMessage(void) const;
-	void		resetMessage(void);
-	void		parse(void);
-	void		sendMessage(const std::string &msg);
-	void		setMessage(std::string part, std::string channel);
+	void				recvPackets(void);
+	void				sendPackets(void);
+	void				setStatus(bool status);
+	bool				getStatus(void) const;
+	Message			getMessage(void) const;
+	void				resetMessage(void);
+	void				parse(void);
+	void				sendMessage(const std::string &msg);
+	void				setMessage(std::string part, std::string channel);
 };
 
 #endif

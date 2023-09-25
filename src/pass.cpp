@@ -3,23 +3,13 @@
 void Server::pass(Client &client)
 {
 	if (client.getMessage().getParameters().size() < 1)
-	{
-		client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname(), "PASS"));
-		return;
-	}
+		return client.sendMessage(this->_name + ERR_NEEDMOREPARAMS(client.getNickname(), "PASS"));
+
 	if (client.getIsPassOK() == true)
-	{
-		client.sendMessage(this->_name + ERR_ALREADYREGISTERED(client.getNickname()));
-		return;
-	}
+		return client.sendMessage(this->_name + ERR_ALREADYREGISTERED(client.getNickname()));
 	std::string pass = client.getMessage().getParameters()[0];
 	if (this->_password != pass)
-	{
-		client.sendMessage(this->_name + ERR_PASSWDMISMATCH(client.getNickname()));
-		return;
-	}
+		return client.sendMessage(this->_name + ERR_PASSWDMISMATCH(client.getNickname()));
 	else
-	{
 		client.setIsPassOK(true);
-	}
 }

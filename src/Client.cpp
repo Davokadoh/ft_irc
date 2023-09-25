@@ -15,7 +15,6 @@
 Client::Client(int sd, const std::string &ip)
 	: _sd(sd), _rdyToSend(false), _status(CONNECTED), _isRegistered(false), _isPassOK(false), _ip(ip), _nickname("*"), _username(""), _source(""), _realname(""), _recvString("")
 {
-	std::cout << "ip: " << _ip << std::endl;
 }
 
 Client::Client(const Client &ref)
@@ -44,24 +43,18 @@ void Client::recvPackets(void)
 {
 	if (getStatus() == DISCONNECTED)
 		return;
-	std::cout << "Receiving packet" << std::endl;
 	bzero(_recvBuff, 512);
 	int rc = recv(_sd, _recvBuff, sizeof(_recvBuff), 0);
 	if (rc <= 0)
-	{
 		setStatus(DISCONNECTED);
-	}
 	else
-	{
 		_recvString.append(_recvBuff);
-	}
 }
 
 void Client::sendPackets(void)
 {
 	if (getStatus() == DISCONNECTED)
 		return;
-	std::cout << "Sending packet" << std::endl;
 	if (_sendBuff.empty())
 		return;
 	int rc = send(_sd, _sendBuff.c_str(), _sendBuff.length(), 0);
@@ -116,51 +109,49 @@ Message Client::getMessage(void) const
 	return _recvMessage;
 }
 
-// ------- GETTERS AND SETTERS -------
-
 std::string Client::getNickname(void) const
 {
-	return (this->_nickname);
+	return this->_nickname;
 }
 
 std::string Client::getUsername(void) const
 {
-	return (this->_username);
+	return this->_username;
 }
 
 std::string Client::getRealname(void) const
 {
-	return (this->_realname);
+	return this->_realname;
 }
 
 std::string Client::getSource(void) const
 {
-	return (this->_source);
+	return this->_source;
 }
 
 std::string Client::getIp(void) const
 {
-	return (this->_ip);
+	return this->_ip;
 }
 
 std::string Client::getSendBuff(void) const
 {
-	return (this->_sendBuff);
+	return this->_sendBuff;
 }
 
 bool Client::getIsRegistered(void) const
 {
-	return (this->_isRegistered);
+	return this->_isRegistered;
 }
 
 bool Client::getIsPassOK(void) const
 {
-	return (this->_isPassOK);
+	return this->_isPassOK;
 }
 
 bool Client::getRdyToSend(void) const
 {
-	return (this->_rdyToSend);
+	return this->_rdyToSend;
 }
 
 void Client::setNickname(std::string newNick)

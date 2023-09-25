@@ -14,7 +14,7 @@ void Server::who(Client &client)
 
 	if (parameters.empty())
 	{
-		for (std::map<std::string, Client *>::iterator clientIt = _nicknames.begin(); clientIt != _nicknames.end(); clientIt++)
+		for (std::map<std::string, Client *>::iterator clientIt = _nicknames.begin(); clientIt != _nicknames.end(); ++clientIt)
 		{
 			client.sendMessage(
 				_name + RPL_WHOREPLY(
@@ -26,8 +26,7 @@ void Server::who(Client &client)
 									clientIt->first,
 									clientIt->second->getRealname()));
 		}
-		client.sendMessage(_name + RPL_ENDOFWHO(client.getNickname(), ""));
-		return;
+		return client.sendMessage(_name + RPL_ENDOFWHO(client.getNickname(), ""));
 	}
 	if (_nicknames.find(parameters[0]) != _nicknames.end())
 	{
@@ -41,8 +40,7 @@ void Server::who(Client &client)
 								std::string(_name).erase(0),
 								clientIt->first,
 								clientIt->second->getRealname()));
-		client.sendMessage(_name + RPL_ENDOFWHO(client.getNickname(), parameters[0]));
-		return;
+		return client.sendMessage(_name + RPL_ENDOFWHO(client.getNickname(), parameters[0]));
 	}
 	std::map<std::string, Channel *>::iterator channelIt = _channels.find(parameters[0]);
 	if (_channels.find(parameters[0]) != _channels.end())
@@ -60,8 +58,7 @@ void Server::who(Client &client)
 									(*clientIt)->getNickname(),
 									(*clientIt)->getRealname()));
 		}
-		client.sendMessage(_name + RPL_ENDOFWHO(client.getNickname(), parameters[0]));
-		return;
+		return client.sendMessage(_name + RPL_ENDOFWHO(client.getNickname(), parameters[0]));
 	}
 	client.sendMessage(_name + RPL_ENDOFWHO(client.getNickname(), parameters[0]));
 }
