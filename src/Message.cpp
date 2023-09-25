@@ -115,7 +115,21 @@ void Message::srcSplit(void)
 
 void Message::parse(std::string toParse)
 {
-	std::istringstream buffer(toParse);
+	std::string checkSp = toParse;
+
+	if (toParse[0] == 9 || toParse[0] == 32)
+	{
+		for (unsigned long i = 0; i < toParse.size(); i++)
+		{
+			if (toParse[i] != 9 && toParse[i] != 32)
+			{
+				std::cout << i << std::endl;
+				checkSp.erase(0, i);
+				break;
+			}
+		}
+	}
+	std::istringstream buffer(checkSp);
 	std::string				 tmp;
 
 	if (toParse[0] == ':')
