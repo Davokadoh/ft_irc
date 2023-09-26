@@ -1,16 +1,8 @@
 #include "Client.hpp"
-#include <arpa/inet.h>
-#include <cstring>
-#include <iostream>
-#include <netinet/in.h>
-#include <stdio.h>
-#include <sys/errno.h>
+#include "utils.hpp"
 #include <sys/socket.h>
-#include <sys/types.h>
 #include <unistd.h>
-
-#include <arpa/inet.h>
-#include <netinet/in.h>
+#include <cstring>
 
 Client::Client(int sd, const std::string &ip)
 	: _sd(sd), _rdyToSend(false), _status(CONNECTED), _isRegistered(false), _isPassOK(false), _ip(ip), _nickname("*"), _username(""), _source(""), _realname(""), _recvString("")

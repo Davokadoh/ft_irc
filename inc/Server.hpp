@@ -78,8 +78,8 @@ public:
 
 	void watch(void);
 	void run(void);
+
 };
 
-std::string intToString(int toStr);
 
 #endif
