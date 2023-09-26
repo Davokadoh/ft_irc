@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void Server::cap(Client &client) // a enlever
+void Server::cap(Client &client)
 {
 	if (client.getMessage().getParameters().empty())
 	{
