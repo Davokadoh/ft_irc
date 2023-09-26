@@ -1,8 +1,7 @@
 #include "Server.hpp"
+#include "utils.hpp"
 #include <cstring>
-#include <ctime>
 #include <fcntl.h>
-#include <iostream>
 #include <sys/errno.h>
 #include <sys/select.h>
 #include <unistd.h>
@@ -206,25 +205,6 @@ void Server::rmClients(void)
 		else
 			++it;
 	}
-}
-
-std::string intToString(int toStr)
-{
-	std::stringstream ss;
-	ss << toStr;
-	return ss.str();
-}
-
-std::string getDateCreation(void)
-{
-	std::time_t			now = std::time(NULL);
-	struct std::tm *timeinfo = std::localtime(&now);
-
-	char buffer[80];
-	std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
-
-	std::string result = buffer;
-	return result;
 }
 
 int Server::nbrRegistered(void)

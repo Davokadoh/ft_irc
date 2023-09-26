@@ -22,10 +22,11 @@ SRCS		=	$(SRC_DIR)/main.cpp \
 				$(SRC_DIR)/motd.cpp \
 				$(SRC_DIR)/pass.cpp \
 				$(SRC_DIR)/who.cpp \
+				$(SRC_DIR)/utils.cpp \
 
 INCS		=	inc
 
-CXX			=	c++#g++-13
+CXX			=	g++-13
 CXXFLAGS	=	-g -std=c++98 -O2
 CPPFLAGS	=	-Wall -Wextra -Werror -pedantic \
 				$(addprefix -I,$(INCS)) -MMD -MP \
