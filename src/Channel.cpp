@@ -2,6 +2,7 @@
 #include "Macros.hpp"
 #include "Server.hpp"
 #include "utils.hpp"
+#include <cstdlib>
 
 const std::string Channel::_modesStr[4] = {"i", "k", "l", "t"};
 

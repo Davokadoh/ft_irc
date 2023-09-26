@@ -2,9 +2,10 @@
 #include "utils.hpp"
 #include <cstring>
 #include <fcntl.h>
-#include <sys/errno.h>
-#include <sys/select.h>
+#include <netdb.h>
 #include <unistd.h>
+#include <sys/errno.h>
+#include <arpa/inet.h>
 
 std::map<std::string, FunPtr> Server::createMap(void)
 {
@@ -179,9 +180,7 @@ void Server::addClients(void)
 	do
 	{
 		sd = accept(_listenSd, (struct sockaddr *)&addr, &len);
-		if (sd < 0 && errno != EWOULDBLOCK)
-			throw std::runtime_error("accept() failed");
-		else if (sd < 0)
+		if (sd < 0)
 			break;
 		addSocket(sd);
 		_clients.insert(
